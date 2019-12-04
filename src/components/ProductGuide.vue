@@ -3,7 +3,7 @@
     <h2>Guide</h2>
     <section class="vue__brand-container">
       <header>
-        <h3>Välj ditt märke TEST123</h3>
+        <h3>Välj ditt märke</h3>
       </header>
 
       <ul>
