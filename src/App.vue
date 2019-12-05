@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header class="main-header">
-      <ProductGuide v-on:summarize="summarize" />
+      <ProductGuide v-on:summarize="summarize" v-bind:lang="language" />
       <!-- <ProductFilter /> -->
     </header>
     <div class="summary-bar">
@@ -13,13 +13,14 @@
     </div>
 
     <div class="products-container">
-      
+      <p>Produkter</p>
     </div>
   </div>
 </template>
 
 <script>
 import ProductGuide from "./components/ProductGuide";
+import axios from "axios";
 // import ProductFilter from "./components/ProductFilter";
 
 export default {
@@ -31,12 +32,32 @@ export default {
   methods: {
     summarize(searchSummary) {
       this.searchSummary = searchSummary;
+      this.generateProducts();
     },
+    generateProducts() {
+      axios
+        .get(
+          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" + this.searchSummary.brandId + "&model=" + this.searchSummary.modelId,
+          {
+            headers: {
+              Authorization: "Access-Control-Allow-Origin: *"
+            }
+          }
+        )
+        .then(res => (this.products = res.data.Excavator[0].Model[0].Products))
+        // eslint-disable-next-line no-console
+        .catch(err => console.log(err));
+    }
   },
   data() {
     return {
-      searchSummary: []
-    }
+      searchSummary: [],
+      products: [],
+      language: null
+    };
+  },
+  created() {
+    // this.language = navigator.language.substr(3,5);
   }
 };
 </script>
@@ -64,7 +85,7 @@ body {
 .main-header {
   padding-top: 50px;
   padding-bottom: 50px;
-  height: 60vh;
+  height: 700px;
 
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
   background-size: cover;
@@ -89,7 +110,7 @@ body {
 }
 
 .products-container {
-  background: #F0F0F0;
+  background: #f0f0f0;
   height: 100vh;
 }
 </style>

@@ -44,6 +44,9 @@ import Model from "./Model";
 
 export default {
   name: "ProductGuide",
+  props: {
+    lang: String
+  },
   components: {
     Brand,
     Model
