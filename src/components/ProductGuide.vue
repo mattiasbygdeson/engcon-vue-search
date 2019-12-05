@@ -7,11 +7,7 @@
       </header>
 
       <ul>
-        <li class="vue__brand-icon" v-for="brand in brands" v-bind:key="brand.BrandId">
-          <!-- <p>{{brand.Logo}}</p> -->
-          <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-          <p class="vue__brand-name">{{brand.BrandName}}</p>
-        </li>
+        <Brand v-for="brand in brands" v-bind:key="brand.BrandId" v-bind:brand="brand" />
       </ul>
     </section>
   </div>
@@ -19,9 +15,13 @@
 
 <script>
 import axios from "axios";
+import Brand from "./Brand";
 
 export default {
   name: "ProductGuide",
+  components: {
+    Brand
+  },
   data() {
     return {
       brands: []
@@ -58,7 +58,6 @@ h2 {
   margin: auto;
   background: white;
   border-radius: 5px;
-  // padding: 10px;
   border: 1px solid #ddd;
 
   ul {
@@ -70,10 +69,6 @@ h2 {
 
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
-  }
-
-  li {
-    list-style: none;
   }
 
   h3 {
@@ -90,40 +85,4 @@ h2 {
   }
 }
 
-.vue__brand-icon {
-  // display: inline-block;
-  // width: calc(20% - 10px);
-  // max-width: 150px;
-  // margin-right: 5px;
-  // margin-left: 5px;
-  // margin-bottom: 20px;
-  // padding: 10px 0 10px 0;
-  margin: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-  transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-
-  p {
-    font-size: 0.8em;
-    padding-bottom: 15px;
-  }
-
-  img {
-    width: 60%;
-    height: auto;
-  }
-
-  &:hover {
-    cursor: pointer;
-    border-color: #222;
-  }
-}
-
-.vue__brand-name {
-  border-top: 2px dotted #ccc;
-  padding-top: 15px;
-  padding-bottom: 5px;
-  margin: auto;
-  width: 80%;
-}
 </style>
