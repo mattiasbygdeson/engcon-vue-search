@@ -1,5 +1,10 @@
 <template>
-  <li class="vue__brand-icon">
+  <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="vue__brand-icon selected">
+    <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
+    <p class="vue__brand-name">{{brand.BrandName}}</p>
+  </li>
+
+  <li v-else class="vue__brand-icon" @click="$emit('select-brand', brand)">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
     <p class="vue__brand-name">{{brand.BrandName}}</p>
   </li>
@@ -8,8 +13,23 @@
 <script>
 export default {
   name: "Brand",
-  props: ["brand"]
-}
+  props: {
+    brand: Array,
+    selectedBrand: Array,
+  },
+  data() {
+    return {
+      selected: false
+    };
+  },
+  methods: {
+    highlight() {
+      if (this.selectedBrand.BrandId === this.brand.BrandId) {
+        this.selected = true;
+      }
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -36,17 +56,23 @@ export default {
 }
 
 .vue__brand-name {
-  border-top: 2px dotted #ccc;
+  // border-top: 2px dotted #ccc;
   padding-top: 15px;
   padding-bottom: 5px;
   margin: auto;
   width: 80%;
 }
 
-.vue__brand-container {
-  li {
-    list-style: none;
+.selected {
+  background-color: #ffd300;
+
+  &:hover {
+    cursor: initial;
+    border-color: #ffd300;
+  }
+
+  img {
+    mix-blend-mode: multiply;
   }
 }
-
 </style>

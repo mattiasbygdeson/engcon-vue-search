@@ -1,7 +1,20 @@
 <template>
   <div id="app">
-    <ProductGuide />
-    <!-- <ProductFilter /> -->
+    <header class="main-header">
+      <ProductGuide v-on:summarize="summarize" />
+      <!-- <ProductFilter /> -->
+    </header>
+    <div class="summary-bar">
+      <p v-if="searchSummary.length !== 0">
+        <span>Märke: {{searchSummary.brandName}}</span>
+        <span>Modell: {{searchSummary.modelName}}</span>
+        <span>Maskinvikt: {{searchSummary.machineWeight}} ton</span>
+      </p>
+    </div>
+
+    <div class="products-container">
+      
+    </div>
   </div>
 </template>
 
@@ -14,6 +27,16 @@ export default {
   components: {
     ProductGuide
     // ProductFilter
+  },
+  methods: {
+    summarize(searchSummary) {
+      this.searchSummary = searchSummary;
+    },
+  },
+  data() {
+    return {
+      searchSummary: []
+    }
   }
 };
 </script>
@@ -27,12 +50,46 @@ export default {
   padding: 0;
 }
 
+li {
+  list-style: none;
+}
+
 body {
   font-family: "akzidenz-grotesk-next", sans-serif;
   font-style: normal;
   font-size: 17px;
-  max-width: 1200px;
   margin: auto;
-  background-color: rgb(143, 145, 153);
+}
+
+.main-header {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  height: 60vh;
+
+  background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
+  background-size: cover;
+}
+
+.summary-bar {
+  background: #1f1f1f;
+  height: 50px;
+  color: white;
+  font-size: 1.1em;
+  font-weight: 800;
+  padding-top: 11px;
+
+  p {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  span {
+    margin-right: 5%;
+  }
+}
+
+.products-container {
+  background: #F0F0F0;
+  height: 100vh;
 }
 </style>
