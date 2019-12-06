@@ -20,8 +20,9 @@
       </section>
 
       <section class="vue__brand-search-column">
-        <h3 v-if="selectedBrand.length !== 0">Välj din modell</h3>
-        <h3 v-else class="inactive">Välj din modell</h3>
+        <h3 v-if="selectedBrand.length !== 0">Välj din {{selectedBrand.BrandName}}</h3>
+
+        <p v-else class="vue__notice">Välj ett märke för att se tillgängliga modeller</p>
 
         <ul class="vue__model-list">
           <Model
@@ -109,7 +110,7 @@ export default {
         brandName: this.selectedBrand.BrandName,
         modelId: this.selectedModel.ModelId,
         machineWeight: this.selectedModel.ModelMachineWeight,
-        modelName: this.selectedModel.ModelName,
+        modelName: this.selectedModel.ModelName
       };
 
       // Send object to parent
@@ -133,6 +134,7 @@ export default {
 
 .vue__brand-search-column {
   background: white;
+  opacity: 0.9;
   border: 1px solid #ddd;
   height: 400px;
 
@@ -151,7 +153,7 @@ export default {
     padding: 10px;
 
     display: grid;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 50% 50%;
   }
 
   h3 {
@@ -160,10 +162,14 @@ export default {
     font-weight: 800;
     font-size: 1em;
   }
+}
 
-  .inactive {
-    color: #aaa;
-  }
+.vue__notice {
+  color: #aaa;
+  width: 50%;
+  margin: auto;
+  padding-top: 160px;
+  text-align: center;
 }
 
 header {

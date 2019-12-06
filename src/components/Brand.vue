@@ -1,12 +1,12 @@
 <template>
   <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="vue__brand-icon selected">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-    <p class="vue__brand-name">{{brand.BrandName}}</p>
+    <!-- <p class="vue__brand-name">{{brand.BrandName}}</p> -->
   </li>
 
   <li v-else class="vue__brand-icon" @click="$emit('select-brand', brand)">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-    <p class="vue__brand-name">{{brand.BrandName}}</p>
+    <!-- <p class="vue__brand-name">{{brand.BrandName}}</p> -->
   </li>
 </template>
 
@@ -38,6 +38,8 @@ export default {
   border: 1px solid #ddd;
   text-align: center;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  
+  // background: black;
 
   p {
     font-size: 0.8em;
@@ -47,6 +49,9 @@ export default {
   img {
     width: 60%;
     height: auto;
+
+    mix-blend-mode: multiply;
+    // filter: invert(100%);
   }
 
   &:hover {
@@ -73,6 +78,7 @@ export default {
 
   img {
     mix-blend-mode: multiply;
+    filter: invert(0%);
   }
 }
 </style>

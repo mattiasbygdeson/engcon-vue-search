@@ -4,29 +4,24 @@
       <ProductGuide v-on:summarize="summarize" v-bind:lang="language" />
       <!-- <ProductFilter /> -->
     </header>
-    <div class="summary-bar">
-      <p v-if="searchSummary.length !== 0">
-        <span>Märke: {{searchSummary.brandName}}</span>
-        <span>Modell: {{searchSummary.modelName}}</span>
-        <span>Maskinvikt: {{searchSummary.machineWeight}} ton</span>
-      </p>
-    </div>
 
-    <div class="products-container">
-      <p>Produkter</p>
-    </div>
+    <main>
+      <ProductList v-bind:searchSummary="searchSummary" v-bind:products="products" />
+    </main>
   </div>
 </template>
 
 <script>
 import ProductGuide from "./components/ProductGuide";
+import ProductList from "./components/ProductList";
 import axios from "axios";
 // import ProductFilter from "./components/ProductFilter";
 
 export default {
   name: "app",
   components: {
-    ProductGuide
+    ProductGuide,
+    ProductList
     // ProductFilter
   },
   methods: {
@@ -35,6 +30,9 @@ export default {
       this.generateProducts();
     },
     generateProducts() {
+      // Clear previous products
+      this.products = [];
+
       axios
         .get(
           "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" + this.searchSummary.brandId + "&model=" + this.searchSummary.modelId,
@@ -47,6 +45,8 @@ export default {
         .then(res => (this.products = res.data.Excavator[0].Model[0].Products))
         // eslint-disable-next-line no-console
         .catch(err => console.log(err));
+
+        
     }
   },
   data() {
@@ -80,6 +80,7 @@ body {
   font-style: normal;
   font-size: 17px;
   margin: auto;
+  background: #f0f0f0;
 }
 
 .main-header {
@@ -91,26 +92,10 @@ body {
   background-size: cover;
 }
 
-.summary-bar {
-  background: #1f1f1f;
-  height: 50px;
-  color: white;
-  font-size: 1.1em;
-  font-weight: 800;
-  padding-top: 11px;
-
-  p {
-    max-width: 1200px;
-    margin: auto;
-  }
-
-  span {
-    margin-right: 5%;
-  }
-}
-
 .products-container {
-  background: #f0f0f0;
+  padding-top: 40px;
+  margin: auto;
   height: 100vh;
+  max-width: 1200px;
 }
 </style>
