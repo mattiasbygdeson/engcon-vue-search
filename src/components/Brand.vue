@@ -1,12 +1,10 @@
 <template>
   <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="vue__brand-icon selected">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-    <!-- <p class="vue__brand-name">{{brand.BrandName}}</p> -->
   </li>
 
   <li v-else class="vue__brand-icon" @click="$emit('select-brand', brand)">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-    <!-- <p class="vue__brand-name">{{brand.BrandName}}</p> -->
   </li>
 </template>
 
@@ -14,8 +12,8 @@
 export default {
   name: "Brand",
   props: {
-    brand: Array,
-    selectedBrand: Array,
+    brand: Object,
+    selectedBrand: Object
   },
   data() {
     return {

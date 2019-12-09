@@ -9,16 +9,21 @@
     </div>
 
     <div class="products-container">
-      <p v-for="product in products" v-bind:key="product.id">{{product}}</p>
+      <Product v-for="product in products" v-bind:key="product.id" v-bind:product="product" />
     </div>
   </div>
 </template>
 
 <script>
+import Product from "./Product";
+
 export default {
   name: "ProductList",
+  components: {
+    Product
+  },
   props: {
-    searchSummary: Array,
+    searchSummary: Object,
     products: Array
   }
 };
@@ -41,5 +46,10 @@ export default {
   span {
     margin-right: 5%;
   }
+}
+
+.products-container {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
 }
 </style>

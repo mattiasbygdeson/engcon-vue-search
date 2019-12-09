@@ -1,14 +1,35 @@
 <template>
-  <div class="vue__brand-search-container">
-    <header>
+  <div class="brand-search-container">
+    <header class="brand-search-container-header">
       <h2>Guida mig till rätt produkt</h2>
     </header>
 
     <main>
-      <section class="vue__brand-search-column">
-        <h3>Välj ditt märke</h3>
+      <section class="brand-search-column">
+        <header>
+          <h3>Välj ditt märke</h3>
 
-        <ul class="vue__brand-list">
+          <input
+            class="input-brand-filter"
+            type="text"
+            placeholder="Sök ..."
+            v-on:keyup="filterBrands"
+            v-model="filter"
+            name="filter"
+          />
+        </header>
+
+        <ul v-if="this.filteredBrands.length !== 0" class="brand-list">
+          <Brand
+            v-for="brand in filteredBrands"
+            v-bind:key="brand.BrandId"
+            :brand="brand"
+            :selectedBrand="selectedBrand"
+            v-on:select-brand="selectBrand"
+          />
+        </ul>
+
+        <ul v-else class="brand-list">
           <Brand
             v-for="brand in brands"
             v-bind:key="brand.BrandId"
@@ -19,12 +40,12 @@
         </ul>
       </section>
 
-      <section class="vue__brand-search-column">
+      <section class="brand-search-column">
         <h3 v-if="selectedBrand.length !== 0">Välj din {{selectedBrand.BrandName}}</h3>
 
         <p v-else class="vue__notice">Välj ett märke för att se tillgängliga modeller</p>
 
-        <ul class="vue__model-list">
+        <ul class="model-list">
           <Model
             v-for="model in models"
             v-bind:key="model.ModelId"
@@ -55,9 +76,11 @@ export default {
   data() {
     return {
       brands: [],
+      filteredBrands: [],
       selectedBrand: [],
       models: [],
-      selectedModel: []
+      selectedModel: [],
+      filter: ""
     };
   },
   methods: {
@@ -69,13 +92,19 @@ export default {
 
       this.selectedBrand = brand;
 
+      // CHECK FOR COOKIE
+
+      // ELSE
+
       axios
         .get(
           "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
             brand.BrandId,
           {
             headers: {
-              Authorization: "Access-Control-Allow-Origin: *"
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
+              "Access-Control-Allow-Headers": "Content-Type,Accept"
             }
           }
         )
@@ -83,28 +112,64 @@ export default {
         // eslint-disable-next-line no-console
         .catch(err => console.log(err));
     },
+    filterBrands() {
+      this.filteredBrands = [];
+
+      var filter = this.filter.toLowerCase();
+      var brand;
+      var result;
+
+      if (filter !== "") {
+        for (var i = 0; this.brands.length > i; i++) {
+          brand = this.brands[i].BrandName.toLowerCase();
+          result = brand.match(filter);
+
+          if (result && filter.charAt(0) === brand.charAt(0)) {
+            this.filteredBrands.push(this.brands[i]);
+          }
+        }
+      }
+    },
     selectModel(model) {
       this.selectedModel = [];
       this.selectedModel = model;
     }
   },
   created() {
-    axios
-      .get("http://beta.configurator.engcon.com/Configurator.ashx?country=se", {
-        headers: {
-          Authorization: "Access-Control-Allow-Origin: *"
-        }
-      })
-      .then(res => (this.brands = res.data.Excavator))
-      // eslint-disable-next-line no-console
-      .catch(err => console.log(err));
+    var getBrands = localStorage.getItem("engcon-brands");
+
+    if (getBrands) {
+      this.brands = JSON.parse(getBrands);
+    } else {
+      axios
+        .get(
+          "http://beta.configurator.engcon.com/Configurator.ashx?country=se",
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
+              "Access-Control-Allow-Headers": "Content-Type,Accept"
+            }
+          }
+        )
+        .then(res => {
+          this.brands = res.data.Excavator;
+          localStorage.setItem(
+            "engcon-brands",
+            JSON.stringify(res.data.Excavator)
+          );
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    }
   },
   updated() {
-    // eslint-disable-next-line no-console
-    console.log("Updated");
+    //
+    // If both brand and machine has been selected, summarize the result
 
     if (this.selectedBrand.length !== 0 && this.selectedModel.length !== 0) {
-      // Both brand and machine selected, summarize results
       const searchSummary = {
         brandId: this.selectedBrand.BrandId,
         brandName: this.selectedBrand.BrandName,
@@ -121,7 +186,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.vue__brand-search-container {
+.brand-search-container {
   max-width: 1200px;
   margin: auto;
 
@@ -132,14 +197,18 @@ export default {
   }
 }
 
-.vue__brand-search-column {
+.brand-search-column {
+  header {
+    height: 41px;
+  }
+
   background: white;
   opacity: 0.9;
   border: 1px solid #ddd;
   height: 400px;
 
-  .vue__brand-list {
-    height: 90%;
+  .brand-list {
+    max-height: 90%;
     overflow-y: scroll;
     padding: 10px;
 
@@ -147,7 +216,11 @@ export default {
     grid-template-columns: 20% 20% 20% 20% 20%;
   }
 
-  .vue__model-list {
+  .vue__brand-icon {
+    max-height: 70px;
+  }
+
+  .model-list {
     max-height: 90%;
     overflow-y: auto;
     padding: 10px;
@@ -161,6 +234,7 @@ export default {
     margin-left: 20px;
     font-weight: 800;
     font-size: 1em;
+    display: inline-block;
   }
 }
 
@@ -172,7 +246,7 @@ export default {
   text-align: center;
 }
 
-header {
+.brand-search-container-header {
   background: #f0f0f0;
   padding: 0;
   margin: 0;
@@ -183,5 +257,17 @@ header {
     font-weight: 800;
     font-size: 1.3em;
   }
+}
+
+.input-brand-filter {
+  // display: inline;
+  float: right;
+  position: relative;
+  top: 11px;
+  right: 38px;
+
+  height: 30px;
+  font-size: 1em;
+  padding-left: 10px;
 }
 </style>

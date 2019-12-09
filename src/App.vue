@@ -35,10 +35,15 @@ export default {
 
       axios
         .get(
-          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" + this.searchSummary.brandId + "&model=" + this.searchSummary.modelId,
+          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
+            this.searchSummary.brandId +
+            "&model=" +
+            this.searchSummary.modelId,
           {
             headers: {
-              Authorization: "Access-Control-Allow-Origin: *"
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
+              "Access-Control-Allow-Headers": "Content-Type,Accept"
             }
           }
         )
@@ -46,12 +51,36 @@ export default {
         // eslint-disable-next-line no-console
         .catch(err => console.log(err));
 
-        
+    //   axios
+    //     .get(
+    //       "http://engcon.utv/rest-api/1/0/303.online-5.0/search",
+    //       {
+    //         query: "*",
+    //         filterQuery:
+    //           "+(metadata.product-id:1920 OR metadata.product-id:1561) AND language:sv",
+    //         limit: 200
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: "Access-Control-Allow-Origin: *",
+    //           "Content-Type": "application/json;charset=UTF-8",
+    //           Accept: "application/json, text/plain, */*"
+    //         }
+    //       }
+    //     )
+    //     .then(response => {
+    //       // eslint-disable-next-line no-console
+    //       console.log(response.data);
+    //     })
+    //     .catch(error => {
+    //       // eslint-disable-next-line no-console
+    //       console.log(error.response);
+    //     });
     }
   },
   data() {
     return {
-      searchSummary: [],
+      searchSummary: {},
       products: [],
       language: null
     };

@@ -10,7 +10,7 @@
 export default {
   name: "Model",
   props: {
-    model: Array,
+    model: Object,
     selectedModel: Array
   }
 };
