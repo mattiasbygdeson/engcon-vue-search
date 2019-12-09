@@ -2,7 +2,7 @@
   <div id="app">
     <header class="main-header">
       <ProductGuide v-on:summarize="summarize" v-bind:lang="language" />
-      <!-- <ProductFilter /> -->
+      <ProductFilter />
     </header>
 
     <main>
@@ -15,14 +15,14 @@
 import ProductGuide from "./components/ProductGuide";
 import ProductList from "./components/ProductList";
 import axios from "axios";
-// import ProductFilter from "./components/ProductFilter";
+import ProductFilter from "./components/ProductFilter";
 
 export default {
   name: "app",
   components: {
     ProductGuide,
-    ProductList
-    // ProductFilter
+    ProductList,
+    ProductFilter
   },
   methods: {
     summarize(searchSummary) {
@@ -80,7 +80,7 @@ export default {
   },
   data() {
     return {
-      searchSummary: {},
+      searchSummary: [],
       products: [],
       language: null
     };
@@ -110,15 +110,21 @@ body {
   font-size: 17px;
   margin: auto;
   background: #f0f0f0;
+  background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position-y: -110px;
 }
 
 .main-header {
   padding-top: 50px;
   padding-bottom: 50px;
   height: 700px;
+  max-width: 1200px;
+  margin: auto;
 
-  background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
-  background-size: cover;
+  // background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
+  // background-size: cover;
 }
 
 .products-container {

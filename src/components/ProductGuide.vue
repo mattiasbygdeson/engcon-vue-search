@@ -19,17 +19,7 @@
           />
         </header>
 
-        <ul v-if="this.filteredBrands.length !== 0" class="brand-list">
-          <Brand
-            v-for="brand in filteredBrands"
-            v-bind:key="brand.BrandId"
-            :brand="brand"
-            :selectedBrand="selectedBrand"
-            v-on:select-brand="selectBrand"
-          />
-        </ul>
-
-        <ul v-else class="brand-list">
+        <ul class="brand-list">
           <Brand
             v-for="brand in brands"
             v-bind:key="brand.BrandId"
@@ -43,7 +33,7 @@
       <section class="brand-search-column">
         <h3 v-if="selectedBrand.length !== 0">Välj din {{selectedBrand.BrandName}}</h3>
 
-        <p v-else class="vue__notice">Välj ett märke för att se tillgängliga modeller</p>
+        <p v-else class="notice">Välj ett märke för att se tillgängliga modeller</p>
 
         <ul class="model-list">
           <Model
@@ -85,16 +75,16 @@ export default {
   },
   methods: {
     selectBrand(brand) {
-      // Reset all search data when clicking on new brand
+      /**
+       * Activated when user clicks on brand icon
+       * Will render a list of models
+       *
+       */
+
       this.selectedBrand = [];
       this.selectedModel = [];
       this.models = [];
-
       this.selectedBrand = brand;
-
-      // CHECK FOR COOKIE
-
-      // ELSE
 
       axios
         .get(
@@ -113,6 +103,15 @@ export default {
         .catch(err => console.log(err));
     },
     filterBrands() {
+      /**
+       * Activated at keyup in input field
+       * Will remove any brands from component that do not match search input
+       *
+       */
+
+      var getBrands = localStorage.getItem("engcon-brands");
+      this.brands = JSON.parse(getBrands);
+
       this.filteredBrands = [];
 
       var filter = this.filter.toLowerCase();
@@ -128,6 +127,8 @@ export default {
             this.filteredBrands.push(this.brands[i]);
           }
         }
+
+        this.brands = this.filteredBrands;
       }
     },
     selectModel(model) {
@@ -136,6 +137,11 @@ export default {
     }
   },
   created() {
+    /**
+     * Load brands into component
+     *
+     */
+
     var getBrands = localStorage.getItem("engcon-brands");
 
     if (getBrands) {
@@ -166,10 +172,13 @@ export default {
     }
   },
   updated() {
-    //
-    // If both brand and machine has been selected, summarize the result
+    /**
+     * If a model has been selected
+     * Send all relevant data to parent to display products
+     *
+     */
 
-    if (this.selectedBrand.length !== 0 && this.selectedModel.length !== 0) {
+    if (this.selectedModel.length !== 0) {
       const searchSummary = {
         brandId: this.selectedBrand.BrandId,
         brandName: this.selectedBrand.BrandName,
@@ -178,7 +187,6 @@ export default {
         modelName: this.selectedModel.ModelName
       };
 
-      // Send object to parent
       this.$emit("summarize", searchSummary);
     }
   }
@@ -187,9 +195,6 @@ export default {
 
 <style lang="scss" scoped>
 .brand-search-container {
-  max-width: 1200px;
-  margin: auto;
-
   main {
     display: grid;
     grid-template-columns: 70% auto;
@@ -216,10 +221,6 @@ export default {
     grid-template-columns: 20% 20% 20% 20% 20%;
   }
 
-  .vue__brand-icon {
-    max-height: 70px;
-  }
-
   .model-list {
     max-height: 90%;
     overflow-y: auto;
@@ -238,7 +239,7 @@ export default {
   }
 }
 
-.vue__notice {
+.notice {
   color: #aaa;
   width: 50%;
   margin: auto;
@@ -247,7 +248,7 @@ export default {
 }
 
 .brand-search-container-header {
-  background: #f0f0f0;
+  background: #ffd300;
   padding: 0;
   margin: 0;
   height: 50px;
@@ -260,12 +261,10 @@ export default {
 }
 
 .input-brand-filter {
-  // display: inline;
   float: right;
   position: relative;
   top: 11px;
   right: 38px;
-
   height: 30px;
   font-size: 1em;
   padding-left: 10px;

@@ -17,6 +17,7 @@ export default {
 
 <style lang="scss" scoped>
 .product-container {
+  height: 380px;
   background: white;
   border: 1px solid #ddd;
   text-align: center;
