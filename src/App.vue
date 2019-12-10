@@ -1,12 +1,16 @@
 <template>
   <div id="app">
     <header class="main-header">
-      <ProductGuide v-on:summarize="summarize" v-bind:lang="language" />
-      <ProductFilter />
+      <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:lang="language" />
+      <ProductFilter v-on:summarizeFilter="summarizeFilter" />
     </header>
 
     <main>
-      <ProductList v-bind:searchSummary="searchSummary" v-bind:products="products" />
+      <ProductList
+        v-bind:searchSummary="searchSummary"
+        v-bind:filterSummary="filterSummary"
+        v-bind:products="products"
+      />
     </main>
   </div>
 </template>
@@ -24,14 +28,24 @@ export default {
     ProductList,
     ProductFilter
   },
+  data() {
+    return {
+      searchSummary: [],
+      filterSummary: [],
+      products: [],
+      language: null
+    };
+  },
   methods: {
-    summarize(searchSummary) {
-      this.searchSummary = searchSummary;
-      this.generateProducts();
-    },
-    generateProducts() {
-      // Clear previous products
+    summarizeSearch(searchSummary) {
+      /**
+       * Clear previous search and product result and create new
+       * Get product IDs from API call
+       */
+
       this.products = [];
+      this.filterSummary = [];
+      this.searchSummary = searchSummary;
 
       axios
         .get(
@@ -47,46 +61,35 @@ export default {
             }
           }
         )
-        .then(res => (this.products = res.data.Excavator[0].Model[0].Products))
-        // eslint-disable-next-line no-console
-        .catch(err => console.log(err));
+        .then(res => {
+            this.products = res.data.Excavator[0].Model[0].Products;
+            this.generateProducts();
+          })
+        .catch(err => {
+            // eslint-disable-next-line no-console
+            console.log(err)
+          });
+    },
+    summarizeFilter(filterSummary) {
+      /**
+       * Clear previous search and product result and create new
+       * 
+       */
 
-    //   axios
-    //     .get(
-    //       "http://engcon.utv/rest-api/1/0/303.online-5.0/search",
-    //       {
-    //         query: "*",
-    //         filterQuery:
-    //           "+(metadata.product-id:1920 OR metadata.product-id:1561) AND language:sv",
-    //         limit: 200
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: "Access-Control-Allow-Origin: *",
-    //           "Content-Type": "application/json;charset=UTF-8",
-    //           Accept: "application/json, text/plain, */*"
-    //         }
-    //       }
-    //     )
-    //     .then(response => {
-    //       // eslint-disable-next-line no-console
-    //       console.log(response.data);
-    //     })
-    //     .catch(error => {
-    //       // eslint-disable-next-line no-console
-    //       console.log(error.response);
-    //     });
+      this.products = [];
+      this.searchSummary = [];
+      this.filterSummary = filterSummary;
+    },
+    generateProducts() {
+
+      /**
+       * Axios call to Sitevisions API to extract propducts
+       * Argument: searchSummary contains product ID
+       * 
+       */
+
+
     }
-  },
-  data() {
-    return {
-      searchSummary: [],
-      products: [],
-      language: null
-    };
-  },
-  created() {
-    // this.language = navigator.language.substr(3,5);
   }
 };
 </script>
@@ -122,9 +125,6 @@ body {
   height: 700px;
   max-width: 1200px;
   margin: auto;
-
-  // background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
-  // background-size: cover;
 }
 
 .products-container {

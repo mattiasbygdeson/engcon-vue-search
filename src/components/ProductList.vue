@@ -6,6 +6,11 @@
         <span>Modell: {{searchSummary.modelName}}</span>
         <span>Maskinvikt: {{searchSummary.machineWeight}} ton</span>
       </p>
+
+      <p v-if="filterSummary.length !== 0">
+        <span>Maskinvikt: 0 - {{filterSummary.maxWeight}} ton</span>
+        <span v-if="filterSummary.keyword">Sökord: {{filterSummary.keyword}}</span>
+      </p>
     </div>
 
     <div class="products-container">
@@ -24,6 +29,7 @@ export default {
   },
   props: {
     searchSummary: Object,
+    filterSummary: String,
     products: Array
   }
 };

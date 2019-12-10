@@ -1,7 +1,7 @@
 <template>
   <div class="brand-search-container">
     <header class="brand-search-container-header">
-      <h2>Guida mig till rätt produkt</h2>
+      <h2>Guida mig till rätt produkter</h2>
     </header>
 
     <main>
@@ -187,7 +187,7 @@ export default {
         modelName: this.selectedModel.ModelName
       };
 
-      this.$emit("summarize", searchSummary);
+      this.$emit("summarizeSearch", searchSummary);
     }
   }
 };

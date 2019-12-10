@@ -6,20 +6,24 @@
 
     <main>
       <section>
-        <label for="machine-weight">Maskinvikt: {{machineWeightValue}} ton</label>
+        <label for="machine-weight">Maskinvikt: {{maxWeight}} ton</label>
         <input
+          v-on:change="setFilterSummary"
           class="machine-weight-range-input"
           type="range"
           id="start"
-          name="machineWeightValue"
+          name="maxWeight"
           min="0"
           max="40"
           value="0"
-          v-model="machineWeightValue"
+          v-model="maxWeight"
         />
       </section>
 
-      <section></section>
+      <section class="product-filter-search">
+        <input type="text" placeholder="Sök bland produkter" v-model="keyword" />
+        <button v-on:click="setFilterSummary" type="submit" />
+      </section>
     </main>
   </div>
 </template>
@@ -29,8 +33,22 @@ export default {
   name: "ProductFilter",
   data() {
     return {
-      machineWeightValue: 0
+      maxWeight: 0,
+      keyword: ""
     };
+  },
+  methods: {
+    setFilterSummary() {
+
+      const filterSummary = {
+        maxWeight: this.maxWeight,
+        keyword: this.keyword,
+      };
+
+      // this.$emit("summarize", searchSummary);
+
+      this.$emit("summarizeFilter", filterSummary);
+    }
   }
 };
 </script>
@@ -43,7 +61,7 @@ export default {
 
   main {
     display: grid;
-    grid-template-columns: 70% auto;
+    grid-template-columns: 65% auto;
 
     border: 1px solid #ddd;
     height: 110px;
@@ -53,8 +71,39 @@ export default {
   }
 
   section {
-    // border: 1px solid red;
     padding: 20px;
+  }
+}
+
+.product-filter-search {
+  input[type="text"] {
+    margin-top: 15px;
+    height: 40px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 2px 0 0 2px;
+    padding: 10px;
+    font-size: 0.8em;
+  }
+
+  button {
+    position: relative;
+    top: 14px;
+    height: 40px;
+    width: 30%;
+    background: #ffd300;
+    border: 0;
+    border: 1px solid #ffd300;
+
+    background-image: url("../assets/icon-search.png");
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: center;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
@@ -73,9 +122,47 @@ export default {
 }
 
 .machine-weight-range-input {
-  width: 80%;
+  width: 100%;
   height: 20px;
   display: block;
   margin-top: 15px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  min-height: 26px;
+  min-width: 26px;
+  background: #ffffff;
+  margin-top: -5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type="range"]::-moz-range-thumb {
+  border: 1px solid #000000;
+  min-height: 26px;
+  min-width: 26px;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 18px;
+  cursor: pointer;
+  background: #ccc;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 18px;
+  cursor: pointer;
+  background: #ccc;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
 }
 </style>
