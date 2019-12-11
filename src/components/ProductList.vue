@@ -14,7 +14,7 @@
     </div>
 
     <div class="products-container">
-      <Product v-for="product in products" v-bind:key="product.id" v-bind:product="product" />
+      <Product v-for="product in products" v-bind:key="product.id" v-bind:product="product" v-on:summarizeFilter="$emit('summarizeFilter')"/>
     </div>
   </div>
 </template>

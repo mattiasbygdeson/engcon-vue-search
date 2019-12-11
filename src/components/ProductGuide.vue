@@ -91,16 +91,12 @@ export default {
           "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
             brand.BrandId,
           {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
-              "Access-Control-Allow-Headers": "Content-Type,Accept"
-            }
+
           }
         )
         .then(res => (this.models = res.data.Excavator[0].Model))
         // eslint-disable-next-line no-console
-        .catch(err => console.log(err));
+        
     },
     filterBrands() {
       /**
@@ -148,16 +144,7 @@ export default {
       this.brands = JSON.parse(getBrands);
     } else {
       axios
-        .get(
-          "http://beta.configurator.engcon.com/Configurator.ashx?country=se",
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
-              "Access-Control-Allow-Headers": "Content-Type,Accept"
-            }
-          }
-        )
+        .get("http://beta.configurator.engcon.com/Configurator.ashx?country=se")
         .then(res => {
           this.brands = res.data.Excavator;
           localStorage.setItem(

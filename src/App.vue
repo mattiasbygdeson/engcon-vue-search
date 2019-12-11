@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <header class="main-header">
-      <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:lang="language" />
-      <ProductFilter v-on:summarizeFilter="summarizeFilter" />
-    </header>
+    <div class="main-header-wrapper">
+      <header class="main-header">
+        <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:lang="language" />
+        <ProductFilter v-on:summarizeFilter="summarizeFilter" />
+      </header>
+    </div>
 
     <main>
       <ProductList
         v-bind:searchSummary="searchSummary"
         v-bind:filterSummary="filterSummary"
         v-bind:products="products"
+        v-on:filterSummary="summarizeFilter"
       />
     </main>
   </div>
@@ -19,6 +22,7 @@
 import ProductGuide from "./components/ProductGuide";
 import ProductList from "./components/ProductList";
 import axios from "axios";
+import qs from "qs";
 import ProductFilter from "./components/ProductFilter";
 
 export default {
@@ -33,6 +37,7 @@ export default {
       searchSummary: [],
       filterSummary: [],
       products: [],
+      test: [],
       language: null
     };
   },
@@ -41,6 +46,7 @@ export default {
       /**
        * Clear previous search and product result and create new
        * Get product IDs from API call
+       *
        */
 
       this.products = [];
@@ -52,51 +58,112 @@ export default {
           "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
             this.searchSummary.brandId +
             "&model=" +
-            this.searchSummary.modelId,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "POST,GET,OPTIONS,PUT,DELETE",
-              "Access-Control-Allow-Headers": "Content-Type,Accept"
-            }
-          }
+            this.searchSummary.modelId
         )
         .then(res => {
-            this.products = res.data.Excavator[0].Model[0].Products;
-            this.generateProducts();
-          })
+          this.products = res.data.Excavator[0].Model[0].Products;
+          this.generateProductsBySearch();
+        })
         .catch(err => {
-            // eslint-disable-next-line no-console
-            console.log(err)
-          });
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
     },
     summarizeFilter(filterSummary) {
       /**
        * Clear previous search and product result and create new
-       * 
+       *
        */
 
       this.products = [];
       this.searchSummary = [];
       this.filterSummary = filterSummary;
     },
-    generateProducts() {
-
+    generateProductsBySearch() {
       /**
        * Axios call to Sitevisions API to extract propducts
        * Argument: searchSummary contains product ID
-       * 
+       *
        */
 
+      const instance = axios.create({
+        baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+        paramsSerializer: params => qs.stringify(params)
+      });
 
+      let url = "/search";
+
+      // Create array with all IDs
+      var productsIDs = [];
+
+      for (var i = 0; this.products.length > i; i++) {
+        productsIDs.push(this.products[i].id);
+      }
+
+      // Create filterQuery string
+      var startOfString = "+(";
+      var endOfString = ") AND language:sv";
+      var middleOfString = "";
+
+      for (i = 0; productsIDs.length > i; i++) {
+        middleOfString += "metadata.product-id:" + productsIDs[i];
+
+        if (i !== productsIDs.length - 1) {
+          // Unless loop is at the last index, print " OR " in queary string
+          //
+          middleOfString += " OR ";
+        }
+      }
+
+      var filterQuery = startOfString + middleOfString + endOfString;
+
+      let query = {
+        query: "*",
+        filterQuery: filterQuery,
+        limit: 200,
+        fields: [
+          "name",
+          "title",
+          "language",
+          "uri",
+          "id",
+          "metadata.description",
+          "metadata.product-media",
+          "metadata.product-minWeight",
+          "metadata.product-maxWeight",
+        ]
+      };
+
+      instance
+        .get(url, {
+          params: {
+            format: "json",
+            json: JSON.stringify(query)
+          },
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(res => {
+          this.products = res.data;
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    },
+    generateProductsByFilter() {
+      /**
+       * Axios call to Sitevisions API to extract propducts
+       * Argument: searchSummary contains product ID
+       *
+       */
     }
   }
 };
 </script>
 
 <style lang="scss">
-// @import './main.css';
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -113,10 +180,11 @@ body {
   font-size: 17px;
   margin: auto;
   background: #f0f0f0;
+}
+
+.main-header-wrapper {
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  background-position-y: -110px;
+  background-size: cover;
 }
 
 .main-header {
