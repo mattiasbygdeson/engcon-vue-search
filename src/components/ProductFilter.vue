@@ -21,8 +21,10 @@
       </section>
 
       <section class="product-filter-search">
-        <input type="text" placeholder="Sök bland produkter" v-model="keyword" />
-        <button v-on:click="setFilterSummary" type="submit" />
+        <form v-on:submit.prevent>
+          <input type="text" placeholder="Sök bland produkter" v-model="keyword" />
+          <button v-on:click="setFilterSummary" type="submit" />
+        </form>
       </section>
     </main>
   </div>

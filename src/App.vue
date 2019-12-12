@@ -2,8 +2,8 @@
   <div id="app">
     <div class="main-header-wrapper">
       <header class="main-header">
-        <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:lang="language" />
-        <ProductFilter v-on:summarizeFilter="summarizeFilter" />
+        <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:class="{'unfocus' : this.filterSummary.length !== 0}" />
+        <ProductFilter v-on:summarizeFilter="summarizeFilter" v-bind:class="{'unfocus' : this.searchSummary.length !== 0} "/>
       </header>
     </div>
 
@@ -37,7 +37,6 @@ export default {
       searchSummary: [],
       filterSummary: [],
       products: [],
-      test: [],
       language: null
     };
   },
@@ -82,7 +81,6 @@ export default {
     generateProductsBySearch() {
       /**
        * Axios call to Sitevisions API to extract propducts
-       * Argument: searchSummary contains product ID
        *
        */
 
@@ -93,22 +91,18 @@ export default {
 
       let url = "/search";
 
-      // Create array with all IDs
+      // Construct a filterQuery string
+      //
       var productsIDs = [];
-
-      for (var i = 0; this.products.length > i; i++) {
-        productsIDs.push(this.products[i].id);
-      }
-
-      // Create filterQuery string
       var startOfString = "+(";
       var endOfString = ") AND language:sv";
       var middleOfString = "";
 
-      for (i = 0; productsIDs.length > i; i++) {
-        middleOfString += "metadata.product-id:" + productsIDs[i];
+      for (var i = 0; this.products.length > i; i++) {
+        productsIDs.push(this.products[i].id);
+        middleOfString += "metadata.product-id:" + this.products[i].id;
 
-        if (i !== productsIDs.length - 1) {
+        if (i !== this.products.length - 1) {
           // Unless loop is at the last index, print " OR " in queary string
           //
           middleOfString += " OR ";
@@ -130,7 +124,7 @@ export default {
           "metadata.description",
           "metadata.product-media",
           "metadata.product-minWeight",
-          "metadata.product-maxWeight",
+          "metadata.product-maxWeight"
         ]
       };
 
@@ -200,5 +194,18 @@ body {
   margin: auto;
   height: 100vh;
   max-width: 1200px;
+}
+
+.unfocus {
+  opacity: 0.5;
+  filter: grayscale(1);
+
+  transition: opacity 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
+
+  &:hover {
+    cursor: pointer;
+    opacity: initial;
+    filter: grayscale(0);
+  }
 }
 </style>

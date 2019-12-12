@@ -8,7 +8,7 @@
       </p>
 
       <p v-if="filterSummary.length !== 0">
-        <span>Maskinvikt: 0 - {{filterSummary.maxWeight}} ton</span>
+        <span>Maskinvikt: {{filterSummary.maxWeight}} ton</span>
         <span v-if="filterSummary.keyword">Sökord: {{filterSummary.keyword}}</span>
       </p>
     </div>
