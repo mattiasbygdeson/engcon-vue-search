@@ -14,7 +14,12 @@
     </div>
 
     <div class="products-container">
-      <Product v-for="product in products" v-bind:key="product.id" v-bind:product="product" v-on:summarizeFilter="$emit('summarizeFilter')"/>
+      <Product
+        v-for="product in products"
+        v-bind:key="product.id"
+        v-bind:product="product"
+        v-on:summarizeFilter="$emit('summarizeFilter')"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +36,10 @@ export default {
     searchSummary: Object,
     filterSummary: String,
     products: Array
+  },
+  created() {
+    // eslint-disable-next-line no-console
+    console.log("ProductList created");
   }
 };
 </script>

@@ -12,9 +12,8 @@
           <input
             class="input-brand-filter"
             type="text"
-            placeholder="Sök ..."
+            placeholder="Filtrera ..."
             v-on:keyup="filterBrands"
-            v-model="filter"
             name="filter"
           />
         </header>
@@ -73,70 +72,14 @@ export default {
       filter: ""
     };
   },
-  methods: {
-    selectBrand(brand) {
-      /**
-       * Activated when user clicks on brand icon
-       * Will render a list of models
-       *
-       */
-
-      this.selectedBrand = [];
-      this.selectedModel = [];
-      this.models = [];
-      this.selectedBrand = brand;
-
-      axios
-        .get(
-          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
-            brand.BrandId,
-          {
-
-          }
-        )
-        .then(res => (this.models = res.data.Excavator[0].Model))
-        // eslint-disable-next-line no-console
-        
-    },
-    filterBrands() {
-      /**
-       * Activated at keyup in input field
-       * Will remove any brands from component that do not match search input
-       *
-       */
-
-      var getBrands = localStorage.getItem("engcon-brands");
-      this.brands = JSON.parse(getBrands);
-
-      this.filteredBrands = [];
-
-      var filter = this.filter.toLowerCase();
-      var brand;
-      var result;
-
-      if (filter !== "") {
-        for (var i = 0; this.brands.length > i; i++) {
-          brand = this.brands[i].BrandName.toLowerCase();
-          result = brand.match(filter);
-
-          if (result && filter.charAt(0) === brand.charAt(0)) {
-            this.filteredBrands.push(this.brands[i]);
-          }
-        }
-
-        this.brands = this.filteredBrands;
-      }
-    },
-    selectModel(model) {
-      this.selectedModel = [];
-      this.selectedModel = model;
-    }
-  },
   created() {
     /**
      * Load brands into component
      *
      */
+
+    // eslint-disable-next-line no-console
+    console.log("ProductGuide created");
 
     var getBrands = localStorage.getItem("engcon-brands");
 
@@ -156,6 +99,78 @@ export default {
           // eslint-disable-next-line no-console
           console.log(err);
         });
+    }
+  },
+  update() {
+    // eslint-disable-next-line no-console
+    console.log("ProductGuide updated");
+  },
+  methods: {
+    selectBrand(brand) {
+      /**
+       * Render a list of models
+       * Activated when user clicks on brand icon
+       *
+       */
+
+      this.selectedBrand = [];
+      this.selectedModel = [];
+      this.models = [];
+      this.selectedBrand = brand;
+
+      axios
+        .get(
+          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
+            brand.BrandId,
+          {}
+        )
+        .then(res => {
+          this.models = res.data.Excavator[0].Model;
+        })
+        .then(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    },
+
+    filterBrands() {
+      /**
+       * Remove any brands from component that do not match search input
+       * Activated at keyup in input field
+
+       *
+       */
+
+      // var getBrands = localStorage.getItem("engcon-brands");
+
+      // if (getBrands) {
+      //   this.brands = JSON.parse(getBrands);
+      // }
+
+      // this.filteredBrands = [];
+
+      // var filter = this.filter.toLowerCase();
+      // var brand;
+      // var result;
+
+      // if (filter !== "") {
+      //   for (var i = 0; this.brands.length > i; i++) {
+      //     brand = this.brands[i].BrandName.toLowerCase();
+      //     result = brand.match(filter);
+
+      //     if (result && filter.charAt(0) === brand.charAt(0)) {
+      //       this.filteredBrands.push(this.brands[i]);
+      //     }
+      //   }
+
+      //   this.brands = this.filteredBrands;
+      // }
+    },
+
+
+    selectModel(model) {
+      this.selectedModel = [];
+      this.selectedModel = model;
     }
   },
   updated() {

@@ -47,6 +47,10 @@ export default {
       keyword: ""
     };
   },
+  created() {
+    // eslint-disable-next-line no-console
+    console.log("Product created");
+  },
   methods: {
     setFilterSummary(e) {
       // eslint-disable-next-line no-console
@@ -77,8 +81,6 @@ export default {
   grid-template-rows: auto 100px 60px;
 
   header {
-    // border: 1px solid red;
-
     img {
       display: block;
       width: 100%;
@@ -88,7 +90,6 @@ export default {
   }
 
   main {
-    // border: 1px solid red;
     text-align: center;
     line-height: 1.4em;
     font-size: 0.9em;
@@ -116,7 +117,6 @@ export default {
   }
 
   footer {
-    // border: 1px solid red;
     border-top: 1px solid #ccc;
     display: grid;
     grid-template-columns: auto auto;

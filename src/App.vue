@@ -2,8 +2,14 @@
   <div id="app">
     <div class="main-header-wrapper">
       <header class="main-header">
-        <ProductGuide v-on:summarizeSearch="summarizeSearch" v-bind:class="{'unfocus' : this.filterSummary.length !== 0}" />
-        <ProductFilter v-on:summarizeFilter="summarizeFilter" v-bind:class="{'unfocus' : this.searchSummary.length !== 0} "/>
+        <ProductGuide
+          v-on:summarizeSearch="summarizeSearch"
+          v-bind:class="{'unfocus' : this.filterSummary.length !== 0}"
+        />
+        <ProductFilter
+          v-on:summarizeFilter="summarizeFilter"
+          v-bind:class="{'unfocus' : this.searchSummary.length !== 0} "
+        />
       </header>
     </div>
 
@@ -40,6 +46,26 @@ export default {
       language: null
     };
   },
+  created() {
+    // eslint-disable-next-line no-console
+    console.log("App created");
+
+    var getProducts = localStorage.getItem('engcon-products');
+    var getSearchSummary = localStorage.getItem('engcon-searchSummary');
+    var getFilterSummary = localStorage.getItem('engcon-filterSummary');
+
+    if(getProducts) {
+      this.products = JSON.parse(getProducts);
+    }
+
+    if(getSearchSummary) {
+      this.searchSummary = JSON.parse(getSearchSummary);
+    }
+
+    if(getFilterSummary) {
+      this.filterSummary = JSON.parse(getFilterSummary);
+    }
+  },
   methods: {
     summarizeSearch(searchSummary) {
       /**
@@ -48,9 +74,14 @@ export default {
        *
        */
 
+      localStorage.removeItem('engcon-filterSummary');
+      // localStorage.removeItem('engcon-products');
+
       this.products = [];
       this.filterSummary = [];
       this.searchSummary = searchSummary;
+
+      localStorage.setItem("engcon-searchSummary", JSON.stringify(searchSummary));
 
       axios
         .get(
@@ -74,9 +105,13 @@ export default {
        *
        */
 
+      localStorage.removeItem('engcon-searchSummary');
+      // localStorage.removeItem('engcon-products');
+
       this.products = [];
       this.searchSummary = [];
       this.filterSummary = filterSummary;
+      localStorage.setItem('engcon-filterSummary', JSON.stringify(filterSummary));
     },
     generateProductsBySearch() {
       /**
@@ -140,6 +175,10 @@ export default {
         })
         .then(res => {
           this.products = res.data;
+          localStorage.setItem(
+            "engcon-products",
+            JSON.stringify(res.data)
+          );
         })
         .catch(err => {
           // eslint-disable-next-line no-console
