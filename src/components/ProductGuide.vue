@@ -250,7 +250,8 @@ export default {
 }
 
 .brand-search-container-header {
-  background: #ffd300;
+  // background: #ffd300;
+  background-image: linear-gradient(#ffd300, #ffb800);
   padding: 0;
   margin: 0;
   height: 50px;

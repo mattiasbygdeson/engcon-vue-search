@@ -110,7 +110,8 @@ export default {
 }
 
 .product-filter-container-header {
-  background: #ffd300;
+  // background: #ffd300;
+  background-image: linear-gradient(#ffd300, #ffb800);
   width: 900px;
   padding: 0;
   margin: 0;

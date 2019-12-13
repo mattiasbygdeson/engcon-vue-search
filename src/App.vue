@@ -43,6 +43,7 @@ export default {
       searchSummary: [],
       filterSummary: [],
       products: [],
+      favorites: [],
       language: null
     };
   },
@@ -50,23 +51,35 @@ export default {
     // eslint-disable-next-line no-console
     console.log("App created");
 
-    var getProducts = localStorage.getItem('engcon-products');
-    var getSearchSummary = localStorage.getItem('engcon-searchSummary');
-    var getFilterSummary = localStorage.getItem('engcon-filterSummary');
-
-    if(getProducts) {
-      this.products = JSON.parse(getProducts);
-    }
-
-    if(getSearchSummary) {
-      this.searchSummary = JSON.parse(getSearchSummary);
-    }
-
-    if(getFilterSummary) {
-      this.filterSummary = JSON.parse(getFilterSummary);
-    }
+    this.getStoredProducts();
+    this.getStoredSearchSummary();
+    this.getStoredFilterSummary();
   },
   methods: {
+    getStoredProducts() {
+      var storedProducts = localStorage.getItem("engcon-products");
+
+      if (storedProducts) {
+        this.products = JSON.parse(storedProducts);
+      }
+    },
+
+    getStoredSearchSummary() {
+      var storedSearchSummary = localStorage.getItem("engcon-searchSummary");
+
+      if (storedSearchSummary) {
+        this.searchSummary = JSON.parse(storedSearchSummary);
+      }
+    },
+
+    getStoredFilterSummary() {
+      var storedFilterSummary = localStorage.getItem("engcon-filterSummary");
+
+      if (storedFilterSummary) {
+        this.filterSummary = JSON.parse(storedFilterSummary);
+      }
+    },
+
     summarizeSearch(searchSummary) {
       /**
        * Clear previous search and product result and create new
@@ -74,14 +87,17 @@ export default {
        *
        */
 
-      localStorage.removeItem('engcon-filterSummary');
+      localStorage.removeItem("engcon-filterSummary");
       // localStorage.removeItem('engcon-products');
 
       this.products = [];
       this.filterSummary = [];
       this.searchSummary = searchSummary;
 
-      localStorage.setItem("engcon-searchSummary", JSON.stringify(searchSummary));
+      localStorage.setItem(
+        "engcon-searchSummary",
+        JSON.stringify(searchSummary)
+      );
 
       axios
         .get(
@@ -99,20 +115,25 @@ export default {
           console.log(err);
         });
     },
+
     summarizeFilter(filterSummary) {
       /**
        * Clear previous search and product result and create new
        *
        */
 
-      localStorage.removeItem('engcon-searchSummary');
+      localStorage.removeItem("engcon-searchSummary");
       // localStorage.removeItem('engcon-products');
 
       this.products = [];
       this.searchSummary = [];
       this.filterSummary = filterSummary;
-      localStorage.setItem('engcon-filterSummary', JSON.stringify(filterSummary));
+      localStorage.setItem(
+        "engcon-filterSummary",
+        JSON.stringify(filterSummary)
+      );
     },
+
     generateProductsBySearch() {
       /**
        * Axios call to Sitevisions API to extract propducts
@@ -175,16 +196,14 @@ export default {
         })
         .then(res => {
           this.products = res.data;
-          localStorage.setItem(
-            "engcon-products",
-            JSON.stringify(res.data)
-          );
+          localStorage.setItem("engcon-products", JSON.stringify(res.data));
         })
         .catch(err => {
           // eslint-disable-next-line no-console
           console.log(err);
         });
     },
+
     generateProductsByFilter() {
       /**
        * Axios call to Sitevisions API to extract propducts
@@ -201,6 +220,10 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 li {
@@ -231,7 +254,7 @@ body {
 .products-container {
   padding-top: 40px;
   margin: auto;
-  height: 100vh;
+  min-height: 100vh;
   max-width: 1200px;
 }
 
@@ -246,5 +269,41 @@ body {
     opacity: initial;
     filter: grayscale(0);
   }
+}
+
+.icon {
+  // border: 1px solid red;
+  // width: 40px;
+  // height: 40px;
+  display: block;
+
+  position: relative;
+  // top: -3px;
+
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-position-x: right;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  &.close {
+    background-image: url("./assets/icon-close.png");
+  }
+
+  &.share {
+    background-image: url("./assets/icon-share.png");
+  }
+
+  &.print {
+    background-image: url("./assets/icon-print.png");
+  }
+}
+
+.inline {
+  display: inline;
 }
 </style>

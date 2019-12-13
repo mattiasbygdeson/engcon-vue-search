@@ -21,12 +21,17 @@
         <a :href="'http://engcon.utv' + product.uri">{{product.name}}</a>
       </h3>
 
-      <p>Produkttyp</p>
+      <p>{{product.title.substr(product.name.length + 1)}}</p>
       <p>{{product["metadata.product-minWeight"]}} - {{product["metadata.product-maxWeight"]}} ton</p>
     </main>
 
     <footer>
-      <i class="fav-icon" />
+      <i
+        v-on:click="$emit('handle-favorites', product)"
+        @click="toggleFavoriteIcon"
+        class="fav-icon"
+        v-bind:class="{'in-favorites' : this.inFavorites}"
+      />
 
       <span class="more-info">
         <a :href="'http://engcon.utv' + product.uri">Mer info</a>
@@ -40,18 +45,40 @@
 export default {
   name: "Product",
   props: {
-    product: Object
+    product: Object,
+    favorites: Array
   },
   data() {
     return {
-      keyword: ""
+      keyword: "",
+      inFavorites: false
     };
   },
   created() {
     // eslint-disable-next-line no-console
     console.log("Product created");
+
+    this.checkIfProductIsInFavorites();
+  },
+  watch: {
+    // favorites: function() {
+    //   // eslint-disable-next-line no-console
+    //   console.log("Props changed");
+
+    //   this.checkIfProductIsInFavorites();
+    // }
   },
   methods: {
+    checkIfProductIsInFavorites() {
+      for (var i = 0; this.favorites.length > i; i++) {
+        if (this.favorites[i].id === this.product.id) {
+          this.inFavorites = !this.inFavorites;
+        }
+      }
+    },
+    toggleFavoriteIcon() {
+      this.inFavorites = !this.inFavorites;
+    },
     setFilterSummary(e) {
       // eslint-disable-next-line no-console
       console.log(e.path[0].innerHTML);
@@ -85,7 +112,7 @@ export default {
       display: block;
       width: 100%;
       height: 300px;
-      object-fit:scale-down;
+      object-fit: scale-down;
     }
   }
 
@@ -191,6 +218,10 @@ export default {
     background-color: #ffd300;
     cursor: pointer;
   }
+}
+
+.in-favorites {
+  background-color: #ffd300;
 }
 
 .product-tags {
