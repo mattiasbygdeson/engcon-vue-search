@@ -46,7 +46,8 @@ export default {
   name: "Product",
   props: {
     product: Object,
-    favorites: Array
+    favorites: Array,
+    displayFavoriteModal: Boolean
   },
   data() {
     return {
@@ -61,12 +62,12 @@ export default {
     this.checkIfProductIsInFavorites();
   },
   watch: {
-    // favorites: function() {
-    //   // eslint-disable-next-line no-console
-    //   console.log("Props changed");
+    displayFavoriteModal: function() {
+      // eslint-disable-next-line no-console
+      console.log("displayFavoriteModal changed");
 
-    //   this.checkIfProductIsInFavorites();
-    // }
+      this.checkIfProductIsInFavorites();
+    }
   },
   methods: {
     checkIfProductIsInFavorites() {

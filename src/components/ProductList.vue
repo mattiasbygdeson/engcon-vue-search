@@ -24,11 +24,16 @@
         :key="product.id"
         :product="product"
         :favorites="favorites"
+        :displayFavoriteModal="displayFavoriteModal"
         v-on:summarizeFilter="$emit('summarizeFilter')"
       />
     </div>
 
-    <button @click="toggleDisplayFavoriteModal" class="favorite-list__button">
+    <button
+      v-if="this.favorites.length !== 0"
+      @click="toggleDisplayFavoriteModal"
+      class="favorite-list__button"
+    >
       Mina favoriter
       <span class="favorite-list__number">({{favorites.length}})</span>
     </button>
@@ -42,11 +47,16 @@
 
           <i class="icon share" />
 
-          <i class="icon close" />
+          <i @click="toggleDisplayFavoriteModal" class="icon close" />
         </header>
 
         <main class="favorite-list__content">
-          <Favorite v-for="favorite in favorites" :key="favorite.id" :favorite="favorite" />
+          <Favorite
+            v-on:remove-favorite="handleFavorites"
+            v-for="favorite in favorites"
+            :key="favorite.id"
+            :favorite="favorite"
+          />
         </main>
       </div>
     </section>
@@ -90,8 +100,16 @@ export default {
     },
     toggleDisplayFavoriteModal() {
       this.displayFavoriteModal = !this.displayFavoriteModal;
+
+      // Reload products
+      var test = this.products;
+      this.products = [];
+      this.products = test;
     },
     handleFavorites(product) {
+      // eslint-disable-next-line no-console
+      console.log("handleFavorites");
+
       /**
        * Add to favorite list if it's a new object
        * Remove from favorite list if it already exists
@@ -117,6 +135,11 @@ export default {
 
       this.favorites = [...this.favorites, product];
       localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
+
+      // Reload products
+      var test = this.products;
+      this.products = [];
+      this.products = test;
     }
   }
 };
@@ -159,7 +182,7 @@ export default {
   height: 40px;
   float: right;
 
-  background-image: url("../assets/icon-back.png");
+  background-image: url("../assets/icon-chevron.png");
   background-size: 85%;
   background-repeat: no-repeat;
   background-position-y: center;
@@ -170,16 +193,16 @@ export default {
   &__button {
     font-weight: 900;
     font-size: 0.9em;
-    border-radius: 45px;
+    border-radius: 2px;
     // background: #ffd300;
     background-image: linear-gradient(#ffd300, #ffb800);
     border: 0;
     height: 60px;
     padding: 0 20px 3px 20px;
-    border: 4px solid #191b1d;
+    border: 2px solid #191b1d;
 
     position: fixed;
-    bottom: 40px;
+    bottom: -2px;
     right: 10%;
 
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.45);
@@ -203,6 +226,7 @@ export default {
     width: 100%;
     max-width: 1000px;
     max-height: 700px;
+    height: 100%;
     margin: auto;
     margin-top: 15vh;
     border-radius: 3px;

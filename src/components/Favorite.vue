@@ -19,9 +19,8 @@
     <section>
       <h3>{{favorite.title}}</h3>
       <p>Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
-      <span class="badge">Läs mer</span>
-      <br />
-      <span class="badge remove">Ta bort</span>
+      <a :href="'http://engcon.utv' + favorite.uri" class="badge">Läs mer</a>
+      <span v-on:click="$emit('remove-favorite', favorite)" class="badge remove">Ta bort</span>
     </section>
   </article>
 </template>
@@ -39,6 +38,7 @@ export default {
 article {
   display: grid;
   grid-template-columns: 20% 80%;
+  padding-top: 10px;
 }
 
 p {
@@ -52,16 +52,20 @@ h3 {
 .badge {
   background: #fdd300;
   border: 1px solid #fdd300;
-  // max-width: 100px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   display: inline-block;
   padding: 4px 15px;
-  border-radius: 25px;
+  border-radius: 2px;
   font-size: 0.9em;
-  
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 14px;
 
   &:hover {
     cursor: pointer;
+    opacity: 0.7;
   }
 }
 
