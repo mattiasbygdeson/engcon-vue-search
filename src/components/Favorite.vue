@@ -19,8 +19,11 @@
     <section>
       <h3>{{favorite.title}}</h3>
       <p>Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
-      <a :href="'http://engcon.utv' + favorite.uri" class="badge">Läs mer</a>
-      <span v-on:click="$emit('remove-favorite', favorite)" class="badge remove">Ta bort</span>
+      <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
+      <span
+        v-on:click="$emit('remove-favorite', favorite)"
+        class="badge remove"
+      >{{translatedStrings.remove}}</span>
     </section>
   </article>
 </template>
@@ -29,7 +32,9 @@
 export default {
   name: "Favorite",
   props: {
-    favorite: Array
+    favorite: Array,
+    strings: Array,
+    translatedStrings: Array
   }
 };
 </script>
@@ -47,6 +52,7 @@ p {
 
 h3 {
   margin-bottom: 10px;
+  font-size: 1em;
 }
 
 .badge {

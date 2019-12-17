@@ -26,16 +26,18 @@
     </main>
 
     <footer>
-      <i
+      <span
+        class="favorite-icon"
+        v-bind:class="{'in-favorites' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
-        class="fav-icon"
-        v-bind:class="{'in-favorites' : this.inFavorites}"
-      />
+      >
+        <i class="far fa-star" />
+      </span>
 
       <span class="more-info">
         <a :href="'http://engcon.utv' + product.uri">Mer info</a>
-        <i class="arrow-icon" />
+        <i class="fas fa-angle-right icon-big" />
       </span>
     </footer>
   </article>
@@ -100,7 +102,7 @@ export default {
   background: white;
   border: 1px solid #ddd;
   text-align: left;
-  margin: 20px;
+  margin: 15px;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
   transition: box-shadow 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
   border-radius: 2px;
@@ -165,6 +167,13 @@ export default {
           color: black;
         }
       }
+
+      i {
+        color: #ffd300;
+        position: relative;
+        top: 5px;
+        margin-left: 10px;
+      }
     }
   }
 
@@ -183,41 +192,21 @@ export default {
   padding: 20px;
 }
 
-.arrow-icon {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-
-  position: relative;
-  top: 8px;
-
-  background-image: url("../assets/icon-right-arrow.png");
-  background-size: 80%;
-  background-repeat: no-repeat;
-  background-position-y: center;
-  background-position-x: right;
-}
-
-.fav-icon {
+.favorite-icon {
   width: 40px;
   height: 40px;
   display: inline-block;
+  text-align: center;
+  font-size: 1.5em;
+  border: 1px solid #ccc;
 
-  border: 1px solid #a1a1a1;
-
-  background-image: url("../assets/icon-star.png");
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position-y: 7px;
-  background-position-x: center;
-
-  border-radius: 50px;
-  transition: background 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-  transition: background 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  i {
+    position: relative;
+    top: 5px;
+  }
 
   &:hover {
     background-color: #ffd300;
-    cursor: pointer;
   }
 }
 

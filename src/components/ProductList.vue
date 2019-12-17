@@ -1,20 +1,28 @@
 <template>
-  <div>
+  <main>
     <div id="summary-bar" class="summary-bar">
-      <p v-if="searchSummary.length !== 0">
-        <span>Märke: {{searchSummary.brandName}}</span>
-        <span>Modell: {{searchSummary.modelName}}</span>
-        <span>Maskinvikt: {{searchSummary.machineWeight}} ton</span>
+      <div class="summary-bar__content">
+        <span v-if="searchSummary.brandName">{{replaceString(translatedStrings.brand, searchSummary.brandName)}}</span>
+        <span v-if="searchSummary.modelName">{{replaceString(translatedStrings.model, searchSummary.modelName)}}</span>
+        <span v-if="searchSummary.machineWeight">{{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}</span>
 
-        <a href="#app">
-          <i class="back-to-top-icon" />
-        </a>
-      </p>
-
-      <p v-if="filterSummary.length !== 0">
-        <span>Maskinvikt: {{filterSummary.maxWeight}} ton</span>
+        <span v-if="filterSummary.maxWeight">{{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}</span>
         <span v-if="filterSummary.keyword">Sökord: {{filterSummary.keyword}}</span>
-      </p>
+
+        <nav>
+          <button
+            v-if="this.favorites.length !== 0"
+            @click="toggleDisplayFavoriteModal"
+            class="favorite-list__button"
+          >
+            {{replaceString(translatedStrings.favorites, favorites.length)}}
+          </button>
+
+          <a href="#app" class="back-to-top">
+            <i class="fas fa-angle-up icon-big" />
+          </a>
+        </nav>
+      </div>
     </div>
 
     <div class="products-container">
@@ -29,38 +37,32 @@
       />
     </div>
 
-    <button
-      v-if="this.favorites.length !== 0"
-      @click="toggleDisplayFavoriteModal"
-      class="favorite-list__button"
-    >
-      Mina favoriter
-      <span class="favorite-list__number">({{favorites.length}})</span>
-    </button>
+
 
     <section v-if="displayFavoriteModal" class="favorite-list__wrapper">
       <div class="favorite-list__container">
         <header class="favorite-list__header">
-          <h2>Mina favoriter</h2>
+          <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
 
-          <i class="icon print" />
-
-          <i class="icon share" />
-
-          <i @click="toggleDisplayFavoriteModal" class="icon close" />
+          <nav>
+            <i class="fas fa-print icon-big" />
+            <i class="fas fa-share-alt icon-big" />
+            <i @click="toggleDisplayFavoriteModal" class="fas fa-times icon-big" />
+          </nav>
         </header>
 
         <main class="favorite-list__content">
           <Favorite
             v-on:remove-favorite="handleFavorites"
             v-for="favorite in favorites"
+            v-bind:translatedStrings="translatedStrings"
             :key="favorite.id"
             :favorite="favorite"
           />
         </main>
       </div>
     </section>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -76,7 +78,8 @@ export default {
   props: {
     searchSummary: Object,
     filterSummary: String,
-    products: Array
+    products: Array,
+    translatedStrings: Array
   },
   data() {
     return {
@@ -97,6 +100,9 @@ export default {
       if (storedFavorites) {
         this.favorites = JSON.parse(storedFavorites);
       }
+    },
+    replaceString(phrase, subject) {
+      return phrase.replace("{{rep}}", subject);
     },
     toggleDisplayFavoriteModal() {
       this.displayFavoriteModal = !this.displayFavoriteModal;
@@ -157,9 +163,17 @@ export default {
   top: 0px;
   z-index: 100;
 
-  p {
+  &__content {
     max-width: 1200px;
     margin: auto;
+
+    nav {
+      // border: 1px solid red;
+      // display: inline;
+      float: right;
+
+
+    }
   }
 
   span {
@@ -174,38 +188,38 @@ export default {
   margin-bottom: 120px;
 }
 
-.back-to-top-icon {
-  position: relative;
-  top: -5px;
-
-  width: 40px;
-  height: 40px;
-  float: right;
-
-  background-image: url("../assets/icon-chevron.png");
-  background-size: 85%;
-  background-repeat: no-repeat;
-  background-position-y: center;
-  background-position-x: center;
-}
-
 .favorite-list {
+  // &__button {
+  //   font-weight: 900;
+  //   font-size: 0.9em;
+  //   border-radius: 2px;
+  //   background: #ffd300;
+  //   border: 0;
+  //   height: 60px;
+  //   padding: 0 20px 3px 20px;
+  //   border: 2px solid #191b1d;
+
+  //   // position: fixed;
+  //   // bottom: -2px;
+  //   // right: 10%;
+
+  //   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.45);
+
+  //   &:hover {
+  //     cursor: pointer;
+  //   }
+  // }
+
   &__button {
     font-weight: 900;
-    font-size: 0.9em;
-    border-radius: 2px;
-    // background: #ffd300;
-    background-image: linear-gradient(#ffd300, #ffb800);
+    position: relative;
+    top: -14px;
+    background: #ffd300;
     border: 0;
-    height: 60px;
+    font-size: 0.85em;
     padding: 0 20px 3px 20px;
-    border: 2px solid #191b1d;
-
-    position: fixed;
-    bottom: -2px;
-    right: 10%;
-
-    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 6px #ffd300;
+    margin-right: 28px;
 
     &:hover {
       cursor: pointer;
@@ -234,19 +248,26 @@ export default {
   }
 
   &__header {
-    background-image: linear-gradient(#ffd300, #ffb800);
+    background: #ffd300;
     padding: 0;
     margin: 0;
     height: 50px;
     padding: 8px 20px;
 
     display: grid;
-    grid-template-columns: auto 30px 30px 30px;
-    grid-column-gap: 10px;
+    grid-template-columns: auto 300px;
+
+    nav {
+      text-align: right;
+
+      i {
+        margin-left: 25px;
+      }
+    }
 
     h2 {
       font-weight: 800;
-      font-size: 1.3em;
+      font-size: 1.2em;
     }
   }
 
@@ -259,6 +280,25 @@ export default {
   &__product {
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
+  }
+}
+
+.back-to-top {
+  text-decoration: none;
+  // float: right;
+  position: relative;
+  top: -7px;
+  color: white;
+
+  // border: 4px solid white;
+  // width: 40px;
+  // height: 40px;
+  // text-align: center;
+  // border-radius: 2px;
+  // padding-bottom: 4px;
+
+  &:active {
+    color: inherit;
   }
 }
 </style>

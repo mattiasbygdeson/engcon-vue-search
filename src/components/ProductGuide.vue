@@ -1,18 +1,18 @@
 <template>
   <div class="brand-search-container">
     <header class="brand-search-container-header">
-      <h2>Guida mig till rätt produkter</h2>
+      <h2>{{translatedStrings.guideMe}}</h2>
     </header>
 
     <main>
       <section class="brand-search-column">
         <header>
-          <h3>Välj ditt märke</h3>
+          <h3>{{translatedStrings.selectYourBrand}}</h3>
 
           <input
             class="input-brand-filter"
             type="text"
-            placeholder="Filtrera ..."
+            :placeholder="translatedStrings.filter"
             v-on:keyup="filterBrands"
             name="filter"
           />
@@ -30,9 +30,9 @@
       </section>
 
       <section class="brand-search-column">
-        <h3 v-if="selectedBrand.length !== 0">Välj din {{selectedBrand.BrandName}}</h3>
+        <h3 v-if="selectedBrand.length !== 0">{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h3>
 
-        <p v-else class="notice">Välj ett märke för att se tillgängliga modeller</p>
+        <p v-else class="notice">{{translatedStrings.selectBrandTo}}</p>
 
         <ul class="model-list">
           <Model
@@ -56,7 +56,8 @@ import Model from "./Model";
 export default {
   name: "ProductGuide",
   props: {
-    lang: String
+    lang: String,
+    translatedStrings: Array
   },
   components: {
     Brand,
@@ -78,9 +79,6 @@ export default {
      *
      */
 
-    // eslint-disable-next-line no-console
-    console.log("ProductGuide created");
-
     var getBrands = localStorage.getItem("engcon-brands");
 
     if (getBrands) {
@@ -100,10 +98,6 @@ export default {
           console.log(err);
         });
     }
-  },
-  update() {
-    // eslint-disable-next-line no-console
-    console.log("ProductGuide updated");
   },
   methods: {
     selectBrand(brand) {
@@ -140,33 +134,29 @@ export default {
 
        *
        */
-
       // var getBrands = localStorage.getItem("engcon-brands");
-
       // if (getBrands) {
       //   this.brands = JSON.parse(getBrands);
       // }
-
       // this.filteredBrands = [];
-
       // var filter = this.filter.toLowerCase();
       // var brand;
       // var result;
-
       // if (filter !== "") {
       //   for (var i = 0; this.brands.length > i; i++) {
       //     brand = this.brands[i].BrandName.toLowerCase();
       //     result = brand.match(filter);
-
       //     if (result && filter.charAt(0) === brand.charAt(0)) {
       //       this.filteredBrands.push(this.brands[i]);
       //     }
       //   }
-
       //   this.brands = this.filteredBrands;
       // }
     },
 
+    replaceString(phrase, subject) {
+      return phrase.replace("{{rep}}", subject);
+    },
 
     selectModel(model) {
       this.selectedModel = [];
@@ -250,8 +240,7 @@ export default {
 }
 
 .brand-search-container-header {
-  // background: #ffd300;
-  background-image: linear-gradient(#ffd300, #ffb800);
+  background: #ffd300;
   padding: 0;
   margin: 0;
   height: 50px;

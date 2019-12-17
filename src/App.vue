@@ -4,23 +4,24 @@
       <header class="main-header">
         <ProductGuide
           v-on:summarizeSearch="summarizeSearch"
+          v-bind:translatedStrings="translatedStrings"
           v-bind:class="{'unfocus' : this.filterSummary.length !== 0}"
         />
         <ProductFilter
           v-on:summarizeFilter="summarizeFilter"
+          v-bind:translatedStrings="translatedStrings"
           v-bind:class="{'unfocus' : this.searchSummary.length !== 0} "
         />
       </header>
     </div>
 
-    <main>
-      <ProductList
-        v-bind:searchSummary="searchSummary"
-        v-bind:filterSummary="filterSummary"
-        v-bind:products="products"
-        v-on:filterSummary="summarizeFilter"
-      />
-    </main>
+    <ProductList
+      v-bind:translatedStrings="translatedStrings"
+      v-bind:searchSummary="searchSummary"
+      v-bind:filterSummary="filterSummary"
+      v-bind:products="products"
+      v-on:filterSummary="summarizeFilter"
+    />
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import ProductList from "./components/ProductList";
 import axios from "axios";
 import qs from "qs";
 import ProductFilter from "./components/ProductFilter";
+import { getTranslation } from "./api.js";
 
 export default {
   name: "app",
@@ -44,16 +46,14 @@ export default {
       filterSummary: [],
       products: [],
       favorites: [],
-      language: null
+      translatedStrings: []
     };
   },
   created() {
-    // eslint-disable-next-line no-console
-    console.log("App created");
-
     this.getStoredProducts();
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
+    this.getTranslatedStrings();
   },
   methods: {
     getStoredProducts() {
@@ -80,10 +80,14 @@ export default {
       }
     },
 
+    replaceString(phrase, subject) {
+      return phrase.replace("{{rep}}", subject);
+    },
+
     summarizeSearch(searchSummary) {
       /**
-       * Clear previous search and product result and create new
-       * Get product IDs from API call
+       * Clear previous search and product result and create a new one
+       * Get product IDs 
        *
        */
 
@@ -132,6 +136,8 @@ export default {
         "engcon-filterSummary",
         JSON.stringify(filterSummary)
       );
+
+      this.generateProductsByFilter();
     },
 
     generateProductsBySearch() {
@@ -210,6 +216,61 @@ export default {
        * Argument: searchSummary contains product ID
        *
        */
+
+      const instance = axios.create({
+        baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+        paramsSerializer: params => qs.stringify(params)
+      });
+
+      let url = "/search";
+
+      // Construct a filterQuery string
+      //
+      var filterQuery =
+        "+(metadata.product-minWeight:[* TO 20] AND metadata.product-maxWeight:[20 TO *]) AND language:sv";
+
+      let query = {
+        query: "*",
+        filterQuery: filterQuery,
+        limit: 200,
+        fields: [
+          "name",
+          "title",
+          "language",
+          "uri",
+          "id",
+          "metadata.description",
+          "metadata.product-media",
+          "metadata.product-minWeight",
+          "metadata.product-maxWeight"
+        ]
+      };
+
+      instance
+        .get(url, {
+          params: {
+            format: "json",
+            json: JSON.stringify(query)
+          },
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(res => {
+          // eslint-disable-next-line no-console
+          // console.log(res.data);
+          this.products = res.data;
+          localStorage.setItem("engcon-products", JSON.stringify(res.data));
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    },
+
+    async getTranslatedStrings() {
+      let translation = await getTranslation();
+      this.translatedStrings = translation.translation;
     }
   }
 };
@@ -271,39 +332,26 @@ body {
   }
 }
 
-.icon {
-  // border: 1px solid red;
-  // width: 40px;
-  // height: 40px;
-  display: block;
+.inline {
+  display: inline;
+}
 
-  position: relative;
-  // top: -3px;
-
-  background-size: 80%;
-  background-repeat: no-repeat;
-  background-position-y: center;
-  background-position-x: right;
+i {
+  font-family:'FontAwesome';
+  font-style: initial;
+  text-decoration: none;
 
   &:hover {
     cursor: pointer;
     opacity: 0.7;
   }
-
-  &.close {
-    background-image: url("./assets/icon-close.png");
-  }
-
-  &.share {
-    background-image: url("./assets/icon-share.png");
-  }
-
-  &.print {
-    background-image: url("./assets/icon-print.png");
-  }
 }
 
-.inline {
-  display: inline;
+.icon-big {
+  font-size: 2em;
+}
+
+.icon-medium {
+  font-size: 1.5em;
 }
 </style>
