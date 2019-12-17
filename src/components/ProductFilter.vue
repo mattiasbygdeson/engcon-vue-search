@@ -25,7 +25,7 @@
           <input type="text" :placeholder="translatedStrings.searchPlaceholder" v-model="keyword" />
 
           <button v-on:click="setFilterSummary" type="submit">
-            <i class="fas fa-search icon-medium" />
+            <i class="icon fas fa-search icon-medium" />
           </button>
         </form>
       </section>
@@ -67,23 +67,19 @@ export default {
   margin: auto;
   margin-top: 20px;
   float: right;
-
   main {
     display: grid;
     grid-template-columns: 65% auto;
-
     border: 1px solid #ddd;
     height: 110px;
     max-width: 900px;
     background: white;
     opacity: 0.9;
   }
-
   section {
     padding: 20px;
   }
 }
-
 .product-filter-search {
   input[type="text"] {
     margin-top: 15px;
@@ -94,7 +90,6 @@ export default {
     padding: 10px;
     font-size: 0.8em;
   }
-
   button {
     position: relative;
     top: 2px;
@@ -102,13 +97,11 @@ export default {
     width: 30%;
     background: #ffd300;
     border: 1px solid #ffd300;
-
     &:hover {
       cursor: pointer;
     }
   }
 }
-
 .product-filter-container-header {
   background: #ffd300;
   width: 900px;
@@ -116,20 +109,17 @@ export default {
   margin: 0;
   height: 50px;
   padding: 11px 20px;
-
   h2 {
     font-weight: 800;
     font-size: 1.1em;
   }
 }
-
 .machine-weight-range-input {
   width: 100%;
   height: 20px;
   display: block;
   margin-top: 15px;
 }
-
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   border: 1px solid #000000;
@@ -140,7 +130,6 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
-
 input[type="range"]::-moz-range-thumb {
   border: 1px solid #000000;
   min-height: 26px;
@@ -149,7 +138,6 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
-
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 18px;
@@ -158,7 +146,6 @@ input[type="range"]::-webkit-slider-runnable-track {
   border-radius: 1.3px;
   border: 0.2px solid #010101;
 }
-
 input[type="range"]::-moz-range-track {
   width: 100%;
   height: 18px;

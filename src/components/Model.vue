@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="model-wrapper">
     <a v-if="this.selectedModel.ModelId === this.model.ModelId" href="#summary-bar" v-smooth-scroll>
-      <li class="vue__model-name selected">{{model.ModelName}}</li>
+      <li class="model-name selected">{{model.ModelName}}</li>
     </a>
 
     <a v-else href="#summary-bar" v-smooth-scroll>
-      <li @click="$emit('select-model', model)" class="vue__model-name">{{model.ModelName}}</li>
+      <li @click="$emit('select-model', model)" class="model-name">{{model.ModelName}}</li>
     </a>
   </div>
 </template>
@@ -21,15 +21,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-a {
-  text-decoration: none;
-  color: black;
+
+.model-wrapper {
+  a {
+    text-decoration: none;
+    color: black;
+  }
 }
 
-.vue__model-name {
+.model-name {
   padding-top: 16px;
   font-size: 0.8em;
-
+  list-style: none;
   margin: 10px;
   height: 50px;
   border: 1px solid #ddd;

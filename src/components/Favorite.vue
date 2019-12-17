@@ -18,7 +18,8 @@
 
     <section>
       <h3>{{favorite.title}}</h3>
-      <p>Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
+      <p class="d-block">Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
+
       <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
       <span
         v-on:click="$emit('remove-favorite', favorite)"
@@ -40,25 +41,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-article {
+.favorite-list__product {
   display: grid;
   grid-template-columns: 20% 80%;
   padding-top: 10px;
-}
 
-p {
-  margin-bottom: 10px;
-}
+  p {
+    margin-bottom: 10px;
+  }
 
-h3 {
-  margin-bottom: 10px;
-  font-size: 1em;
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1em;
+  }
 }
 
 .badge {
   background: #fdd300;
   border: 1px solid #fdd300;
-  // margin-bottom: 10px;
   display: inline-block;
   padding: 4px 15px;
   border-radius: 2px;
@@ -88,5 +88,9 @@ h3 {
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 20px;
+
+  p {
+    display: block !important;
+  }
 }
 </style>

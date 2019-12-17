@@ -1,9 +1,9 @@
 <template>
-  <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="vue__brand-icon selected">
+  <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="brand-icon selected">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
   </li>
 
-  <li v-else class="vue__brand-icon" @click="$emit('select-brand', brand)">
+  <li v-else class="brand-icon" @click="$emit('select-brand', brand)">
     <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
   </li>
 </template>
@@ -31,13 +31,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.vue__brand-icon {
+.brand-icon {
   margin: 10px;
   border: 1px solid #ddd;
   text-align: center;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-  
-  // background: black;
+  list-style: none;
 
   p {
     font-size: 0.8em;

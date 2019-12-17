@@ -18,8 +18,8 @@
             {{replaceString(translatedStrings.favorites, favorites.length)}}
           </button>
 
-          <a href="#app" class="back-to-top">
-            <i class="fas fa-angle-up icon-big" />
+          <a href="#apptop" class="back-to-top">
+            <i class="icon fas fa-angle-up icon-big" />
           </a>
         </nav>
       </div>
@@ -37,17 +37,15 @@
       />
     </div>
 
-
-
     <section v-if="displayFavoriteModal" class="favorite-list__wrapper">
       <div class="favorite-list__container">
         <header class="favorite-list__header">
           <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
 
           <nav>
-            <i class="fas fa-print icon-big" />
-            <i class="fas fa-share-alt icon-big" />
-            <i @click="toggleDisplayFavoriteModal" class="fas fa-times icon-big" />
+            <i class="icon fas fa-print icon-big" />
+            <i class="icon fas fa-share-alt icon-big" />
+            <i @click="toggleDisplayFavoriteModal" class="icon fas fa-times icon-big" />
           </nav>
         </header>
 
@@ -88,9 +86,6 @@ export default {
     };
   },
   created() {
-    // eslint-disable-next-line no-console
-    console.log("ProductList created");
-
     this.getFavorites();
   },
   methods: {
@@ -113,9 +108,6 @@ export default {
       this.products = test;
     },
     handleFavorites(product) {
-      // eslint-disable-next-line no-console
-      console.log("handleFavorites");
-
       /**
        * Add to favorite list if it's a new object
        * Remove from favorite list if it already exists
@@ -157,8 +149,7 @@ export default {
   height: 50px;
   color: white;
   font-size: 1.1em;
-  font-weight: 800;
-  padding-top: 11px;
+  padding-top: 16px;
   position: sticky;
   top: 0px;
   z-index: 100;
@@ -168,11 +159,7 @@ export default {
     margin: auto;
 
     nav {
-      // border: 1px solid red;
-      // display: inline;
       float: right;
-
-
     }
   }
 
@@ -180,7 +167,6 @@ export default {
     margin-right: 5%;
   }
 }
-
 .products-container {
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
@@ -189,35 +175,13 @@ export default {
 }
 
 .favorite-list {
-  // &__button {
-  //   font-weight: 900;
-  //   font-size: 0.9em;
-  //   border-radius: 2px;
-  //   background: #ffd300;
-  //   border: 0;
-  //   height: 60px;
-  //   padding: 0 20px 3px 20px;
-  //   border: 2px solid #191b1d;
-
-  //   // position: fixed;
-  //   // bottom: -2px;
-  //   // right: 10%;
-
-  //   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.45);
-
-  //   &:hover {
-  //     cursor: pointer;
-  //   }
-  // }
-
   &__button {
-    font-weight: 900;
     position: relative;
     top: -14px;
     background: #ffd300;
     border: 0;
     font-size: 0.85em;
-    padding: 0 20px 3px 20px;
+    padding: 0 20px 0 20px;
     box-shadow: 0 0 0 6px #ffd300;
     margin-right: 28px;
 
@@ -239,63 +203,48 @@ export default {
     background: white;
     width: 100%;
     max-width: 1000px;
-    max-height: 700px;
+    max-height: 600px;
+    // max-height: 60vh;
     height: 100%;
     margin: auto;
-    margin-top: 15vh;
+    margin-top: 10vh;
     border-radius: 3px;
     box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
   }
-
   &__header {
     background: #ffd300;
     padding: 0;
     margin: 0;
     height: 50px;
     padding: 8px 20px;
-
     display: grid;
     grid-template-columns: auto 300px;
-
     nav {
       text-align: right;
-
       i {
         margin-left: 25px;
       }
     }
-
     h2 {
       font-weight: 800;
       font-size: 1.2em;
     }
   }
-
   &__content {
+    max-height: 550px;
     padding: 2%;
-    max-height: 650px;
     overflow-y: scroll;
   }
-
   &__product {
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
   }
 }
-
 .back-to-top {
   text-decoration: none;
-  // float: right;
   position: relative;
   top: -7px;
   color: white;
-
-  // border: 4px solid white;
-  // width: 40px;
-  // height: 40px;
-  // text-align: center;
-  // border-radius: 2px;
-  // padding-bottom: 4px;
 
   &:active {
     color: inherit;

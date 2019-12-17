@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="apptop">
     <div class="main-header-wrapper">
       <header class="main-header">
         <ProductGuide
@@ -10,7 +10,7 @@
         <ProductFilter
           v-on:summarizeFilter="summarizeFilter"
           v-bind:translatedStrings="translatedStrings"
-          v-bind:class="{'unfocus' : this.searchSummary.length !== 0} "
+          v-bind:class="{'unfocus' : this.searchSummary.length !== 0}"
         />
       </header>
     </div>
@@ -34,7 +34,7 @@ import ProductFilter from "./components/ProductFilter";
 import { getTranslation } from "./api.js";
 
 export default {
-  name: "app",
+  name: "productfilter",
   components: {
     ProductGuide,
     ProductList,
@@ -92,7 +92,6 @@ export default {
        */
 
       localStorage.removeItem("engcon-filterSummary");
-      // localStorage.removeItem('engcon-products');
 
       this.products = [];
       this.filterSummary = [];
@@ -127,7 +126,6 @@ export default {
        */
 
       localStorage.removeItem("engcon-searchSummary");
-      // localStorage.removeItem('engcon-products');
 
       this.products = [];
       this.searchSummary = [];
@@ -284,20 +282,28 @@ export default {
 }
 
 html {
-  scroll-behavior: smooth;
-}
-
-li {
-  list-style: none;
+  scroll-behavior: smooth !important;
+  height: 100%;
+  overflow-y: initial;
+  overflow-x: initial;
 }
 
 body {
-  font-family: "akzidenz-grotesk-next", sans-serif;
-  font-style: normal;
-  font-size: 17px;
-  margin: auto;
-  background: #f0f0f0;
+  height: 100%;
+  overflow: auto;
 }
+
+// li {
+//   list-style: none;
+// }
+
+// body {
+  // font-family: "akzidenz-grotesk-next", sans-serif;
+  // font-style: normal;
+  // font-size: 17px;
+  // margin: auto;
+  // background: #f0f0f0;
+// }
 
 .main-header-wrapper {
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
@@ -336,7 +342,7 @@ body {
   display: inline;
 }
 
-i {
+.icon {
   font-family:'FontAwesome';
   font-style: initial;
   text-decoration: none;
@@ -353,5 +359,9 @@ i {
 
 .icon-medium {
   font-size: 1.5em;
+}
+
+.d-block {
+  display: block !important;
 }
 </style>

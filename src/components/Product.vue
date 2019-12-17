@@ -32,12 +32,12 @@
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
       >
-        <i class="far fa-star" />
+        <i class="icon far fa-star" />
       </span>
 
       <span class="more-info">
         <a :href="'http://engcon.utv' + product.uri">Mer info</a>
-        <i class="fas fa-angle-right icon-big" />
+        <i class="icon fas fa-angle-right icon-big" />
       </span>
     </footer>
   </article>
@@ -58,16 +58,10 @@ export default {
     };
   },
   created() {
-    // eslint-disable-next-line no-console
-    console.log("Product created");
-
     this.checkIfProductIsInFavorites();
   },
   watch: {
     displayFavoriteModal: function() {
-      // eslint-disable-next-line no-console
-      console.log("displayFavoriteModal changed");
-
       this.checkIfProductIsInFavorites();
     }
   },
@@ -83,9 +77,6 @@ export default {
       this.inFavorites = !this.inFavorites;
     },
     setFilterSummary(e) {
-      // eslint-disable-next-line no-console
-      console.log(e.path[0].innerHTML);
-
       const filterSummary = {
         maxWeight: 40,
         keyword: e.path[0].innerHTML
@@ -124,6 +115,10 @@ export default {
     line-height: 1.4em;
     font-size: 0.9em;
     height: 80px;
+
+    p {
+      display: block !important;
+    }
 
     h3 {
       font-weight: 800;
@@ -198,7 +193,7 @@ export default {
   display: inline-block;
   text-align: center;
   font-size: 1.5em;
-  border: 1px solid #ccc;
+  color: #999;
 
   i {
     position: relative;
@@ -206,12 +201,12 @@ export default {
   }
 
   &:hover {
-    background-color: #ffd300;
+    text-shadow: 1px 2px 3px rgba(49, 49, 49, 0.5)
   }
 }
 
 .in-favorites {
-  background-color: #ffd300;
+  color: #ffd300;
 }
 
 .product-tags {

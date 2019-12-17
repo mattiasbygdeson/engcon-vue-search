@@ -1,13 +1,13 @@
 <template>
   <div class="brand-search-container">
     <header class="brand-search-container-header">
-      <h2>{{translatedStrings.guideMe}}</h2>
+      <h1>{{translatedStrings.guideMe}}</h1>
     </header>
 
     <main>
       <section class="brand-search-column">
         <header>
-          <h3>{{translatedStrings.selectYourBrand}}</h3>
+          <h2>{{translatedStrings.selectYourBrand}}</h2>
 
           <input
             class="input-brand-filter"
@@ -30,7 +30,7 @@
       </section>
 
       <section class="brand-search-column">
-        <h3 v-if="selectedBrand.length !== 0">{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h3>
+        <h2 v-if="selectedBrand.length !== 0">{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h2>
 
         <p v-else class="notice">{{translatedStrings.selectBrandTo}}</p>
 
@@ -214,7 +214,7 @@ export default {
   }
 
   .model-list {
-    max-height: 90%;
+    max-height: 355px;  
     overflow-y: auto;
     padding: 10px;
 
@@ -222,12 +222,14 @@ export default {
     grid-template-columns: 50% 50%;
   }
 
-  h3 {
+  h2 {
     padding-top: 10px;
     margin-left: 20px;
-    font-weight: 800;
-    font-size: 1em;
+    font-weight: 400 !important;
+    font-size: 1em !important;
     display: inline-block;
+    position: relative !important;
+    top: 10px !important;
   }
 }
 
@@ -246,9 +248,9 @@ export default {
   height: 50px;
   padding: 8px 20px;
 
-  h2 {
+  h1 {
     font-weight: 800;
-    font-size: 1.3em;
+    font-size: 1.5em !important;
   }
 }
 
