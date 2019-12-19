@@ -10,6 +10,7 @@
           class="machine-weight-range-label"
           for="machine-weight"
         ><span v-if="maxWeight > 0">{{replaceString(translatedStrings.machineWeight, maxWeight)}}</span></label>
+
         <input
           v-on:change="setFilterSummary"
           class="machine-weight-range-input"
@@ -119,6 +120,7 @@ export default {
     font-size: 1.1em;
   }
 }
+
 .machine-weight-range-input {
   width: 100%;
   height: 20px;
@@ -130,41 +132,44 @@ export default {
   border: 1px solid white;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 1px solid #000000;
-  min-height: 26px;
-  min-width: 26px;
-  background: #ffffff;
-  margin-top: -5px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+.product-filter-container {
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    min-height: 26px;
+    min-width: 26px;
+    background: #ffffff;
+    margin-top: -5px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    border: 1px solid #000000;
+    min-height: 26px;
+    min-width: 26px;
+    background: #ffffff;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 18px;
+    cursor: pointer;
+    background: #ccc;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 18px;
+    cursor: pointer;
+    background: #ccc;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
 }
 
-input[type="range"]::-moz-range-thumb {
-  border: 1px solid #000000;
-  min-height: 26px;
-  min-width: 26px;
-  background: #ffffff;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 18px;
-  cursor: pointer;
-  background: #ccc;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
-}
-
-input[type="range"]::-moz-range-track {
-  width: 100%;
-  height: 18px;
-  cursor: pointer;
-  background: #ccc;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
-}
 </style>

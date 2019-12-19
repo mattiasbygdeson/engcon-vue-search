@@ -8,7 +8,7 @@
       v-else
       class="brand-icon"
       @click="$emit('select-brand', brand)"
-      v-bind:class="{'hidden' : brand.Hide}"
+      v-bind:class="{'d-none' : brand.Hide}"
     >
       <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
     </li>
@@ -86,7 +86,4 @@ export default {
   }
 }
 
-.hidden {
-  border: 2px solid red;
-}
 </style>

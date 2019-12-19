@@ -66,7 +66,7 @@
           <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
 
           <nav>
-            <i class="hidden icon fas fa-print icon-big" />
+            <i class="d-none icon fas fa-print icon-big" />
             <i @click="toggleDisplayShareModal" class="icon fas fa-share-alt icon-big" />
             <i @click="toggleDisplayFavoriteModal" class="icon fas fa-times icon-big" />
           </nav>
@@ -301,6 +301,8 @@ export default {
   position: relative;
   top: -7px;
   color: white;
+
+  visibility: hidden;
 
   &:active {
     color: inherit;

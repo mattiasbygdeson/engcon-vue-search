@@ -118,7 +118,7 @@ export default {
             message: msg + link + signoff,
             html: true,
             reciepient: this.recipent
-          }
+          },
         })
         .then(function(response) {
           //eslint-disable-next-line no-console

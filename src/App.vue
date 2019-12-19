@@ -1,6 +1,6 @@
 <template>
   <div id="apptop">
-    <div class="main-header-wrapper" :class="{'hidden' : this.listTitle.length !== 0}">
+    <div class="main-header-wrapper" :class="{'d-none' : this.listTitle.length !== 0}">
       <header class="main-header">
         <ProductGuide
           v-on:summarizeSearch="summarizeSearch"
@@ -488,7 +488,11 @@ body {
   display: block !important;
 }
 
-.hidden {
+.d-none {
   display: none;
+}
+
+.no-visibility {
+  visibility: hidden;
 }
 </style>

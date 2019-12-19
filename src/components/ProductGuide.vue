@@ -10,7 +10,7 @@
           <h2>{{translatedStrings.selectYourBrand}}</h2>
 
           <input
-            class="input-brand-filter hidden"
+            class="input-brand-filter d-none"
             type="text"
             :placeholder="translatedStrings.filter"
             name="filter"
