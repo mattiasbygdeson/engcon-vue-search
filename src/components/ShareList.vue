@@ -13,10 +13,16 @@
           <input id="input-email" type="email" />
 
           <label for="input-subject">Ämne</label>
-          <input id="input-subject" type="text" />
+          <input id="input-subject" type="text" v-model="mailSubject" />
 
           <label for="input-message">Meddelande</label>
-          <textarea id="input-message" name="input-message" cols="30" rows="10" :placeholder="messagePlaceholder" />
+          <textarea
+            id="input-message"
+            name="input-message"
+            cols="30"
+            rows="10"
+            :placeholder="messagePlaceholder"
+          />
 
           <button class="button-submit" type="submit">Skicka</button>
         </form>
@@ -24,8 +30,7 @@
         <section class="input-copy">
           <label for="input-url">URL</label>
           <input id="input-url" type="text" :value="favoriteListUrl" />
-          <button @click="copyUrl" class="button-copy">Kopiera</button>
-          <p class="notification" v-if="urlCopied">Länken är kopierad till urklipp</p>
+          <button @click="generateShareableUrl" class="button-copy">Generera</button>
         </section>
       </main>
     </article>
@@ -37,21 +42,37 @@ export default {
   name: "ShareList",
   data() {
     return {
-      messagePlaceholder: "Hej, följ länken i detta mail och kika på mina favoritprodukter hos Engcon!",
-      favoriteListUrl: "https://alongurl.com&product=3929&product=4027&product=1020",
-      urlCopied: false,
-    }
+      receiversEmail: "",
+      mailSubject: "Min lista",
+      messagePlaceholder:
+        "Hej, följ länken i detta mail och kika på mina favoritprodukter hos Engcon!",
+      favoriteListUrl: "",
+      urlCopied: false
+    };
   },
   created() {
-    
+    // this.generateShareableUrl();
   },
   props: {
     favorites: Array
   },
   methods: {
+    generateShareableUrl() {
+      var baseUrl = window.location.hostname + this.$route.fullPath;
+      var hash = this.$route.hash;
+      var baseUrlCleaned = baseUrl.replace(hash, '');
+      var listName = this.mailSubject.toLowerCase();
+      var listNameDashed = listName.replace(/ /g, "-");
+      var urlBody = "";
+
+      for (var i = 0; this.favorites.length > i; i++) {
+        urlBody += "&id=" + this.favorites[i].id;
+      }
+
+      this.favoriteListUrl = baseUrlCleaned + "?name=" + listNameDashed + urlBody;
+    },
+
     copyUrl() {
-      //eslint-disable-next-line no-console
-      console.log(this.favoriteListUrl);
       this.urlCopied = true;
       navigator.clipboard.writeText(this.favoriteListUrl);
     }
@@ -182,8 +203,12 @@ export default {
 }
 
 @keyframes fadein-fadeout {
-  from  {opacity: 0}
-  to    {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .notification {

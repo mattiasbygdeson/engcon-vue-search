@@ -56,6 +56,9 @@ export default {
     };
   },
   created() {
+    //eslint-disable-next-line no-console
+    console.log(window.lang)
+
     this.getStoredProducts();
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
@@ -162,7 +165,7 @@ export default {
       // Construct a filterQuery string
       var productsIDs = [];
       var startOfString = "+(";
-      var endOfString = ") AND language:sv";
+      var endOfString = ") AND language:" + window.lang;
       var middleOfString = "";
 
       for (var i = 0; this.products.length > i; i++) {
@@ -231,7 +234,7 @@ export default {
 
         // Construct a filterQuery string
         var startOfString = "+(";
-        var endOfString = ") AND language:sv";
+        var endOfString = ") AND language:" + window.lang;
         var middleOfString = "";
 
         for (var i = 0; urlQuery.id.length > i; i++) {
@@ -312,7 +315,7 @@ export default {
         this.filterSummary.maxWeight +
         "] AND metadata.product-maxWeight:[" +
         this.filterSummary.maxWeight +
-        " TO *]) AND language:sv";
+        " TO *]) AND language:" + window.lang;
 
       if (this.filterSummary.keyword) {
         var keyword = this.filterSummary.keyword.toUpperCase();
@@ -368,18 +371,17 @@ export default {
     },
 
     clearUrlQuery() {
-      // eslint-disable-next-line no-console
-      console.log("clearUrlQuery")
-
       this.$router.push(this.$route.path);
       this.listTitle = "";
-
       this.getStoredProducts();
     },
 
     async getTranslatedStrings() {
       let translation = await getTranslation();
       this.translatedStrings = translation.translation;
+
+      //eslint-disable-next-line no-console
+      // console.log(translation);
     },
 
     async requestProducts() {

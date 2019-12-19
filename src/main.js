@@ -6,6 +6,17 @@ Vue.use(VueRouter);
 
 Vue.config.productionTip = false
 
+// document.addEventListener('DOMContentLoaded', function(){
+  const langDiv = document.querySelector('#lang');
+  const lang = langDiv.dataset.lang;
+
+  window.lang = lang;
+// });
+
+
+//eslint-disable-next-line no-console
+// console.log(window.lang);
+
 const router = new VueRouter({
   routes: [
     { path: '/', component: App },

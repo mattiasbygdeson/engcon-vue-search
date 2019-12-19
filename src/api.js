@@ -15,7 +15,13 @@ const instance = axios.create({
 
 // Exports
 async function getTranslation() {
-  let urlExtension = "/translate/filter";
+  
+  // var lang = navigator.language.slice(0,2);
+
+  let urlExtension = "/translate/filter?lang=" + window.lang;
+
+  // eslint-disable-next-line no-console
+  console.log(window.lang);
 
   try {
     const response = await instance.get(urlExtension);
@@ -26,7 +32,7 @@ async function getTranslation() {
   }
 }
 
-async function getProducts(middleOfString) {
+async function getProducts() {
   
   // const instance = axios.create({
   //   baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
@@ -35,10 +41,10 @@ async function getProducts(middleOfString) {
 
   // let url = "/search";
 
-  var startOfString = "+(";
-  var endOfString = ") AND language:sv";
+  // var startOfString = "+(";
+  // var endOfString = ") AND language:sv";
 
-  return startOfString + middleOfString + endOfString;
+  // return startOfString + middleOfString + endOfString;
 }
 
 export {

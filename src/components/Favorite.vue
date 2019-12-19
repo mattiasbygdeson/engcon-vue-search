@@ -21,7 +21,7 @@
         <h3>{{favorite.title}}</h3>
         <p
           class="d-block"
-        >Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
+        >{{replaceString(translatedStrings.machineWeight, favorite["metadata.product-minWeight"] + " - " + favorite["metadata.product-maxWeight"])}}</p>
 
         <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
         <span
@@ -45,6 +45,11 @@ export default {
     return {
       displayShareModal: true
     };
+  },
+  methods: {
+    replaceString(phrase, subject) {
+      return phrase.replace("{{rep}}", subject);
+    }
   }
 };
 </script>

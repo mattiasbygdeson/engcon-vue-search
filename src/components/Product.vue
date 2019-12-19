@@ -21,7 +21,7 @@
         <a :href="'http://engcon.utv' + product.uri">{{product.name}}</a>
       </h3>
 
-      <p>{{product.title.substr(product.name.length + 1)}}</p>
+      <p>{{this.category}}</p>
       <p>{{product["metadata.product-minWeight"]}} - {{product["metadata.product-maxWeight"]}} ton</p>
     </main>
 
@@ -36,7 +36,7 @@
       </span>
 
       <span class="more-info">
-        <a :href="'http://engcon.utv' + product.uri">Mer info</a>
+        <a :href="'http://engcon.utv' + product.uri">{{translatedStrings.readMore}}</a>
         <i class="icon fas fa-angle-right icon-big" />
       </span>
     </footer>
@@ -49,16 +49,19 @@ export default {
   props: {
     product: Object,
     favorites: Array,
-    displayFavoriteModal: Boolean
+    displayFavoriteModal: Boolean,
+    translatedStrings: Array,
   },
   data() {
     return {
       keyword: "",
-      inFavorites: false
+      inFavorites: false,
+      category: this.product.title
     };
   },
   created() {
     this.checkIfProductIsInFavorites();
+    this.formatCategory();
   },
   watch: {
     displayFavoriteModal: function() {
@@ -73,9 +76,11 @@ export default {
         }
       }
     },
+
     toggleFavoriteIcon() {
       this.inFavorites = !this.inFavorites;
     },
+
     setFilterSummary(e) {
       const filterSummary = {
         maxWeight: 40,
@@ -83,6 +88,13 @@ export default {
       };
 
       this.$emit("summarizeFilter", filterSummary);
+    },
+
+    formatCategory() {
+      this.category = this.category.split(' ');
+      this.category.shift();
+      this.category = this.category.join();
+      this.category = this.category.replace(',', ' ');
     }
   }
 };
@@ -202,7 +214,7 @@ export default {
   }
 
   &:hover {
-    text-shadow: 1px 2px 3px rgba(49, 49, 49, 0.5)
+    text-shadow: 1px 2px 3px rgba(49, 49, 49, 0.5);
   }
 }
 

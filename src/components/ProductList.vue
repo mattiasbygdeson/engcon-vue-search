@@ -7,7 +7,7 @@
 
           <button
             class="return-button"
-            @click="goBackToStart"
+            @click="$emit('return')"
           >Tillbaka till produktfilter</button>
         </template>
 
@@ -53,6 +53,7 @@
         :product="product"
         :favorites="favorites"
         :displayFavoriteModal="displayFavoriteModal"
+        :translatedStrings="translatedStrings"
         v-on:summarizeFilter="$emit('summarizeFilter')"
       />
     </div>
@@ -82,7 +83,7 @@
     </section>
 
     <ShareList
-      v-bind:favorites="favorites"
+      :favorites="favorites"
       v-if="displayShareModal"
       v-on:toggle-share-modal="toggleDisplayShareModal"
       class="share-modal__wrapper"
@@ -177,14 +178,6 @@ export default {
       this.products = [];
       this.products = test;
     },
-
-    goBackToStart() {
-      //eslint-disable-next-line no-console
-      console.log("Gå tillbaka");
-
-      // this.$router.push(this.$route.path);
-      this.$emit("return");
-    }
   }
 };
 </script>
