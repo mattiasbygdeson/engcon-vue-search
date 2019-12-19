@@ -44,8 +44,10 @@
         </nav>
       </div>
     </div>
-
-    <div class="products-container">
+    
+    <h2 class="products-headline">Products ({{products.length}})</h2>
+    
+    <div class="products-container">  
       <Product
         v-on:handle-favorites="handleFavorites"
         v-for="product in products"
@@ -206,11 +208,22 @@ export default {
     margin-right: 5%;
   }
 }
+
+.products-headline {
+  max-width: 1200px;
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+
 .products-container {
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
   clear: both;
   margin-bottom: 120px;
+  margin: auto;
+  min-height: 100vh;
+  max-width: 1200px;
 }
 
 .favorite-list {
@@ -250,6 +263,7 @@ export default {
     border-radius: 3px;
     box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
   }
+
   &__header {
     background: #ffd300;
     padding: 0;

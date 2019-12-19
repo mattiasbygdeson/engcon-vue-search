@@ -21,7 +21,7 @@ async function getTranslation() {
   let urlExtension = "/translate/filter?lang=" + window.lang;
 
   // eslint-disable-next-line no-console
-  console.log(window.lang);
+  // console.log(window.lang);
 
   try {
     const response = await instance.get(urlExtension);

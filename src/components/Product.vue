@@ -94,7 +94,7 @@ export default {
       this.category = this.category.split(' ');
       this.category.shift();
       this.category = this.category.join();
-      this.category = this.category.replace(',', ' ');
+      this.category = this.category.replace(/,/g, ' ');
     }
   }
 };

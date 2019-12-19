@@ -8,29 +8,42 @@
       </header>
 
       <main class="share-modal__content">
-        <form action>
-          <label for="input-email">Mottagarens e-postadress</label>
-          <input id="input-email" type="email" />
+        <form v-on:submit.prevent="sendEmail">
+          <label for="input-email">Receivers email address</label>
+          <input id="input-email" type="email" v-model="recipent" />
 
-          <label for="input-subject">Ämne</label>
-          <input id="input-subject" type="text" v-model="mailSubject" />
+          <label for="input-subject">Subject</label>
+          <input id="input-subject" type="text" v-model="messageSubject" />
 
-          <label for="input-message">Meddelande</label>
+          <label for="input-message">Message</label>
           <textarea
+            v-model="messageBody"
             id="input-message"
             name="input-message"
             cols="30"
             rows="10"
-            :placeholder="messagePlaceholder"
+            ng-disabled="true"
           />
 
-          <button class="button-submit" type="submit">Skicka</button>
+          <label for="input-name">Your name</label>
+          <input id="input-name" class="input-name" type="text" v-model="sender" />
+
+          <button class="button-submit" type="submit">Send</button>
         </form>
 
         <section class="input-copy">
           <label for="input-url">URL</label>
-          <input id="input-url" type="text" :value="favoriteListUrl" />
-          <button @click="generateShareableUrl" class="button-copy">Generera</button>
+          <input
+            id="input-url"
+            class="input-copyurl"
+            type="text"
+            :value="favoriteListUrl"
+            @click="copyUrl"
+            disabled
+          />
+
+          <button @click="generateShareableUrl" class="button-copy">Show URL</button>
+          <p v-if="urlCopied">The url has been successfully copied</p>
         </section>
       </main>
     </article>
@@ -38,14 +51,17 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ShareList",
   data() {
     return {
-      receiversEmail: "",
-      mailSubject: "Min lista",
-      messagePlaceholder:
-        "Hej, följ länken i detta mail och kika på mina favoritprodukter hos Engcon!",
+      recipent: "",
+      sender: "",
+      messageSubject: "Engcon product list",
+      messageBody:
+        "Please follow the link attached in this e-mail to see a list of Engcon products that I have selected.",
       favoriteListUrl: "",
       urlCopied: false
     };
@@ -60,8 +76,8 @@ export default {
     generateShareableUrl() {
       var baseUrl = window.location.hostname + this.$route.fullPath;
       var hash = this.$route.hash;
-      var baseUrlCleaned = baseUrl.replace(hash, '');
-      var listName = this.mailSubject.toLowerCase();
+      var baseUrlCleaned = baseUrl.replace(hash, "");
+      var listName = this.messageSubject.toLowerCase();
       var listNameDashed = listName.replace(/ /g, "-");
       var urlBody = "";
 
@@ -69,12 +85,57 @@ export default {
         urlBody += "&id=" + this.favorites[i].id;
       }
 
-      this.favoriteListUrl = baseUrlCleaned + "?name=" + listNameDashed + urlBody;
+      this.favoriteListUrl =
+        baseUrlCleaned + "?name=" + listNameDashed + urlBody;
     },
 
     copyUrl() {
       this.urlCopied = true;
       navigator.clipboard.writeText(this.favoriteListUrl);
+    },
+
+    sendEmail() {
+      if (!this.recipent || !this.sender || !this.messageSubject || !this.messageBody) {
+        alert("Please fill in all the fields in the form");
+        return;
+      }
+
+      this.generateShareableUrl();
+
+      var regex = /(<([^>]+)>)/ig
+
+      this.messageBody = this.messageBody.replace(regex, "");
+      this.sender = this.sender.replace(regex, "");
+
+      const msg = "<p>" + this.messageBody + "</p>";
+      const link = "<p><a href=" + this.favoriteListUrl + ">" + this.favoriteListUrl +"</a></p>";
+      const signoff = "<p>- " + this.sender + "</p>";
+
+      axios
+        .post("http://engcon.utv/rest-api/mail/sendMail", {
+          mailData: {
+            subject: this.messageSubject,
+            message: msg + link + signoff,
+            html: true,
+            reciepient: this.recipent
+          }
+        })
+        .then(function(response) {
+          //eslint-disable-next-line no-console
+          console.log(response);
+          alert(response.data.message);
+        })
+        .catch(function(error) {
+          //eslint-disable-next-line no-console
+          console.log(error);
+        });
+    },
+
+    sanitize(event) {
+      event.preventDefault();
+      const html = this.$sanitize(event.clipboardData.getData("text/html"));
+
+      document.execCommand("insertHTML", false, html);
     }
   }
 };
@@ -108,7 +169,6 @@ export default {
 
   &__container {
     background: white;
-    height: 495px;
     width: 521px;
     margin: auto;
     margin-top: 15vh;
@@ -156,6 +216,7 @@ export default {
     }
 
     textarea {
+      margin-bottom: 14px;
       background: #e7e5e1;
       min-width: 80%;
       max-width: 80%;
@@ -169,8 +230,8 @@ export default {
     .input-copy {
       border-top: 1px solid #c4c4c4;
       padding-top: 20px;
-      position: relative;
-      top: -30px;
+      // position: relative;
+      // top: -30px;
 
       input {
         display: inline;
@@ -191,9 +252,15 @@ export default {
     }
 
     .button-submit {
-      height: 117px;
-      position: relative;
-      top: -54px;
+      // height: 117px;
+      position: absolute;
+      height: 41px;
+      width: 89px;
+      // top: -54px;
+    }
+
+    .input-name {
+      display: inline;
     }
 
     .button-copy {
@@ -214,5 +281,34 @@ export default {
 .notification {
   animation-name: fadein-fadeout;
   animation-duration: 0.5s;
+}
+
+.share-modal__content {
+  input {
+    font-family: "Courier New", Courier, monospace;
+    color: rgb(26, 27, 29);
+    font-size: 0.95em;
+  }
+
+  textarea {
+    font-family: "Courier New", Courier, monospace;
+    color: rgb(26, 27, 29);
+    font-size: 0.95em;
+  }
+
+  ::placeholder {
+    font-family: "Courier New", Courier, monospace;
+    color: rgb(134, 138, 143);
+    font-size: 1.1em;
+  }
+}
+
+.input-copyurl {
+  color: rgb(134, 138, 143) !important;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
 }
 </style>

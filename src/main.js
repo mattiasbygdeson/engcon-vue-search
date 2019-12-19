@@ -1,6 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
+import VueSanitize from "vue-sanitize";
+
+const defaultOptions = {
+  allowedTags: ['a', 'b'],
+  allowedAttributes: {
+    'a': [ 'href' ]
+  }
+};
+
+Vue.use(VueSanitize, defaultOptions);
 
 Vue.use(VueRouter);
 

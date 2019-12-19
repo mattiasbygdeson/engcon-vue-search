@@ -57,7 +57,7 @@ export default {
   },
   created() {
     //eslint-disable-next-line no-console
-    console.log(window.lang)
+    // console.log(window.lang)
 
     this.getStoredProducts();
     this.getStoredSearchSummary();
@@ -326,7 +326,7 @@ export default {
         filterQuery = filterQuery.replace(/0/g, "*");
 
         //eslint-disable-next-line no-console
-        console.log(filterQuery);
+        // console.log(filterQuery);
       }
 
       let query = {
@@ -446,13 +446,6 @@ body {
   height: 700px;
   max-width: 1200px;
   margin: auto;
-}
-
-.products-container {
-  padding-top: 40px;
-  margin: auto;
-  min-height: 100vh;
-  max-width: 1200px;
 }
 
 .unfocus {
