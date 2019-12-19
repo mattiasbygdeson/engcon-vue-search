@@ -86,6 +86,7 @@
 
     <ShareList
       :favorites="favorites"
+      :translatedStrings="translatedStrings"
       v-if="displayShareModal"
       v-on:toggle-share-modal="toggleDisplayShareModal"
       class="share-modal__wrapper"

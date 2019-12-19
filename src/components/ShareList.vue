@@ -2,37 +2,37 @@
   <div class="share-modal__wrapper">
     <article class="share-modal__container">
       <header class="share-modal__header">
-        <h2>Dela</h2>
+        <h2>{{translatedStrings.share}}</h2>
 
         <i @click="$emit('toggle-share-modal')" class="icon fas fa-times icon-big" />
       </header>
 
       <main class="share-modal__content">
         <form v-on:submit.prevent="sendEmail">
-          <label for="input-email">Receivers email address</label>
+          <label for="input-email">{{translatedStrings.emailRecipients}}</label>
           <input id="input-email" type="email" v-model="recipent" />
 
-          <label for="input-subject">Subject</label>
+          <label for="input-subject">{{translatedStrings.emailSubject}}</label>
           <input id="input-subject" type="text" v-model="messageSubject" />
 
-          <label for="input-message">Message</label>
+          <label for="input-message">{{translatedStrings.emailMessage}}</label>
           <textarea
             v-model="messageBody"
             id="input-message"
             name="input-message"
             cols="30"
             rows="10"
-            ng-disabled="true"
           />
 
-          <label for="input-name">Your name</label>
+          <label for="input-name">{{translatedStrings.emailYourName}}</label>
           <input id="input-name" class="input-name" type="text" v-model="sender" />
 
-          <button class="button-submit" type="submit">Send</button>
+          <button class="button-submit" type="submit">{{translatedStrings.emailSend}}</button>
         </form>
 
         <section class="input-copy">
           <label for="input-url">URL</label>
+
           <input
             id="input-url"
             class="input-copyurl"
@@ -40,10 +40,12 @@
             :value="favoriteListUrl"
             @click="copyUrl"
             disabled
-          />
+          />          
 
-          <button @click="generateShareableUrl" class="button-copy">Show URL</button>
-          <p v-if="urlCopied">The url has been successfully copied</p>
+          <button @click="generateShareableUrl" class="button-copy">{{translatedStrings.emailShowURL}}</button>
+          <span @click="copyUrl" class="clickable-surface"></span>
+
+          <p class="notification" v-if="urlCopied">{{translatedStrings.emailCopyNote}}</p>          
         </section>
       </main>
     </article>
@@ -66,11 +68,9 @@ export default {
       urlCopied: false
     };
   },
-  created() {
-    // this.generateShareableUrl();
-  },
   props: {
-    favorites: Array
+    favorites: Array,
+    translatedStrings: Object,
   },
   methods: {
     generateShareableUrl() {
@@ -170,6 +170,7 @@ export default {
   &__container {
     background: white;
     width: 521px;
+    height: 560px;
     margin: auto;
     margin-top: 15vh;
     border-radius: 3px;
@@ -193,6 +194,7 @@ export default {
     h2 {
       font-weight: 800;
       font-size: 1.2em;
+      padding-top: 3px;
     }
   }
 
@@ -281,6 +283,8 @@ export default {
 .notification {
   animation-name: fadein-fadeout;
   animation-duration: 0.5s;
+  position: relative;
+  top: -40px;
 }
 
 .share-modal__content {
@@ -305,10 +309,20 @@ export default {
 
 .input-copyurl {
   color: rgb(134, 138, 143) !important;
+}
+
+.clickable-surface {
+  background: #e7e5e1;
+  opacity: 0;
+  display: block;
+  width: 400px;
+  height: 41px;
+  top: -57px;
+  position: relative;
 
   &:hover {
     cursor: pointer;
-    opacity: 0.7;
+    opacity: 0.3;
   }
 }
 </style>
