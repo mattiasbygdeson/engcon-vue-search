@@ -97,6 +97,7 @@ export default {
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
   transition: box-shadow 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
   border-radius: 2px;
+  max-height: 500px;
 
   display: grid;
   grid-template-rows: auto 100px 60px;

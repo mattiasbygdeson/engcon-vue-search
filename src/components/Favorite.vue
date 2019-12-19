@@ -1,32 +1,36 @@
 <template>
-  <article class="favorite-list__product">
-    <section>
-      <a :href="'http://engcon.utv' + favorite.uri">
-        <img
-          v-if="favorite['metadata.product-media'][0].length == 1"
-          class="product-thumbnail"
-          v-bind:src="'http://engcon.utv' + favorite['metadata.product-media']"
-        />
+  <div>
+    <article class="favorite-list__product">
+      <section>
+        <a :href="'http://engcon.utv' + favorite.uri">
+          <img
+            v-if="favorite['metadata.product-media'][0].length == 1"
+            class="product-thumbnail"
+            v-bind:src="'http://engcon.utv' + favorite['metadata.product-media']"
+          />
 
-        <img
-          v-else
-          class="product-thumbnail"
-          v-bind:src="'http://engcon.utv' + favorite['metadata.product-media'][0]"
-        />
-      </a>
-    </section>
+          <img
+            v-else
+            class="product-thumbnail"
+            v-bind:src="'http://engcon.utv' + favorite['metadata.product-media'][0]"
+          />
+        </a>
+      </section>
 
-    <section>
-      <h3>{{favorite.title}}</h3>
-      <p class="d-block">Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
+      <section>
+        <h3>{{favorite.title}}</h3>
+        <p
+          class="d-block"
+        >Maskinvikt: {{favorite["metadata.product-minWeight"]}} - {{favorite["metadata.product-maxWeight"]}} ton</p>
 
-      <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
-      <span
-        v-on:click="$emit('remove-favorite', favorite)"
-        class="badge remove"
-      >{{translatedStrings.remove}}</span>
-    </section>
-  </article>
+        <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
+        <span
+          v-on:click="$emit('remove-favorite', favorite)"
+          class="badge remove"
+        >{{translatedStrings.remove}}</span>
+      </section>
+    </article>
+  </div>
 </template>
 
 <script>
@@ -36,6 +40,11 @@ export default {
     favorite: Array,
     strings: Array,
     translatedStrings: Array
+  },
+  data() {
+    return {
+      displayShareModal: true
+    };
   }
 };
 </script>
@@ -45,6 +54,7 @@ export default {
   display: grid;
   grid-template-columns: 20% 80%;
   padding-top: 10px;
+  border-bottom: 1px solid #ccc;
 
   p {
     margin-bottom: 10px;

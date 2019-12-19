@@ -10,10 +10,9 @@
           <h2>{{translatedStrings.selectYourBrand}}</h2>
 
           <input
-            class="input-brand-filter"
+            class="input-brand-filter hidden"
             type="text"
             :placeholder="translatedStrings.filter"
-            v-on:keyup="filterBrands"
             name="filter"
           />
         </header>
@@ -30,7 +29,9 @@
       </section>
 
       <section class="brand-search-column">
-        <h2 v-if="selectedBrand.length !== 0">{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h2>
+        <h2
+          v-if="selectedBrand.length !== 0"
+        >{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h2>
 
         <p v-else class="notice">{{translatedStrings.selectBrandTo}}</p>
 
@@ -131,26 +132,23 @@ export default {
       /**
        * Remove any brands from component that do not match search input
        * Activated at keyup in input field
-
        *
        */
-      // var getBrands = localStorage.getItem("engcon-brands");
-      // if (getBrands) {
-      //   this.brands = JSON.parse(getBrands);
-      // }
-      // this.filteredBrands = [];
-      // var filter = this.filter.toLowerCase();
-      // var brand;
+
+      //eslint-disable-next-line no-console
+      // console.log("filterBrands");
+
+      // var filterInput = this.filter.toLowerCase();
+      // var brandName;
       // var result;
-      // if (filter !== "") {
-      //   for (var i = 0; this.brands.length > i; i++) {
-      //     brand = this.brands[i].BrandName.toLowerCase();
-      //     result = brand.match(filter);
-      //     if (result && filter.charAt(0) === brand.charAt(0)) {
-      //       this.filteredBrands.push(this.brands[i]);
-      //     }
+
+      // for (var i = 0; this.brands.length > i; i++) {
+      //   brandName = this.brands[i].BrandName.toLowerCase();
+      //   result = brandName.match(filterInput);
+
+      //   if (result && filterInput.charAt(0) !== brandName.charAt(0)) {
+      //     this.brands[i].Hide = true;
       //   }
-      //   this.brands = this.filteredBrands;
       // }
     },
 
@@ -214,7 +212,7 @@ export default {
   }
 
   .model-list {
-    max-height: 355px;  
+    max-height: 355px;
     overflow-y: auto;
     padding: 10px;
 
@@ -235,7 +233,7 @@ export default {
 
 .notice {
   color: #aaa;
-  width: 50%;
+  width: 100%;
   margin: auto;
   padding-top: 160px;
   text-align: center;
@@ -251,6 +249,7 @@ export default {
   h1 {
     font-weight: 800;
     font-size: 1.5em !important;
+    margin-top: 4px;
   }
 }
 

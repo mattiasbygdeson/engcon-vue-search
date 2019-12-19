@@ -2,21 +2,40 @@
   <main>
     <div id="summary-bar" class="summary-bar">
       <div class="summary-bar__content">
-        <span v-if="searchSummary.brandName">{{replaceString(translatedStrings.brand, searchSummary.brandName)}}</span>
-        <span v-if="searchSummary.modelName">{{replaceString(translatedStrings.model, searchSummary.modelName)}}</span>
-        <span v-if="searchSummary.machineWeight">{{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}</span>
+        <template v-if="this.listTitle">
+          <span>
+            {{listTitle}}
+          </span>
 
-        <span v-if="filterSummary.maxWeight">{{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}</span>
-        <span v-if="filterSummary.keyword">Sökord: {{filterSummary.keyword}}</span>
+          <router-link to="/">Tillbaka till produktfilter</router-link>
+        </template>
+
+        <template v-else>
+          <span v-if="searchSummary.brandName">
+            {{replaceString(translatedStrings.brand, searchSummary.brandName)}}
+          </span>
+
+          <span v-if="searchSummary.modelName">
+            {{replaceString(translatedStrings.model, searchSummary.modelName)}}
+          </span>
+
+          <span v-if="searchSummary.machineWeight">
+            {{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}
+          </span>
+
+          <span v-if="filterSummary.maxWeight > 0">
+            {{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}
+          </span>
+
+          <span v-if="filterSummary.keyword">Sökord: "{{filterSummary.keyword}}"</span>
+        </template>
 
         <nav>
           <button
             v-if="this.favorites.length !== 0"
             @click="toggleDisplayFavoriteModal"
             class="favorite-list__button"
-          >
-            {{replaceString(translatedStrings.favorites, favorites.length)}}
-          </button>
+          >{{replaceString(translatedStrings.favorites, favorites.length)}}</button>
 
           <a href="#apptop" class="back-to-top">
             <i class="icon fas fa-angle-up icon-big" />
@@ -38,13 +57,13 @@
     </div>
 
     <section v-if="displayFavoriteModal" class="favorite-list__wrapper">
-      <div class="favorite-list__container">
+      <article class="favorite-list__container">
         <header class="favorite-list__header">
           <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
 
           <nav>
-            <i class="icon fas fa-print icon-big" />
-            <i class="icon fas fa-share-alt icon-big" />
+            <i class="hidden icon fas fa-print icon-big" />
+            <i @click="toggleDisplayShareModal" class="icon fas fa-share-alt icon-big" />
             <i @click="toggleDisplayFavoriteModal" class="icon fas fa-times icon-big" />
           </nav>
         </header>
@@ -58,31 +77,42 @@
             :favorite="favorite"
           />
         </main>
-      </div>
+      </article>
     </section>
+
+    <ShareList
+      v-bind:favorites="favorites"
+      v-if="displayShareModal"
+      v-on:toggle-share-modal="toggleDisplayShareModal"
+      class="share-modal__wrapper"
+    />
   </main>
 </template>
 
 <script>
 import Product from "./Product";
 import Favorite from "./Favorite";
+import ShareList from "./ShareList";
 
 export default {
   name: "ProductList",
   components: {
     Product,
-    Favorite
+    Favorite,
+    ShareList
   },
   props: {
     searchSummary: Object,
     filterSummary: String,
     products: Array,
-    translatedStrings: Array
+    translatedStrings: Array,
+    listTitle: String
   },
   data() {
     return {
       favorites: [],
-      displayFavoriteModal: false
+      displayFavoriteModal: false,
+      displayShareModal: false
     };
   },
   created() {
@@ -96,9 +126,11 @@ export default {
         this.favorites = JSON.parse(storedFavorites);
       }
     },
+
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
     },
+
     toggleDisplayFavoriteModal() {
       this.displayFavoriteModal = !this.displayFavoriteModal;
 
@@ -107,6 +139,11 @@ export default {
       this.products = [];
       this.products = test;
     },
+
+    toggleDisplayShareModal() {
+      this.displayShareModal = !this.displayShareModal;
+    },
+
     handleFavorites(product) {
       /**
        * Add to favorite list if it's a new object
@@ -138,6 +175,13 @@ export default {
       var test = this.products;
       this.products = [];
       this.products = test;
+    },
+
+    goBackToStart() {
+      //eslint-disable-next-line no-console
+      console.log("Gå tillbaka");
+
+      this.$router.push(this.$route.path);
     }
   }
 };
@@ -228,6 +272,7 @@ export default {
     h2 {
       font-weight: 800;
       font-size: 1.2em;
+      margin-top: 4px;
     }
   }
   &__content {
@@ -240,6 +285,7 @@ export default {
     margin-bottom: 10px;
   }
 }
+
 .back-to-top {
   text-decoration: none;
   position: relative;

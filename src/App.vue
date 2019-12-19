@@ -1,6 +1,6 @@
 <template>
   <div id="apptop">
-    <div class="main-header-wrapper">
+    <div class="main-header-wrapper" :class="{'hidden' : this.listTitle.length !== 0}">
       <header class="main-header">
         <ProductGuide
           v-on:summarizeSearch="summarizeSearch"
@@ -16,11 +16,13 @@
     </div>
 
     <ProductList
-      v-bind:translatedStrings="translatedStrings"
-      v-bind:searchSummary="searchSummary"
-      v-bind:filterSummary="filterSummary"
-      v-bind:products="products"
+      :translatedStrings="translatedStrings"
+      :searchSummary="searchSummary"
+      :filterSummary="filterSummary"
+      :products="products"
+      :listTitle="listTitle"
       v-on:filterSummary="summarizeFilter"
+      v-on:backToStart="backToStart"
     />
   </div>
 </template>
@@ -32,6 +34,8 @@ import axios from "axios";
 import qs from "qs";
 import ProductFilter from "./components/ProductFilter";
 import { getTranslation } from "./api.js";
+// import VueRouter from 'vue-router'
+// import { getProducts } from "./api.js";
 
 export default {
   name: "productfilter",
@@ -46,7 +50,9 @@ export default {
       filterSummary: [],
       products: [],
       favorites: [],
-      translatedStrings: []
+      translatedStrings: [],
+      testData: [],
+      listTitle: ""
     };
   },
   created() {
@@ -54,6 +60,8 @@ export default {
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
     this.getTranslatedStrings();
+    this.generateProductsByFavorites();
+    // this.requestProducts();
   },
   methods: {
     getStoredProducts() {
@@ -87,7 +95,7 @@ export default {
     summarizeSearch(searchSummary) {
       /**
        * Clear previous search and product result and create a new one
-       * Get product IDs 
+       * Get product IDs
        *
        */
 
@@ -140,7 +148,7 @@ export default {
 
     generateProductsBySearch() {
       /**
-       * Axios call to Sitevisions API to extract propducts
+       * Generate products based on brand and model
        *
        */
 
@@ -152,7 +160,6 @@ export default {
       let url = "/search";
 
       // Construct a filterQuery string
-      //
       var productsIDs = [];
       var startOfString = "+(";
       var endOfString = ") AND language:sv";
@@ -164,7 +171,6 @@ export default {
 
         if (i !== this.products.length - 1) {
           // Unless loop is at the last index, print " OR " in queary string
-          //
           middleOfString += " OR ";
         }
       }
@@ -178,10 +184,9 @@ export default {
         fields: [
           "name",
           "title",
+          "id",
           "language",
           "uri",
-          "id",
-          "metadata.description",
           "metadata.product-media",
           "metadata.product-minWeight",
           "metadata.product-maxWeight"
@@ -208,8 +213,85 @@ export default {
         });
     },
 
+    generateProductsByFavorites() {
+      if (this.$route.query) {
+        // this.searchSummary = [];
+        // this.filterSummary = [];
+
+        var urlQuery = this.$route.query
+
+        // Hash string up into array
+        // var idString = this.$route.params.favlist;
+        // var idArray = idString.split(":");
+
+        // Set the title
+        var newTitle = urlQuery.name.replace(/-/g, " ");
+        var newTitleCapitalized = newTitle.charAt(0).toUpperCase() + newTitle.slice(1);
+        this.listTitle = newTitleCapitalized;
+
+        // Construct a filterQuery string
+        var startOfString = "+(";
+        var endOfString = ") AND language:sv";
+        var middleOfString = "";
+
+        for (var i = 0; urlQuery.id.length > i; i++) {
+          middleOfString += "id:" + urlQuery.id[i];
+
+          if (i !== urlQuery.id.length - 1) {
+            // Unless loop is at the last index, print " OR " in queary string
+            middleOfString += " OR ";
+          }
+        }
+
+        var filterQuery = startOfString + middleOfString + endOfString;
+
+        // Make API call
+        const instance = axios.create({
+          baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+          paramsSerializer: params => qs.stringify(params)
+        });
+
+        let url = "/search";
+
+        let query = {
+          query: "*",
+          filterQuery: filterQuery,
+          limit: 200,
+          fields: [
+            "name",
+            "title",
+            "id",
+            "language",
+            "uri",
+            "metadata.product-media",
+            "metadata.product-minWeight",
+            "metadata.product-maxWeight"
+          ]
+        };
+
+        instance
+          .get(url, {
+            params: {
+              format: "json",
+              json: JSON.stringify(query)
+            },
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+          .then(res => {
+            this.products = res.data;
+          })
+          .catch(err => {
+            // eslint-disable-next-line no-console
+            console.log(err);
+          });
+      }
+    },
+
     generateProductsByFilter() {
       /**
+       * Generate products based on input weight and a possible keyword
        * Axios call to Sitevisions API to extract propducts
        * Argument: searchSummary contains product ID
        *
@@ -224,8 +306,25 @@ export default {
 
       // Construct a filterQuery string
       //
+
       var filterQuery =
-        "+(metadata.product-minWeight:[* TO 20] AND metadata.product-maxWeight:[20 TO *]) AND language:sv";
+        "+(metadata.product-minWeight:[* TO " +
+        this.filterSummary.maxWeight +
+        "] AND metadata.product-maxWeight:[" +
+        this.filterSummary.maxWeight +
+        " TO *]) AND language:sv";
+
+      if (this.filterSummary.keyword) {
+        var keyword = this.filterSummary.keyword.toUpperCase();
+        filterQuery += " AND name:*" + keyword + "*";
+      }
+
+      if (this.filterSummary.maxWeight == 0) {
+        filterQuery = filterQuery.replace(/0/g, "*");
+
+        //eslint-disable-next-line no-console
+        console.log(filterQuery);
+      }
 
       let query = {
         query: "*",
@@ -264,11 +363,30 @@ export default {
           // eslint-disable-next-line no-console
           console.log(err);
         });
+
+      // document.getElementById('summary-bar').scrollIntoView();
     },
 
     async getTranslatedStrings() {
       let translation = await getTranslation();
       this.translatedStrings = translation.translation;
+    },
+
+    async requestProducts() {
+      // var productsIDs = [];
+      // var middleOfString = "";
+      // for (var i = 0; this.products.length > i; i++) {
+      //   productsIDs.push(this.products[i].id);
+      //   middleOfString += "metadata.product-id:" + this.products[i].id;
+      //   if (i !== this.products.length - 1) {
+      //     // Unless loop is at the last index, print " OR " in queary string
+      //     //
+      //     middleOfString += " OR ";
+      //   }
+      // }
+      // // var filterQuery = startOfString + middleOfString + endOfString;
+      // let products = await getProducts(middleOfString);
+      // this.testData = products;
     }
   }
 };
@@ -283,14 +401,14 @@ export default {
 
 html {
   scroll-behavior: smooth !important;
-  height: 100%;
-  overflow-y: initial;
-  overflow-x: initial;
+  // height: 100%;
+  overflow-y: initial !important;
+  overflow-x: initial !important;
 }
 
 body {
-  height: 100%;
-  overflow: auto;
+  // height: 100%;
+  overflow: auto !important;
 }
 
 // li {
@@ -298,11 +416,11 @@ body {
 // }
 
 // body {
-  // font-family: "akzidenz-grotesk-next", sans-serif;
-  // font-style: normal;
-  // font-size: 17px;
-  // margin: auto;
-  // background: #f0f0f0;
+// font-family: "akzidenz-grotesk-next", sans-serif;
+// font-style: normal;
+// font-size: 17px;
+// margin: auto;
+// background: #f0f0f0;
 // }
 
 .main-header-wrapper {
@@ -343,7 +461,7 @@ body {
 }
 
 .icon {
-  font-family:'FontAwesome';
+  font-family: "FontAwesome";
   font-style: initial;
   text-decoration: none;
 
@@ -363,5 +481,9 @@ body {
 
 .d-block {
   display: block !important;
+}
+
+.hidden {
+  display: none;
 }
 </style>

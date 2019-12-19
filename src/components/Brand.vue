@@ -1,11 +1,18 @@
 <template>
-  <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="brand-icon selected">
-    <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-  </li>
+  <div>
+    <li v-if="this.selectedBrand.BrandId === this.brand.BrandId" class="brand-icon selected">
+      <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
+    </li>
 
-  <li v-else class="brand-icon" @click="$emit('select-brand', brand)">
-    <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
-  </li>
+    <li
+      v-else
+      class="brand-icon"
+      @click="$emit('select-brand', brand)"
+      v-bind:class="{'hidden' : brand.Hide}"
+    >
+      <img v-bind:src="'http://beta.configurator.engcon.com/' + brand.Logo.substr(2)" />
+    </li>
+  </div>
 </template>
 
 <script>
@@ -77,5 +84,9 @@ export default {
     mix-blend-mode: multiply;
     filter: invert(0%);
   }
+}
+
+.hidden {
+  border: 2px solid red;
 }
 </style>

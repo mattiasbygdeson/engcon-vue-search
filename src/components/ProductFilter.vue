@@ -6,7 +6,10 @@
 
     <main>
       <section>
-        <label for="machine-weight">{{replaceString(translatedStrings.machineWeight, maxWeight)}}</label>
+        <label
+          class="machine-weight-range-label"
+          for="machine-weight"
+        ><span v-if="maxWeight > 0">{{replaceString(translatedStrings.machineWeight, maxWeight)}}</span></label>
         <input
           v-on:change="setFilterSummary"
           class="machine-weight-range-input"
@@ -80,6 +83,7 @@ export default {
     padding: 20px;
   }
 }
+
 .product-filter-search {
   input[type="text"] {
     margin-top: 15px;
@@ -102,6 +106,7 @@ export default {
     }
   }
 }
+
 .product-filter-container-header {
   background: #ffd300;
   width: 900px;
@@ -120,6 +125,11 @@ export default {
   display: block;
   margin-top: 15px;
 }
+
+.machine-weight-range-label {
+  border: 1px solid white;
+}
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   border: 1px solid #000000;
@@ -130,6 +140,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
+
 input[type="range"]::-moz-range-thumb {
   border: 1px solid #000000;
   min-height: 26px;
@@ -138,6 +149,7 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
+
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 18px;
@@ -146,6 +158,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   border-radius: 1.3px;
   border: 0.2px solid #010101;
 }
+
 input[type="range"]::-moz-range-track {
   width: 100%;
   height: 18px;
