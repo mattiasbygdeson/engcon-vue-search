@@ -22,7 +22,7 @@
       :products="products"
       :listTitle="listTitle"
       v-on:filterSummary="summarizeFilter"
-      v-on:backToStart="backToStart"
+      v-on:return="clearUrlQuery"
     />
   </div>
 </template>
@@ -365,6 +365,16 @@ export default {
         });
 
       // document.getElementById('summary-bar').scrollIntoView();
+    },
+
+    clearUrlQuery() {
+      // eslint-disable-next-line no-console
+      console.log("clearUrlQuery")
+
+      this.$router.push(this.$route.path);
+      this.listTitle = "";
+
+      this.getStoredProducts();
     },
 
     async getTranslatedStrings() {

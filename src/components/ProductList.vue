@@ -3,29 +3,30 @@
     <div id="summary-bar" class="summary-bar">
       <div class="summary-bar__content">
         <template v-if="this.listTitle">
-          <span>
-            {{listTitle}}
-          </span>
+          <span>{{listTitle}}</span>
 
-          <router-link to="/">Tillbaka till produktfilter</router-link>
+          <button
+            class="return-button"
+            @click="goBackToStart"
+          >Tillbaka till produktfilter</button>
         </template>
 
         <template v-else>
-          <span v-if="searchSummary.brandName">
-            {{replaceString(translatedStrings.brand, searchSummary.brandName)}}
-          </span>
+          <span
+            v-if="searchSummary.brandName"
+          >{{replaceString(translatedStrings.brand, searchSummary.brandName)}}</span>
 
-          <span v-if="searchSummary.modelName">
-            {{replaceString(translatedStrings.model, searchSummary.modelName)}}
-          </span>
+          <span
+            v-if="searchSummary.modelName"
+          >{{replaceString(translatedStrings.model, searchSummary.modelName)}}</span>
 
-          <span v-if="searchSummary.machineWeight">
-            {{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}
-          </span>
+          <span
+            v-if="searchSummary.machineWeight"
+          >{{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}</span>
 
-          <span v-if="filterSummary.maxWeight > 0">
-            {{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}
-          </span>
+          <span
+            v-if="filterSummary.maxWeight > 0"
+          >{{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}</span>
 
           <span v-if="filterSummary.keyword">Sökord: "{{filterSummary.keyword}}"</span>
         </template>
@@ -181,7 +182,8 @@ export default {
       //eslint-disable-next-line no-console
       console.log("Gå tillbaka");
 
-      this.$router.push(this.$route.path);
+      // this.$router.push(this.$route.path);
+      this.$emit("return");
     }
   }
 };
@@ -295,5 +297,10 @@ export default {
   &:active {
     color: inherit;
   }
+}
+
+.return-button {
+  @extend .favorite-list__button;
+  top: 0px;
 }
 </style>
