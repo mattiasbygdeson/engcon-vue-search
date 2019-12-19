@@ -38,7 +38,7 @@
             class="favorite-list__button"
           >{{replaceString(translatedStrings.favorites, favorites.length)}}</button>
 
-          <a href="#apptop" class="back-to-top">
+          <a href="#apptop" class="back-to-top" :class="{'hidden' : this.listTitle}">
             <i class="icon fas fa-angle-up icon-big" />
           </a>
         </nav>
@@ -301,8 +301,6 @@ export default {
   position: relative;
   top: -7px;
   color: white;
-
-  visibility: hidden;
 
   &:active {
     color: inherit;

@@ -492,7 +492,7 @@ body {
   display: none;
 }
 
-.no-visibility {
+.hidden {
   visibility: hidden;
 }
 </style>
