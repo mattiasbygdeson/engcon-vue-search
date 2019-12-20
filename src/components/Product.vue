@@ -101,6 +101,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .product-container {
   background: white;
   border: 1px solid #ddd;
@@ -135,7 +137,6 @@ export default {
 
     h3 {
       font-weight: 800;
-      text-align: center;
 
       a {
         color: black;
@@ -245,4 +246,44 @@ export default {
   text-align: center;
   padding: 10px;
 }
+
+@media screen and (max-width: $breakpoint-small) {
+.product-container {
+  background: white;
+  border: 1px solid #ddd;
+  text-align: left;
+  margin: 15px;
+  transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  transition: box-shadow 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  border-radius: 2px;
+  max-height: 500px;
+
+  display: initial;
+  // grid-template-columns: 50% 50%;
+  // grid-template-rows: auto 100px 60px;
+
+    header {
+      width: 30%;
+      
+      // border: 1px solid red;
+      display: inline-block;
+
+      img {
+        width: 100%;
+        height: 100px;
+        object-fit: scale-down;
+      }
+    }
+
+    main {
+      text-align: left;
+      // display: inline-block;
+      float: right;
+      // border: 1px solid red;
+      width: 70%;
+      padding-top: 20px;
+    }
+  }
+}
+
 </style>

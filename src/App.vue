@@ -218,14 +218,7 @@ export default {
 
     generateProductsByFavorites() {
       if (this.$route.query) {
-        // this.searchSummary = [];
-        // this.filterSummary = [];
-
         var urlQuery = this.$route.query
-
-        // Hash string up into array
-        // var idString = this.$route.params.favlist;
-        // var idArray = idString.split(":");
 
         // Set the title
         var newTitle = urlQuery.name.replace(/-/g, " ");
@@ -237,13 +230,17 @@ export default {
         var endOfString = ") AND language:" + window.lang;
         var middleOfString = "";
 
-        for (var i = 0; urlQuery.id.length > i; i++) {
-          middleOfString += "id:" + urlQuery.id[i];
+        if(Array.isArray(urlQuery.id)) {
+          for (var i = 0; urlQuery.id.length > i; i++) {
+            middleOfString += "id:" + urlQuery.id[i];
 
-          if (i !== urlQuery.id.length - 1) {
-            // Unless loop is at the last index, print " OR " in queary string
-            middleOfString += " OR ";
+            if (i !== urlQuery.id.length - 1) {
+              // Unless loop is at the last index, print " OR " in queary string
+              middleOfString += " OR ";
+            }
           }
+        } else {
+          middleOfString = "id:" + urlQuery.id;
         }
 
         var filterQuery = startOfString + middleOfString + endOfString;
@@ -383,28 +380,13 @@ export default {
       //eslint-disable-next-line no-console
       // console.log(translation);
     },
-
-    async requestProducts() {
-      // var productsIDs = [];
-      // var middleOfString = "";
-      // for (var i = 0; this.products.length > i; i++) {
-      //   productsIDs.push(this.products[i].id);
-      //   middleOfString += "metadata.product-id:" + this.products[i].id;
-      //   if (i !== this.products.length - 1) {
-      //     // Unless loop is at the last index, print " OR " in queary string
-      //     //
-      //     middleOfString += " OR ";
-      //   }
-      // }
-      // // var filterQuery = startOfString + middleOfString + endOfString;
-      // let products = await getProducts(middleOfString);
-      // this.testData = products;
-    }
   }
 };
 </script>
 
 <style lang="scss">
+@import "./scss/_variables.scss";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -413,31 +395,18 @@ export default {
 
 html {
   scroll-behavior: smooth !important;
-  // height: 100%;
   overflow-y: initial !important;
   overflow-x: initial !important;
 }
 
 body {
-  // height: 100%;
   overflow: auto !important;
 }
-
-// li {
-//   list-style: none;
-// }
-
-// body {
-// font-family: "akzidenz-grotesk-next", sans-serif;
-// font-style: normal;
-// font-size: 17px;
-// margin: auto;
-// background: #f0f0f0;
-// }
 
 .main-header-wrapper {
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
   background-size: cover;
+  background-position: center;
 }
 
 .main-header {
@@ -494,5 +463,25 @@ body {
 
 .hidden {
   visibility: hidden;
+}
+
+@media screen and (max-width: $breakpoint-medium) {
+  body {
+    // background: pink
+  }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+  body {
+    // background: cyan !important;
+  }
+
+  .main-header {
+    height: auto;
+  }
+
+  .products-container {
+    grid-template-columns: 50% 50%;
+  }
 }
 </style>

@@ -134,18 +134,14 @@ export default {
        * Activated at keyup in input field
        *
        */
-
       //eslint-disable-next-line no-console
       // console.log("filterBrands");
-
       // var filterInput = this.filter.toLowerCase();
       // var brandName;
       // var result;
-
       // for (var i = 0; this.brands.length > i; i++) {
       //   brandName = this.brands[i].BrandName.toLowerCase();
       //   result = brandName.match(filterInput);
-
       //   if (result && filterInput.charAt(0) !== brandName.charAt(0)) {
       //     this.brands[i].Hide = true;
       //   }
@@ -184,7 +180,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .brand-search-container {
+  width: 95%;
+  margin: auto;
+
   main {
     display: grid;
     grid-template-columns: 70% auto;
@@ -205,7 +206,6 @@ export default {
   .brand-list {
     max-height: 90%;
     overflow-y: scroll;
-    padding: 10px;
 
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
@@ -214,10 +214,12 @@ export default {
   .model-list {
     max-height: 355px;
     overflow-y: auto;
-    padding: 10px;
 
     display: grid;
     grid-template-columns: 50% 50%;
+
+    position: relative;
+    top: 12px;
   }
 
   h2 {
@@ -261,5 +263,79 @@ export default {
   height: 30px;
   font-size: 1em;
   padding-left: 10px;
+}
+
+@media screen and (max-width: $breakpoint-medium) {
+  body {
+    background: pink;
+  }
+
+  .brand-search-column {
+    .brand-list {
+      grid-template-columns: 33% 33% 33%;
+    }
+
+    .model-list {
+      grid-template-columns: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+  .main-header {
+    height: auto;
+  }
+
+  .products-container {
+    grid-template-columns: 50% 50%;
+  }
+
+  .brand-search-container {
+    width: 95%;
+    margin: auto;
+
+    main {
+      display: grid;
+      grid-template-columns: 100%;
+      grid-row-gap: 20px;
+      max-height: 900px;
+    }
+  }
+
+  .brand-search-column {
+    .brand-list {
+      grid-template-columns: 33% 33% 33%;
+    }
+
+    .model-list {
+      grid-template-columns: 25% 25% 25% 25%;
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint-extra-small) {
+.brand-search-container-header {
+  background: #ffd300;
+  padding: 0;
+  margin: 0;
+  height: 50px;
+  padding: 8px 20px;
+
+    h1 {
+      font-weight: 800;
+      font-size: 1em !important;
+      margin-top: 4px;
+    }
+  }
+
+  .brand-search-column {
+    .brand-list {
+      grid-template-columns: 50% 50%;
+    }
+
+    .model-list {
+      grid-template-columns: 100%;
+    }
+  }
 }
 </style>

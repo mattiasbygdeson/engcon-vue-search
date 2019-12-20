@@ -67,19 +67,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .product-filter-container {
+  // margin: auto;
+  // margin-right: 29px;
+  // float: right;
+
+  width: 95%;
   margin: auto;
   margin-top: 20px;
-  float: right;
+
   main {
     display: grid;
     grid-template-columns: 65% auto;
     border: 1px solid #ddd;
     height: 110px;
-    max-width: 900px;
+    // max-width: 900px;
     background: white;
     opacity: 0.9;
   }
+
   section {
     padding: 20px;
   }
@@ -95,6 +103,7 @@ export default {
     padding: 10px;
     font-size: 0.8em;
   }
+
   button {
     position: relative;
     top: 2px;
@@ -110,11 +119,12 @@ export default {
 
 .product-filter-container-header {
   background: #ffd300;
-  width: 900px;
+  // width: 900px;
   padding: 0;
   margin: 0;
   height: 50px;
   padding: 11px 20px;
+
   h2 {
     font-weight: 800;
     font-size: 1.1em;
@@ -172,4 +182,37 @@ export default {
   }
 }
 
+
+
+@media screen and (max-width: $breakpoint-small) {
+.product-filter-container {
+  // margin: auto;
+  // margin-right: 29px;
+  // float: right;
+
+  width: 95%;
+  margin: auto;
+  margin-top: 20px;
+
+  main {
+      display: grid;
+      grid-template-columns: 100%;
+      border: 1px solid #ddd;
+      height: 210px;
+      // max-width: 900px;
+      background: white;
+      opacity: 0.9;
+    }
+  }
+}
+
+
+
+@media screen and (max-width: $breakpoint-extra-small) {
+  .product-filter-container-header {
+    h2 {
+      font-size: 0.9em !important;
+    }
+  }
+}
 </style>

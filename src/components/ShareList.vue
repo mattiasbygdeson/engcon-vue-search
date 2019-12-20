@@ -33,19 +33,15 @@
         <section class="input-copy">
           <label for="input-url">URL</label>
 
-          <input
-            id="input-url"
-            class="input-copyurl"
-            type="text"
-            :value="favoriteListUrl"
-            @click="copyUrl"
-            disabled
-          />          
+          <input id="input-url" class="input-copyurl" type="text" :value="favoriteListUrl" />
 
-          <button @click="generateShareableUrl" class="button-copy">{{translatedStrings.emailShowURL}}</button>
-          <span @click="copyUrl" class="clickable-surface"></span>
+          <button
+            @click="generateShareableUrl"
+            class="button-copy"
+          >{{translatedStrings.emailShowURL}}</button>
+          <!-- <span @click="copyUrl" class="clickable-surface"></span> -->
 
-          <p class="notification" v-if="urlCopied">{{translatedStrings.emailCopyNote}}</p>          
+          <!-- <p class="notification" v-if="urlCopied">{{translatedStrings.emailCopyNote}}</p> -->
         </section>
       </main>
     </article>
@@ -70,7 +66,7 @@ export default {
   },
   props: {
     favorites: Array,
-    translatedStrings: Object,
+    translatedStrings: Object
   },
   methods: {
     generateShareableUrl() {
@@ -95,20 +91,30 @@ export default {
     },
 
     sendEmail() {
-      if (!this.recipent || !this.sender || !this.messageSubject || !this.messageBody) {
+      if (
+        !this.recipent ||
+        !this.sender ||
+        !this.messageSubject ||
+        !this.messageBody
+      ) {
         alert("Please fill in all the fields in the form");
         return;
       }
 
       this.generateShareableUrl();
 
-      var regex = /(<([^>]+)>)/ig
+      var regex = /(<([^>]+)>)/gi;
 
       this.messageBody = this.messageBody.replace(regex, "");
       this.sender = this.sender.replace(regex, "");
 
       const msg = "<p>" + this.messageBody + "</p>";
-      const link = "<p><a href=" + this.favoriteListUrl + ">" + this.favoriteListUrl +"</a></p>";
+      const link =
+        "<p><a href=" +
+        this.favoriteListUrl +
+        ">" +
+        this.favoriteListUrl +
+        "</a></p>";
       const signoff = "<p>- " + this.sender + "</p>";
 
       axios
@@ -118,7 +124,7 @@ export default {
             message: msg + link + signoff,
             html: true,
             reciepient: this.recipent
-          },
+          }
         })
         .then(function(response) {
           //eslint-disable-next-line no-console
@@ -142,6 +148,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .share-modal {
   &__button {
     position: relative;
@@ -323,6 +331,97 @@ export default {
   &:hover {
     cursor: pointer;
     opacity: 0.3;
+  }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+  .share-modal {
+    &__container {
+      // background: white;
+      width: 90%;
+      // height: 560px;
+      margin: auto;
+      margin-top: 15vh;
+      border-radius: 3px;
+      box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .input-name {
+    width: 75% !important;
+  }
+
+  .share-modal {
+    &__content {
+      input {
+        width: 100%;
+      }
+
+      textarea {
+        width: 100%;
+        max-width: 100% !important;
+      }
+
+      .input-copy {
+        input {
+          // border: 1px solid red;
+          width: 75%;
+        }
+      }
+
+      .button-submit {
+        width: 18%;
+      }
+
+      .button-copy {
+        width: 21%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $breakpoint-extra-small) {
+  .share-modal {
+    &__container {
+      background: white;
+      width: 100%;
+      height: 560px;
+      margin: auto;
+      margin-top: 0;
+      border-radius: 3px;
+      box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .input-name {
+    width: 75% !important;
+  }
+
+  .share-modal {
+    &__content {
+      input {
+        width: 100%;
+      }
+
+      textarea {
+        width: 100%;
+        max-width: 100% !important;
+      }
+
+      .input-copy {
+        input {
+          width: 75%;
+        }
+      }
+
+      .button-submit {
+        width: 21%;
+      }
+
+      .button-copy {
+        width: 21%;
+      }
+    }
   }
 }
 </style>

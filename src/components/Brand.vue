@@ -38,6 +38,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .brand-icon {
   margin: 10px;
   border: 1px solid #ddd;
