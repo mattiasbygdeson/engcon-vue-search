@@ -2,17 +2,17 @@
   <div>
     <article class="favorite-list__product">
       <section>
-        <a :href="'http://engcon.utv' + favorite.uri">
+        <a :href="baseUrl + favorite.uri">
           <img
             v-if="favorite['metadata.product-media'][0].length == 1"
             class="product-thumbnail"
-            v-bind:src="'http://engcon.utv' + favorite['metadata.product-media']"
+            v-bind:src="baseUrl + favorite['metadata.product-media']"
           />
 
           <img
             v-else
             class="product-thumbnail"
-            v-bind:src="'http://engcon.utv' + favorite['metadata.product-media'][0]"
+            v-bind:src="baseUrl + favorite['metadata.product-media'][0]"
           />
         </a>
       </section>
@@ -23,7 +23,7 @@
           class="d-block"
         >{{replaceString(translatedStrings.machineWeight, favorite["metadata.product-minWeight"] + " - " + favorite["metadata.product-maxWeight"])}}</p>
 
-        <a :href="'http://engcon.utv' + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
+        <a :href="baseUrl + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
         <span
           v-on:click="$emit('remove-favorite', favorite)"
           class="badge remove"
@@ -43,10 +43,21 @@ export default {
   },
   data() {
     return {
-      displayShareModal: true
+      displayShareModal: true,
+      baseUrl: ""
     };
   },
+  created() {
+    this.setBaseUrl();
+  },
   methods: {
+    setBaseUrl() {
+      // Public
+      this.baseUrl = "http://" + window.location.hostname;
+
+      // Local
+      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
+    },
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
     }

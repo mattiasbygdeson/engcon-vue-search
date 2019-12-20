@@ -2,8 +2,10 @@ import axios from 'axios';
 import https from 'https';
 import qs from 'qs';
 
+const baseUrl = "http://" + window.location.hostname + "/rest-api";
+
 const instance = axios.create({
-  baseURL: 'http://engcon.utv/rest-api',
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json'
   },

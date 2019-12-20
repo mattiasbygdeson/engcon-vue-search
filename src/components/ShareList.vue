@@ -117,8 +117,10 @@ export default {
         "</a></p>";
       const signoff = "<p>- " + this.sender + "</p>";
 
+      const postUrl = "http://" + window.location.hostname + "/rest-api/mail/sendMail";
+
       axios
-        .post("http://engcon.utv/rest-api/mail/sendMail", {
+        .post(postUrl, {
           mailData: {
             subject: this.messageSubject,
             message: msg + link + signoff,
@@ -385,7 +387,7 @@ export default {
     &__container {
       background: white;
       width: 100%;
-      height: 560px;
+      height: 100%;
       margin: auto;
       margin-top: 0;
       border-radius: 3px;

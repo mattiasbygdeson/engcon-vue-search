@@ -1,24 +1,24 @@
 <template>
   <article class="product-container">
     <header>
-      <a :href="'http://engcon.utv' + product.uri">
+      <a :href="baseUrl + product.uri">
         <img
           v-if="product['metadata.product-media'][0].length == 1"
           class="product-thumbnail"
-          v-bind:src="'http://engcon.utv' + product['metadata.product-media']"
+          v-bind:src="baseUrl + product['metadata.product-media']"
         />
 
         <img
           v-else
           class="product-thumbnail"
-          v-bind:src="'http://engcon.utv' + product['metadata.product-media'][0]"
+          v-bind:src="baseUrl + product['metadata.product-media'][0]"
         />
       </a>
     </header>
 
     <main>
       <h3>
-        <a :href="'http://engcon.utv' + product.uri">{{product.name}}</a>
+        <a :href="baseUrl + product.uri">{{product.name}}</a>
       </h3>
 
       <p>{{this.category}}</p>
@@ -36,7 +36,7 @@
       </span>
 
       <span class="more-info">
-        <a :href="'http://engcon.utv' + product.uri">{{translatedStrings.readMore}}</a>
+        <a :href="baseUrl + product.uri">{{translatedStrings.readMore}}</a>
         <i class="icon fas fa-angle-right icon-big" />
       </span>
     </footer>
@@ -56,12 +56,14 @@ export default {
     return {
       keyword: "",
       inFavorites: false,
-      category: this.product.title
+      category: this.product.title,
+      baseUrl: "",
     };
   },
   created() {
     this.checkIfProductIsInFavorites();
     this.formatCategory();
+    this.setBaseUrl();
   },
   watch: {
     displayFavoriteModal: function() {
@@ -69,6 +71,13 @@ export default {
     }
   },
   methods: {
+    setBaseUrl() {
+      // Public
+      this.baseUrl = "http://" + window.location.hostname;
+
+      // Local
+      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
+    },
     checkIfProductIsInFavorites() {
       for (var i = 0; this.favorites.length > i; i++) {
         if (this.favorites[i].id === this.product.id) {
@@ -137,6 +146,7 @@ export default {
 
     h3 {
       font-weight: 800;
+
 
       a {
         color: black;

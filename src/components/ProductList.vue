@@ -389,6 +389,10 @@ export default {
       font-size: 1.2em !important;
     }
 
+    &__content {
+      max-height: 100%;
+    }
+
     &__container {
       width: 100%;
       max-height: 100%;

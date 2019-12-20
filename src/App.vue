@@ -52,13 +52,15 @@ export default {
       favorites: [],
       translatedStrings: [],
       testData: [],
-      listTitle: ""
+      listTitle: "",
+      baseUrl: "",
     };
   },
   created() {
     //eslint-disable-next-line no-console
     // console.log(window.lang)
 
+    this.setBaseUrl();
     this.getStoredProducts();
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
@@ -73,6 +75,17 @@ export default {
       if (storedProducts) {
         this.products = JSON.parse(storedProducts);
       }
+    },
+
+    setBaseUrl() {
+      //eslint-disable-next-line no-console
+      // console.log("http://" + window.location.hostname + "/rest-api/1/0/303.online-5.0/");
+
+      // Public
+      this.baseUrl = "http://" + window.location.hostname + "/rest-api/1/0/303.online-5.0/";
+
+      // Local
+      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
     },
 
     getStoredSearchSummary() {
@@ -155,10 +168,15 @@ export default {
        *
        */
 
+      // const baseUrl = "http://engcon.utv/rest-api/1/0/303.online-5.0/";
+
       const instance = axios.create({
-        baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+        baseURL: this.baseUrl,
         paramsSerializer: params => qs.stringify(params)
       });
+
+      //eslint-disable-next-line no-console
+      // console.log(baseUrl);
 
       let url = "/search";
 
@@ -247,7 +265,7 @@ export default {
 
         // Make API call
         const instance = axios.create({
-          baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+          baseURL: this.baseUrl,
           paramsSerializer: params => qs.stringify(params)
         });
 
@@ -298,7 +316,7 @@ export default {
        */
 
       const instance = axios.create({
-        baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
+        baseURL: this.baseUrl,
         paramsSerializer: params => qs.stringify(params)
       });
 
