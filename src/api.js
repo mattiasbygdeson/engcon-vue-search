@@ -2,7 +2,12 @@ import axios from 'axios';
 import https from 'https';
 import qs from 'qs';
 
-const baseUrl = "http://" + window.location.hostname + "/rest-api";
+// Public
+// const baseUrl = "https://" + window.location.hostname + "/rest-api";
+const configuratorUrl = "http://beta.configurator.engcon.com/Configurator.ashx?country=se";
+
+// Local
+const baseUrl = "http://engcon.com/rest-api";
 
 const instance = axios.create({
   baseURL: baseUrl,
@@ -17,13 +22,8 @@ const instance = axios.create({
 
 // Exports
 async function getTranslation() {
-  
-  // var lang = navigator.language.slice(0,2);
 
   let urlExtension = "/translate/filter?lang=" + window.lang;
-
-  // eslint-disable-next-line no-console
-  // console.log(window.lang);
 
   try {
     const response = await instance.get(urlExtension);
@@ -34,21 +34,54 @@ async function getTranslation() {
   }
 }
 
-async function getProducts() {
-  
-  // const instance = axios.create({
-  //   baseURL: "http://engcon.utv/rest-api/1/0/303.online-5.0/",
-  //   paramsSerializer: params => qs.stringify(params)
-  // });
+async function getModels(id) {
+  try {
+    const response = await instance.get(configuratorUrl + "&brand=" + id);
+    return response.data.Excavator[0].Model;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+}
 
-  // let url = "/search";
+async function getBrands() {
+  try {
+    const response = await instance.get(configuratorUrl);
+    return response.data.Excavator;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+}
 
-  // var startOfString = "+(";
-  // var endOfString = ") AND language:sv";
+async function getProductIDs(brandId, modelId) {
+  try {
+    const response = await instance.get(configuratorUrl + "&brand=" + brandId + "&model=" + modelId);
+    return response.data.Excavator[0].Model[0].Products;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+}
 
-  // return startOfString + middleOfString + endOfString;
+async function getProducts(query) {
+  let urlExtension = "/1/0/303.online-5.0/search";
+
+  try {
+    const response = await instance.get(baseUrl + urlExtension, {          params: {
+      format: "json",
+      json: JSON.stringify(query)
+    },
+    headers: {
+      "Content-Type": "application/json"
+    }});
+    return response.data;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
 }
 
 export {
-  getTranslation, getProducts
+  getTranslation, getModels, getBrands, getProducts, getProductIDs
 };

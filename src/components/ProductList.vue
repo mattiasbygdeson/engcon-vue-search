@@ -5,7 +5,7 @@
         <template v-if="this.listTitle">
           <span>{{listTitle}}</span>
 
-          <button class="return-button" @click="$emit('return')">Tillbaka till produktfilter</button>
+          <button class="return-button" @click="$emit('backToStart')">Tillbaka till produktfilter</button>
         </template>
 
         <template v-else>
@@ -60,7 +60,7 @@
     <section v-if="displayFavoriteModal" class="favorite-list__wrapper">
       <article class="favorite-list__container">
         <header class="favorite-list__header">
-          <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
+          <!-- <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2> -->
 
           <nav>
             <i class="d-none icon fas fa-print icon-big" />
@@ -104,10 +104,10 @@ export default {
     ShareList
   },
   props: {
-    searchSummary: Object,
-    filterSummary: String,
+    searchSummary: {},
+    filterSummary: {},
     products: Array,
-    translatedStrings: Array,
+    translatedStrings: {},
     listTitle: String
   },
   data() {
@@ -130,7 +130,9 @@ export default {
     },
 
     replaceString(phrase, subject) {
-      return phrase.replace("{{rep}}", subject);
+      if(phrase !== undefined && subject !== undefined) {
+        return phrase.replace("{{rep}}", subject);
+      }
     },
 
     toggleDisplayFavoriteModal() {

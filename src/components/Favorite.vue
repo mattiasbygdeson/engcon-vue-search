@@ -53,10 +53,10 @@ export default {
   methods: {
     setBaseUrl() {
       // Public
-      this.baseUrl = "http://" + window.location.hostname;
+      // this.baseUrl = "https://" + window.location.hostname;
 
       // Local
-      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
+      this.baseUrl = "http://engcon.com";
     },
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);

@@ -15,7 +15,7 @@ export default {
   name: "Model",
   props: {
     model: Object,
-    selectedModel: Array
+    selectedModel: {}
   }
 };
 </script>

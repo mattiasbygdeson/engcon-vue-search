@@ -41,7 +41,7 @@
 export default {
   name: "ProductFilter",
   props: {
-    translatedStrings: Array
+    translatedStrings: {}
   },
   data() {
     return {

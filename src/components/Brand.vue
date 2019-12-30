@@ -19,8 +19,8 @@
 export default {
   name: "Brand",
   props: {
-    brand: Object,
-    selectedBrand: Object
+    brand: {},
+    selectedBrand: {}
   },
   data() {
     return {

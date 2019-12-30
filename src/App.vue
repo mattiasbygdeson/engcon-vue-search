@@ -3,26 +3,26 @@
     <div class="main-header-wrapper" :class="{'d-none' : this.listTitle.length !== 0}">
       <header class="main-header">
         <ProductGuide
-          v-on:summarizeSearch="summarizeSearch"
-          v-bind:translatedStrings="translatedStrings"
-          v-bind:class="{'unfocus' : this.filterSummary.length !== 0}"
+          v-on:summarizeSearch="requestProductsByModel"
+          :translatedStrings="translatedStrings"
         />
         <ProductFilter
-          v-on:summarizeFilter="summarizeFilter"
-          v-bind:translatedStrings="translatedStrings"
-          v-bind:class="{'unfocus' : this.searchSummary.length !== 0}"
+          v-on:summarizeFilter="requestProductsByWeight"
+          :translatedStrings="translatedStrings"
+          
         />
       </header>
     </div>
 
+    <!-- :class="{'unfocus' : this.filterSummary.maxWeight.length !== 0}" -->
+
     <ProductList
+      v-on:backToStart="clearUrlQuery"
       :translatedStrings="translatedStrings"
       :searchSummary="searchSummary"
       :filterSummary="filterSummary"
       :products="products"
       :listTitle="listTitle"
-      v-on:filterSummary="summarizeFilter"
-      v-on:return="clearUrlQuery"
     />
   </div>
 </template>
@@ -30,12 +30,10 @@
 <script>
 import ProductGuide from "./components/ProductGuide";
 import ProductList from "./components/ProductList";
-import axios from "axios";
-import qs from "qs";
 import ProductFilter from "./components/ProductFilter";
 import { getTranslation } from "./api.js";
-// import VueRouter from 'vue-router'
-// import { getProducts } from "./api.js";
+import { getProducts } from "./api.js";
+import { getProductIDs } from "./api.js";
 
 export default {
   name: "productfilter",
@@ -46,27 +44,21 @@ export default {
   },
   data() {
     return {
-      searchSummary: [],
-      filterSummary: [],
+      searchSummary: {},
+      filterSummary: {},
       products: [],
       favorites: [],
       translatedStrings: [],
       testData: [],
       listTitle: "",
-      baseUrl: "",
     };
   },
   created() {
-    //eslint-disable-next-line no-console
-    // console.log(window.lang)
-
-    this.setBaseUrl();
     this.getStoredProducts();
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
-    this.getTranslatedStrings();
-    this.generateProductsByFavorites();
-    // this.requestProducts();
+    this.requestTranslation();
+    this.requestProductsByFavorites();
   },
   methods: {
     getStoredProducts() {
@@ -75,17 +67,6 @@ export default {
       if (storedProducts) {
         this.products = JSON.parse(storedProducts);
       }
-    },
-
-    setBaseUrl() {
-      //eslint-disable-next-line no-console
-      // console.log("http://" + window.location.hostname + "/rest-api/1/0/303.online-5.0/");
-
-      // Public
-      this.baseUrl = "http://" + window.location.hostname + "/rest-api/1/0/303.online-5.0/";
-
-      // Local
-      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
     },
 
     getStoredSearchSummary() {
@@ -108,7 +89,7 @@ export default {
       return phrase.replace("{{rep}}", subject);
     },
 
-    summarizeSearch(searchSummary) {
+    async requestProductsByModel(searchSummary) {
       /**
        * Clear previous search and product result and create a new one
        * Get product IDs
@@ -126,61 +107,12 @@ export default {
         JSON.stringify(searchSummary)
       );
 
-      axios
-        .get(
-          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
-            this.searchSummary.brandId +
-            "&model=" +
-            this.searchSummary.modelId
-        )
-        .then(res => {
-          this.products = res.data.Excavator[0].Model[0].Products;
-          this.generateProductsBySearch();
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
-    },
+      let brandId = this.searchSummary.brandId;
+      let modelId = this.searchSummary.modelId;
+      
+      this.products = await getProductIDs(brandId, modelId);
+      // this.requestProductsByModel();
 
-    summarizeFilter(filterSummary) {
-      /**
-       * Clear previous search and product result and create new
-       *
-       */
-
-      localStorage.removeItem("engcon-searchSummary");
-
-      this.products = [];
-      this.searchSummary = [];
-      this.filterSummary = filterSummary;
-      localStorage.setItem(
-        "engcon-filterSummary",
-        JSON.stringify(filterSummary)
-      );
-
-      this.generateProductsByFilter();
-    },
-
-    generateProductsBySearch() {
-      /**
-       * Generate products based on brand and model
-       *
-       */
-
-      // const baseUrl = "http://engcon.utv/rest-api/1/0/303.online-5.0/";
-
-      const instance = axios.create({
-        baseURL: this.baseUrl,
-        paramsSerializer: params => qs.stringify(params)
-      });
-
-      //eslint-disable-next-line no-console
-      // console.log(baseUrl);
-
-      let url = "/search";
-
-      // Construct a filterQuery string
       var productsIDs = [];
       var startOfString = "+(";
       var endOfString = ") AND language:" + window.lang;
@@ -191,7 +123,6 @@ export default {
         middleOfString += "metadata.product-id:" + this.products[i].id;
 
         if (i !== this.products.length - 1) {
-          // Unless loop is at the last index, print " OR " in queary string
           middleOfString += " OR ";
         }
       }
@@ -214,28 +145,68 @@ export default {
         ]
       };
 
-      instance
-        .get(url, {
-          params: {
-            format: "json",
-            json: JSON.stringify(query)
-          },
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-        .then(res => {
-          this.products = res.data;
-          localStorage.setItem("engcon-products", JSON.stringify(res.data));
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
+      let products = await getProducts(query);
+      this.products = products;
+      localStorage.setItem("engcon-products", JSON.stringify(products));
     },
 
-    generateProductsByFavorites() {
-      if (this.$route.query) {
+    async requestProductsByWeight(filterSummary) {
+      /**
+       * Clear previous search and product result and create new
+       *
+       */
+
+      localStorage.removeItem("engcon-searchSummary");
+
+      this.products = [];
+      this.searchSummary = [];
+      this.filterSummary = filterSummary;
+
+      localStorage.setItem(
+        "engcon-filterSummary",
+        JSON.stringify(filterSummary)
+      );
+
+      var filterQuery =
+        "+(metadata.product-minWeight:[* TO " +
+        this.filterSummary.maxWeight +
+        "] AND metadata.product-maxWeight:[" +
+        this.filterSummary.maxWeight +
+        " TO *]) AND language:" + window.lang;
+
+      if (this.filterSummary.keyword) {
+        var keyword = this.filterSummary.keyword.toUpperCase();
+        filterQuery += " AND name:*" + keyword + "*";
+      }
+
+      if (this.filterSummary.maxWeight == 0) {
+        filterQuery = filterQuery.replace(/0/g, "*");
+      }
+
+      let query = {
+        query: "*",
+        filterQuery: filterQuery,
+        limit: 200,
+        fields: [
+          "name",
+          "title",
+          "language",
+          "uri",
+          "id",
+          "metadata.description",
+          "metadata.product-media",
+          "metadata.product-minWeight",
+          "metadata.product-maxWeight"
+        ]
+      };
+
+      let products = await getProducts(query);
+      this.products = products;
+      localStorage.setItem("engcon-products", JSON.stringify(products));
+    },
+
+    async requestProductsByFavorites() {
+      if (this.$route.query.name) {
         var urlQuery = this.$route.query
 
         // Set the title
@@ -263,14 +234,6 @@ export default {
 
         var filterQuery = startOfString + middleOfString + endOfString;
 
-        // Make API call
-        const instance = axios.create({
-          baseURL: this.baseUrl,
-          paramsSerializer: params => qs.stringify(params)
-        });
-
-        let url = "/search";
-
         let query = {
           query: "*",
           filterQuery: filterQuery,
@@ -287,116 +250,19 @@ export default {
           ]
         };
 
-        instance
-          .get(url, {
-            params: {
-              format: "json",
-              json: JSON.stringify(query)
-            },
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-          .then(res => {
-            this.products = res.data;
-          })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.log(err);
-          });
+        this.products = await getProducts(query);
       }
     },
 
-    generateProductsByFilter() {
-      /**
-       * Generate products based on input weight and a possible keyword
-       * Axios call to Sitevisions API to extract propducts
-       * Argument: searchSummary contains product ID
-       *
-       */
-
-      const instance = axios.create({
-        baseURL: this.baseUrl,
-        paramsSerializer: params => qs.stringify(params)
-      });
-
-      let url = "/search";
-
-      // Construct a filterQuery string
-      //
-
-      var filterQuery =
-        "+(metadata.product-minWeight:[* TO " +
-        this.filterSummary.maxWeight +
-        "] AND metadata.product-maxWeight:[" +
-        this.filterSummary.maxWeight +
-        " TO *]) AND language:" + window.lang;
-
-      if (this.filterSummary.keyword) {
-        var keyword = this.filterSummary.keyword.toUpperCase();
-        filterQuery += " AND name:*" + keyword + "*";
-      }
-
-      if (this.filterSummary.maxWeight == 0) {
-        filterQuery = filterQuery.replace(/0/g, "*");
-
-        //eslint-disable-next-line no-console
-        // console.log(filterQuery);
-      }
-
-      let query = {
-        query: "*",
-        filterQuery: filterQuery,
-        limit: 200,
-        fields: [
-          "name",
-          "title",
-          "language",
-          "uri",
-          "id",
-          "metadata.description",
-          "metadata.product-media",
-          "metadata.product-minWeight",
-          "metadata.product-maxWeight"
-        ]
-      };
-
-      instance
-        .get(url, {
-          params: {
-            format: "json",
-            json: JSON.stringify(query)
-          },
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-        .then(res => {
-          // eslint-disable-next-line no-console
-          // console.log(res.data);
-          this.products = res.data;
-          localStorage.setItem("engcon-products", JSON.stringify(res.data));
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
-
-      // document.getElementById('summary-bar').scrollIntoView();
+    async requestTranslation() {
+      let translation = await getTranslation();
+      this.translatedStrings = translation.translation;
     },
 
     clearUrlQuery() {
       this.$router.push(this.$route.path);
       this.listTitle = "";
       this.getStoredProducts();
-    },
-
-    async getTranslatedStrings() {
-      let translation = await getTranslation();
-      this.translatedStrings = translation.translation;
-
-      //eslint-disable-next-line no-console
-      // console.log(translation);
     },
   }
 };
@@ -483,17 +349,7 @@ body {
   visibility: hidden;
 }
 
-@media screen and (max-width: $breakpoint-medium) {
-  body {
-    // background: pink
-  }
-}
-
 @media screen and (max-width: $breakpoint-small) {
-  body {
-    // background: cyan !important;
-  }
-
   .main-header {
     height: auto;
   }

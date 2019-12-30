@@ -23,7 +23,7 @@
             v-bind:key="brand.BrandId"
             :brand="brand"
             :selectedBrand="selectedBrand"
-            v-on:select-brand="selectBrand"
+            v-on:select-brand="requestModels"
           />
         </ul>
       </section>
@@ -50,15 +50,16 @@
 </template>
 
 <script>
-import axios from "axios";
 import Brand from "./Brand";
 import Model from "./Model";
+import { getBrands } from "../api.js";
+import { getModels } from "../api.js";
 
 export default {
   name: "ProductGuide",
   props: {
     lang: String,
-    translatedStrings: Array
+    translatedStrings: {}
   },
   components: {
     Brand,
@@ -75,57 +76,21 @@ export default {
     };
   },
   created() {
-    /**
-     * Load brands into component
-     *
-     */
-
-    var getBrands = localStorage.getItem("engcon-brands");
-
-    if (getBrands) {
-      this.brands = JSON.parse(getBrands);
-    } else {
-      axios
-        .get("http://beta.configurator.engcon.com/Configurator.ashx?country=se")
-        .then(res => {
-          this.brands = res.data.Excavator;
-          localStorage.setItem(
-            "engcon-brands",
-            JSON.stringify(res.data.Excavator)
-          );
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
-    }
+    this.requestBrands();
   },
   methods: {
-    selectBrand(brand) {
-      /**
-       * Render a list of models
-       * Activated when user clicks on brand icon
-       *
-       */
-
+    async requestBrands() {
+      this.brands = await getBrands();
+    },
+    async requestModels(brand) {
       this.selectedBrand = [];
       this.selectedModel = [];
       this.models = [];
       this.selectedBrand = brand;
 
-      axios
-        .get(
-          "http://beta.configurator.engcon.com/Configurator.ashx?country=se&brand=" +
-            brand.BrandId,
-          {}
-        )
-        .then(res => {
-          this.models = res.data.Excavator[0].Model;
-        })
-        .then(err => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
+      var id = brand.BrandId;
+
+      this.models = await getModels(id);
     },
 
     filterBrands() {

@@ -50,7 +50,7 @@ export default {
     product: Object,
     favorites: Array,
     displayFavoriteModal: Boolean,
-    translatedStrings: Array,
+    translatedStrings: {},
   },
   data() {
     return {
@@ -73,11 +73,12 @@ export default {
   methods: {
     setBaseUrl() {
       // Public
-      this.baseUrl = "http://" + window.location.hostname;
+      // this.baseUrl = "https://" + window.location.hostname;
 
       // Local
-      // "http://engcon.utv/rest-api/1/0/303.online-5.0/"
+      this.baseUrl = "https://engcon.com"
     },
+
     checkIfProductIsInFavorites() {
       for (var i = 0; this.favorites.length > i; i++) {
         if (this.favorites[i].id === this.product.id) {
@@ -90,20 +91,13 @@ export default {
       this.inFavorites = !this.inFavorites;
     },
 
-    setFilterSummary(e) {
-      const filterSummary = {
-        maxWeight: 40,
-        keyword: e.path[0].innerHTML
-      };
-
-      this.$emit("summarizeFilter", filterSummary);
-    },
-
     formatCategory() {
-      this.category = this.category.split(' ');
-      this.category.shift();
-      this.category = this.category.join();
-      this.category = this.category.replace(/,/g, ' ');
+      if(this.category !== undefined) {
+        this.category = this.category.split(' ');
+        this.category.shift();
+        this.category = this.category.join();
+        this.category = this.category.replace(/,/g, ' ');
+      }
     }
   }
 };
