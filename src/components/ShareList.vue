@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     generateShareableUrl() {
-      var baseUrl = window.location.hostname + this.$route.fullPath;
+      var baseUrl = "https://" + window.location.hostname + this.$route.fullPath;
       var hash = this.$route.hash;
       var baseUrlCleaned = baseUrl.replace(hash, "");
       var listName = this.messageSubject.toLowerCase();

@@ -60,7 +60,7 @@
     <section v-if="displayFavoriteModal" class="favorite-list__wrapper">
       <article class="favorite-list__container">
         <header class="favorite-list__header">
-          <!-- <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2> -->
+          <h2>{{replaceString(translatedStrings.favorites, favorites.length)}}</h2>
 
           <nav>
             <i class="d-none icon fas fa-print icon-big" />
