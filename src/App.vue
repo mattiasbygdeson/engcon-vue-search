@@ -23,7 +23,18 @@
       :filterSummary="filterSummary"
       :products="products"
       :listTitle="listTitle"
+      :noProducts="noProducts"
     />
+
+    <div v-if="productsLoading" class="loading-icon-products">
+      <div class="env-spinner">
+        <div class="env-rect1"></div>
+        <div class="env-rect2"></div>
+        <div class="env-rect3"></div>
+        <div class="env-rect4"></div>
+        <div class="env-rect5"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -51,6 +62,8 @@ export default {
       translatedStrings: [],
       testData: [],
       listTitle: "",
+      productsLoading: false,
+      noProducts: false,
     };
   },
   created() {
@@ -59,6 +72,11 @@ export default {
     this.getStoredFilterSummary();
     this.requestTranslation();
     this.requestProductsByFavorites();
+  },
+  updated() {
+    if(this.products === undefined) {
+      this.productsLoading = false;
+    }
   },
   methods: {
     getStoredProducts() {
@@ -96,6 +114,9 @@ export default {
        *
        */
 
+      this.noProducts = false;
+      this.productsLoading = true;
+
       localStorage.removeItem("engcon-filterSummary");
 
       this.products = [];
@@ -114,8 +135,8 @@ export default {
       // this.requestProductsByModel();
 
       var productsIDs = [];
-      var startOfString = "+(";
-      var endOfString = ") AND language:" + window.lang;
+      // var startOfString = "+(";
+      // var endOfString = ") AND language:" + window.lang;
       var middleOfString = "";
 
       for (var i = 0; this.products.length > i; i++) {
@@ -127,7 +148,7 @@ export default {
         }
       }
 
-      var filterQuery = startOfString + middleOfString + endOfString;
+      var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
 
       let query = {
         query: "*",
@@ -148,6 +169,12 @@ export default {
       let products = await getProducts(query);
       this.products = products;
       localStorage.setItem("engcon-products", JSON.stringify(products));
+
+      this.productsLoading = false;
+
+      if(products.length === 0) {
+        this.noProducts = true;
+      }
     },
 
     async requestProductsByWeight(filterSummary) {
@@ -155,6 +182,9 @@ export default {
        * Clear previous search and product result and create new
        *
        */
+
+      this.noProducts = false;
+      this.productsLoading = true;
 
       localStorage.removeItem("engcon-searchSummary");
 
@@ -203,10 +233,14 @@ export default {
       let products = await getProducts(query);
       this.products = products;
       localStorage.setItem("engcon-products", JSON.stringify(products));
+
+      this.productsLoading = false;
     },
 
     async requestProductsByFavorites() {
       if (this.$route.query.name) {
+        this.productsLoading = true;
+
         var urlQuery = this.$route.query
 
         // Set the title
@@ -215,8 +249,8 @@ export default {
         this.listTitle = newTitleCapitalized;
 
         // Construct a filterQuery string
-        var startOfString = "+(";
-        var endOfString = ") AND language:" + window.lang;
+        // var startOfString = "+(";
+        // var endOfString = ") AND language:" + window.lang;
         var middleOfString = "";
 
         if(Array.isArray(urlQuery.id)) {
@@ -232,7 +266,7 @@ export default {
           middleOfString = "id:" + urlQuery.id;
         }
 
-        var filterQuery = startOfString + middleOfString + endOfString;
+        var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
 
         let query = {
           query: "*",
@@ -251,6 +285,8 @@ export default {
         };
 
         this.products = await getProducts(query);
+
+        this.productsLoading = false;
       }
     },
 
@@ -358,4 +394,17 @@ body {
     grid-template-columns: 50% 50%;
   }
 }
+
+.loading-icon-products {
+  border: 2px solid red;
+  text-align: center !important;
+  width: 100%;
+  position: absolute;
+  top: 935px;
+  left: 0;
+  height: 100px;
+  padding-top: 35px;
+  z-index: 999;
+}
+
 </style>

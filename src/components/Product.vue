@@ -108,7 +108,7 @@ export default {
 
 .product-container {
   background: white;
-  border: 1px solid #ddd;
+  border: 1px solid $color-gray;
   text-align: left;
   margin: 15px;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
@@ -141,7 +141,6 @@ export default {
     h3 {
       font-weight: 800;
 
-
       a {
         color: black;
         text-decoration: none;
@@ -149,7 +148,7 @@ export default {
     }
 
     p {
-      font-size: 0.9em;
+      font-size: 0.9em; 
 
       &:first-of-type {
         margin-top: 20px;
@@ -160,7 +159,7 @@ export default {
   }
 
   footer {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid $color-gray;
     display: grid;
     grid-template-columns: auto auto;
     padding: 10px;
@@ -172,7 +171,7 @@ export default {
       font-weight: 600;
 
       a {
-        color: #707070;
+        color: darken($color-gray, 40%);
         transition: color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
         text-decoration: none;
 
@@ -182,7 +181,7 @@ export default {
       }
 
       i {
-        color: #ffd300;
+        color: $color-primary;
         position: relative;
         top: 5px;
         margin-left: 10px;
@@ -192,8 +191,7 @@ export default {
 
   &:hover {
     cursor: pointer;
-    border-color: rgb(145, 145, 145);
-    box-shadow: 3px 10px 20px #ccc;
+    box-shadow: 3px 10px 20px $color-gray;
   }
 }
 
@@ -211,7 +209,7 @@ export default {
   display: inline-block;
   text-align: center;
   font-size: 1.5em;
-  color: #999;
+  color: darken($color-gray, 10%);
 
   i {
     position: relative;
@@ -219,31 +217,14 @@ export default {
   }
 
   &:hover {
-    text-shadow: 1px 2px 3px rgba(49, 49, 49, 0.5);
+    font-size: 2em;
+    position: relative;
+    top: -4px;
   }
 }
 
 .in-favorites {
-  color: #ffd300;
-}
-
-.product-tags {
-  position: relative;
-  bottom: 20px;
-
-  .badge {
-    transition: background-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-    border: 1px solid #ccc;
-    padding: 2% 4%;
-    margin: 2%;
-    border-radius: 20px;
-    font-size: 0.9em;
-
-    &:hover {
-      background-color: #ffd300;
-      cursor: pointer;
-    }
-  }
+  color: $color-primary;
 }
 
 .machine-weight {
@@ -253,37 +234,20 @@ export default {
 
 @media screen and (max-width: $breakpoint-small) {
 .product-container {
-  background: white;
-  border: 1px solid #ddd;
-  text-align: left;
-  margin: 15px;
-  transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-  transition: box-shadow 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-  border-radius: 2px;
-  max-height: 500px;
-
   display: initial;
-  // grid-template-columns: 50% 50%;
-  // grid-template-rows: auto 100px 60px;
 
     header {
       width: 30%;
-      
-      // border: 1px solid red;
       display: inline-block;
 
       img {
-        width: 100%;
         height: 100px;
-        object-fit: scale-down;
       }
     }
 
     main {
       text-align: left;
-      // display: inline-block;
       float: right;
-      // border: 1px solid red;
       width: 70%;
       padding-top: 20px;
     }

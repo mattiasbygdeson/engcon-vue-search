@@ -17,6 +17,16 @@
           />
         </header>
 
+        <div v-if="brandsLoading" class="loading-icon">
+          <div class="env-spinner">
+            <div class="env-rect1"></div>
+            <div class="env-rect2"></div>
+            <div class="env-rect3"></div>
+            <div class="env-rect4"></div>
+            <div class="env-rect5"></div>
+          </div>
+        </div>
+
         <ul class="brand-list">
           <Brand
             v-for="brand in brands"
@@ -34,6 +44,16 @@
         >{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h2>
 
         <p v-else class="notice">{{translatedStrings.selectBrandTo}}</p>
+
+        <div v-if="modelsLoading" class="loading-icon">
+          <div class="env-spinner">
+            <div class="env-rect1"></div>
+            <div class="env-rect2"></div>
+            <div class="env-rect3"></div>
+            <div class="env-rect4"></div>
+            <div class="env-rect5"></div>
+          </div>
+        </div>
 
         <ul class="model-list">
           <Model
@@ -72,17 +92,42 @@ export default {
       selectedBrand: [],
       models: [],
       selectedModel: [],
-      filter: ""
+      filter: "",
+      modelsLoading: false,
+      brandsLoading: false,
     };
   },
   created() {
     this.requestBrands();
   },
+  updated() {
+    /**
+     * If a model has been selected
+     * Send all relevant data to parent to display products
+     *
+     */
+
+    if (this.selectedModel.length !== 0) {
+      const searchSummary = {
+        brandId: this.selectedBrand.BrandId,
+        brandName: this.selectedBrand.BrandName,
+        modelId: this.selectedModel.ModelId,
+        machineWeight: this.selectedModel.ModelMachineWeight,
+        modelName: this.selectedModel.ModelName
+      };
+
+      this.$emit("summarizeSearch", searchSummary);
+    }
+  },
   methods: {
     async requestBrands() {
+      this.brandsLoading = true;
       this.brands = await getBrands();
+      this.brandsLoading = false;
     },
     async requestModels(brand) {
+      this.modelsLoading = true;
+
       this.selectedBrand = [];
       this.selectedModel = [];
       this.models = [];
@@ -91,6 +136,8 @@ export default {
       var id = brand.BrandId;
 
       this.models = await getModels(id);
+
+      this.modelsLoading = false;
     },
 
     filterBrands() {
@@ -99,6 +146,7 @@ export default {
        * Activated at keyup in input field
        *
        */
+
       //eslint-disable-next-line no-console
       // console.log("filterBrands");
       // var filterInput = this.filter.toLowerCase();
@@ -120,25 +168,6 @@ export default {
     selectModel(model) {
       this.selectedModel = [];
       this.selectedModel = model;
-    }
-  },
-  updated() {
-    /**
-     * If a model has been selected
-     * Send all relevant data to parent to display products
-     *
-     */
-
-    if (this.selectedModel.length !== 0) {
-      const searchSummary = {
-        brandId: this.selectedBrand.BrandId,
-        brandName: this.selectedBrand.BrandName,
-        modelId: this.selectedModel.ModelId,
-        machineWeight: this.selectedModel.ModelMachineWeight,
-        modelName: this.selectedModel.ModelName
-      };
-
-      this.$emit("summarizeSearch", searchSummary);
     }
   }
 };
@@ -171,7 +200,6 @@ export default {
   .brand-list {
     max-height: 90%;
     overflow-y: scroll;
-
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
   }
@@ -179,10 +207,8 @@ export default {
   .model-list {
     max-height: 355px;
     overflow-y: auto;
-
     display: grid;
     grid-template-columns: 50% 50%;
-
     position: relative;
     top: 12px;
   }
@@ -207,7 +233,7 @@ export default {
 }
 
 .brand-search-container-header {
-  background: #ffd300;
+  background: $color-primary;
   padding: 0;
   margin: 0;
   height: 50px;
@@ -230,11 +256,14 @@ export default {
   padding-left: 10px;
 }
 
-@media screen and (max-width: $breakpoint-medium) {
-  body {
-    background: pink;
-  }
+.loading-icon {
+  border: 2px solid red;
+  text-align: center !important;
+  width: 100%;
+  margin-top: 150px;  
+}
 
+@media screen and (max-width: $breakpoint-medium) {
   .brand-search-column {
     .brand-list {
       grid-template-columns: 33% 33% 33%;
@@ -280,7 +309,7 @@ export default {
 
 @media screen and (max-width: $breakpoint-extra-small) {
 .brand-search-container-header {
-  background: #ffd300;
+  background: $color-primary;
   padding: 0;
   margin: 0;
   height: 50px;
@@ -303,4 +332,5 @@ export default {
     }
   }
 }
+
 </style>

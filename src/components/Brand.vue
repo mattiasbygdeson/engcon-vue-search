@@ -42,7 +42,7 @@ export default {
 
 .brand-icon {
   margin: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid $color-gray;
   text-align: center;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
   list-style: none;
@@ -55,19 +55,16 @@ export default {
   img {
     width: 60%;
     height: auto;
-
     mix-blend-mode: multiply;
-    // filter: invert(100%);
   }
 
   &:hover {
     cursor: pointer;
-    border-color: #222;
+    border-color: $color-secondary;
   }
 }
 
 .vue__brand-name {
-  // border-top: 2px dotted #ccc;
   padding-top: 15px;
   padding-bottom: 5px;
   margin: auto;
@@ -75,11 +72,11 @@ export default {
 }
 
 .selected {
-  background-color: #ffd300;
+  background-color: $color-primary;
 
   &:hover {
     cursor: initial;
-    border-color: #ffd300;
+    border-color: $color-primary;
   }
 
   img {

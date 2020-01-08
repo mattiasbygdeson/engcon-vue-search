@@ -42,7 +42,11 @@
       </div>
     </div>
 
-    <h2 class="products-headline">{{replaceString(translatedStrings.products, products.length)}}</h2>
+    <div v-if="noProducts" class="no-products-notification">
+      <p>{{translatedStrings.noProductsNotice}}</p>
+    </div>
+
+    <h2 v-else class="products-headline">{{replaceString(translatedStrings.products, products.length)}}</h2>
 
     <div class="products-container">
       <Product
@@ -108,13 +112,14 @@ export default {
     filterSummary: {},
     products: Array,
     translatedStrings: {},
-    listTitle: String
+    listTitle: String,
+    noProducts: Boolean,
   },
   data() {
     return {
       favorites: [],
       displayFavoriteModal: false,
-      displayShareModal: false
+      displayShareModal: false,
     };
   },
   created() {
@@ -188,7 +193,7 @@ export default {
 @import "../scss/_variables.scss";
 
 .summary-bar {
-  background: #1f1f1f;
+  background: $color-secondary;
   height: 50px;
   color: white;
   font-size: 1.1em;
@@ -198,8 +203,6 @@ export default {
   z-index: 100;
 
   &__content {
-    // max-width: 1200px;
-    // margin: auto;
     padding: 0 30px;
 
     nav {
@@ -233,11 +236,11 @@ export default {
   &__button {
     position: relative;
     top: -14px;
-    background: #ffd300;
+    background: $color-primary;
     border: 0;
     font-size: 0.85em;
     padding: 0 20px 0 20px;
-    box-shadow: 0 0 0 6px #ffd300;
+    box-shadow: 0 0 0 6px $color-primary;
     margin-right: 28px;
 
     &:hover {
@@ -251,7 +254,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 200;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba($color-secondary, 0.5);
   }
 
   &__container {
@@ -263,11 +266,11 @@ export default {
     margin: auto;
     margin-top: 10vh;
     border-radius: 3px;
-    box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
   }
 
   &__header {
-    background: #ffd300;
+    background: $color-primary;
     padding: 0;
     margin: 0;
     height: 50px;
@@ -314,10 +317,6 @@ export default {
 }
 
 @media screen and (max-width: $breakpoint-medium) {
-  body {
-    background: pink;
-  }
-
   .products-container {
     grid-template-columns: 33% 33% 33%;
   }
@@ -330,11 +329,11 @@ export default {
     &__button {
       position: relative;
       top: 0px;
-      background: #ffd300;
+      background: $color-primary;
       border: 0;
       font-size: 0.85em;
       padding: 0 20px 0 20px;
-      box-shadow: 0 0 0 6px #ffd300;
+      box-shadow: 0 0 0 6px $color-primary;
       margin-right: 28px;
 
       &:hover {
@@ -366,8 +365,7 @@ export default {
       top: 66px;
       right: -12px;
       height: 41px;
-
-      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 5px 5px 15px rgba($color-secondary, 0.2);
     }
   }
 
@@ -404,4 +402,19 @@ export default {
     }
   }
 }
+
+.no-products-notification {
+  font-size: 1.2em;
+  color: $color-secondary;
+  padding: 150px 20px 0 20px;
+  text-align: center;
+  margin: auto;
+  max-width: 800px;
+}
+
+@keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
 </style>

@@ -43,6 +43,8 @@
 
           <!-- <p class="notification" v-if="urlCopied">{{translatedStrings.emailCopyNote}}</p> -->
         </section>
+
+        <p v-if="formError" class="error">{{translatedStrings.formErrorMsg}}</p>
       </main>
     </article>
   </div>
@@ -57,11 +59,11 @@ export default {
     return {
       recipent: "",
       sender: "",
-      messageSubject: "Engcon product list",
-      messageBody:
-        "Please follow the link attached in this e-mail to see a list of Engcon products that I have selected.",
+      messageSubject: this.translatedStrings.emailSubjectPlaceholder,
+      messageBody: this.translatedStrings.emailMessagePlaceholder,
       favoriteListUrl: "",
-      urlCopied: false
+      urlCopied: false,
+      formError: false,
     };
   },
   props: {
@@ -97,7 +99,7 @@ export default {
         !this.messageSubject ||
         !this.messageBody
       ) {
-        alert("Please fill in all the fields in the form");
+        this.formError = true;
         return;
       }
 
@@ -156,11 +158,11 @@ export default {
   &__button {
     position: relative;
     top: -14px;
-    background: #ffd300;
+    background: $color-primary;
     border: 0;
     font-size: 0.85em;
     padding: 0 20px 0 20px;
-    box-shadow: 0 0 0 6px #ffd300;
+    box-shadow: 0 0 0 6px $color-primary;
     margin-right: 28px;
 
     &:hover {
@@ -174,7 +176,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 200;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba($color-secondary, 0.3);
   }
 
   &__container {
@@ -184,11 +186,11 @@ export default {
     margin: auto;
     margin-top: 15vh;
     border-radius: 3px;
-    box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
   }
 
   &__header {
-    background: #ffd300;
+    background: $color-primary;
     padding: 0;
     margin: 0;
     height: 50px;
@@ -242,8 +244,6 @@ export default {
     .input-copy {
       border-top: 1px solid #c4c4c4;
       padding-top: 20px;
-      // position: relative;
-      // top: -30px;
 
       input {
         display: inline;
@@ -253,7 +253,7 @@ export default {
     button {
       margin-left: 10px;
       width: 18%;
-      background: #fdd300;
+      background: $color-primary;
       border: 0;
       border-radius: 2px;
 
@@ -264,11 +264,9 @@ export default {
     }
 
     .button-submit {
-      // height: 117px;
       position: absolute;
       height: 41px;
       width: 89px;
-      // top: -54px;
     }
 
     .input-name {
@@ -300,25 +298,25 @@ export default {
 .share-modal__content {
   input {
     font-family: "Courier New", Courier, monospace;
-    color: rgb(26, 27, 29);
+    color: $color-secondary;
     font-size: 0.95em;
   }
 
   textarea {
     font-family: "Courier New", Courier, monospace;
-    color: rgb(26, 27, 29);
+    color: $color-secondary;
     font-size: 0.95em;
   }
 
   ::placeholder {
     font-family: "Courier New", Courier, monospace;
-    color: rgb(134, 138, 143);
+    color: $color-secondary;
     font-size: 1.1em;
   }
 }
 
 .input-copyurl {
-  color: rgb(134, 138, 143) !important;
+  color: darken($color-gray, 40%) !important;
 }
 
 .clickable-surface {
@@ -336,16 +334,18 @@ export default {
   }
 }
 
+.error {
+  color: $color-warning;
+}
+
 @media screen and (max-width: $breakpoint-small) {
   .share-modal {
     &__container {
-      // background: white;
       width: 90%;
-      // height: 560px;
       margin: auto;
       margin-top: 15vh;
       border-radius: 3px;
-      box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
     }
   }
 
@@ -366,7 +366,6 @@ export default {
 
       .input-copy {
         input {
-          // border: 1px solid red;
           width: 75%;
         }
       }
@@ -391,7 +390,7 @@ export default {
       margin: auto;
       margin-top: 0;
       border-radius: 3px;
-      box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
     }
   }
 

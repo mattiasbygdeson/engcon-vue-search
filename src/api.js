@@ -61,6 +61,7 @@ async function getProductIDs(brandId, modelId) {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log(error);
+    return "No products to display";
   }
 }
 
@@ -68,7 +69,7 @@ async function getProducts(query) {
   let urlExtension = "/1/0/303.online-5.0/search";
 
   try {
-    const response = await instance.get(baseUrl + urlExtension, {          params: {
+    const response = await instance.get(baseUrl + urlExtension, {params: {
       format: "json",
       json: JSON.stringify(query)
     },

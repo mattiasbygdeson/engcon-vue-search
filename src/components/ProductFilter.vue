@@ -70,10 +70,6 @@ export default {
 @import "../scss/_variables.scss";
 
 .product-filter-container {
-  // margin: auto;
-  // margin-right: 29px;
-  // float: right;
-
   width: 95%;
   margin: auto;
   margin-top: 20px;
@@ -83,7 +79,6 @@ export default {
     grid-template-columns: 65% auto;
     border: 1px solid #ddd;
     height: 110px;
-    // max-width: 900px;
     background: white;
     opacity: 0.9;
   }
@@ -109,8 +104,8 @@ export default {
     top: 2px;
     height: 40px;
     width: 30%;
-    background: #ffd300;
-    border: 1px solid #ffd300;
+    background: $color-primary;
+    border: 1px solid $color-primary;
     &:hover {
       cursor: pointer;
     }
@@ -118,8 +113,7 @@ export default {
 }
 
 .product-filter-container-header {
-  background: #ffd300;
-  // width: 900px;
+  background: $color-primary;
   padding: 0;
   margin: 0;
   height: 50px;
@@ -145,22 +139,22 @@ export default {
 .product-filter-container {
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    border: 1px solid #000000;
+    border: 1px solid $color-secondary;
     min-height: 26px;
     min-width: 26px;
-    background: #ffffff;
+    background: white;
     margin-top: -5px;
     cursor: pointer;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    box-shadow: 1px 1px 1px $color-secondary;
   }
 
   input[type="range"]::-moz-range-thumb {
-    border: 1px solid #000000;
+    border: 1px solid $color-secondary;
     min-height: 26px;
     min-width: 26px;
-    background: #ffffff;
+    background: white;
     cursor: pointer;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    box-shadow: 1px 1px 1px $color-secondary;
   }
 
   input[type="range"]::-webkit-slider-runnable-track {
@@ -169,7 +163,7 @@ export default {
     cursor: pointer;
     background: #ccc;
     border-radius: 1.3px;
-    border: 0.2px solid #010101;
+    border: 0.2px solid $color-secondary;
   }
 
   input[type="range"]::-moz-range-track {
@@ -178,18 +172,12 @@ export default {
     cursor: pointer;
     background: #ccc;
     border-radius: 1.3px;
-    border: 0.2px solid #010101;
+    border: 0.2px solid $color-secondary;
   }
 }
 
-
-
 @media screen and (max-width: $breakpoint-small) {
 .product-filter-container {
-  // margin: auto;
-  // margin-right: 29px;
-  // float: right;
-
   width: 95%;
   margin: auto;
   margin-top: 20px;
@@ -199,14 +187,11 @@ export default {
       grid-template-columns: 100%;
       border: 1px solid #ddd;
       height: 210px;
-      // max-width: 900px;
       background: white;
       opacity: 0.9;
     }
   }
 }
-
-
 
 @media screen and (max-width: $breakpoint-extra-small) {
   .product-filter-container-header {

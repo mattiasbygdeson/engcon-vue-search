@@ -66,11 +66,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+
 .favorite-list__product {
   display: grid;
   grid-template-columns: 20% 80%;
   padding-top: 10px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $color-gray;
 
   p {
     margin-bottom: 10px;
@@ -83,14 +85,14 @@ export default {
 }
 
 .badge {
-  background: #fdd300;
-  border: 1px solid #fdd300;
+  background: $color-primary;
+  border: 1px solid $color-primary;
   display: inline-block;
   padding: 4px 15px;
   border-radius: 2px;
   font-size: 0.9em;
   text-decoration: none;
-  color: black;
+  color: $color-secondary;
   display: inline-block;
   margin-right: 10px;
   margin-top: 14px;
@@ -103,7 +105,7 @@ export default {
 
 .remove {
   background: white;
-  border: 1px solid #ccc;
+  border: 1px solid $color-gray;
 }
 
 .product-thumbnail {

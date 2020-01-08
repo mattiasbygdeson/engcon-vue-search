@@ -21,11 +21,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
 
 .model-wrapper {
   a {
     text-decoration: none;
-    color: black;
+    color: $color-secondary;
   }
 }
 
@@ -35,22 +36,22 @@ export default {
   list-style: none;
   margin: 10px;
   height: 50px;
-  border: 1px solid #ddd;
+  border: 1px solid $color-gray;
   text-align: center;
   transition: border-color 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
 
   &:hover {
     cursor: pointer;
-    border-color: #222;
+    border-color: $color-secondary;
   }
 }
 
 .selected {
-  background-color: #ffd300;
+  background-color: $color-primary;
 
   &:hover {
     cursor: initial;
-    border-color: #ffd300;
+    border-color: $color-primary;
   }
 
   img {
