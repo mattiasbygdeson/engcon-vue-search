@@ -73,10 +73,10 @@ export default {
   methods: {
     setBaseUrl() {
       // Public
-      // this.baseUrl = "https://" + window.location.hostname;
+      this.baseUrl = "https://" + window.location.hostname;
 
       // Local
-      this.baseUrl = "https://engcon.com"
+      // this.baseUrl = "https://engcon.com"
     },
 
     checkIfProductIsInFavorites() {

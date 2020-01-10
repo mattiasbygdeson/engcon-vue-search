@@ -90,8 +90,14 @@
       :translatedStrings="translatedStrings"
       v-if="displayShareModal"
       v-on:toggle-share-modal="toggleDisplayShareModal"
+      v-on:email-success="createNotification"
       class="share-modal__wrapper"
     />
+
+    <div v-if="displayNotification" @click="closeNotification" class="notification">
+      <i class="icon fas fa-check" />
+      <p>{{this.notificationContent}}</p>
+    </div>
   </main>
 </template>
 
@@ -99,7 +105,6 @@
 import Product from "./Product";
 import Favorite from "./Favorite";
 import ShareList from "./ShareList";
-
 export default {
   name: "ProductList",
   components: {
@@ -120,46 +125,52 @@ export default {
       favorites: [],
       displayFavoriteModal: false,
       displayShareModal: false,
+      displayNotification: false,
+      notificationContent: "",
     };
   },
   created() {
     this.getFavorites();
   },
   methods: {
+    createNotification(msg, status) {
+      this.displayFavoriteModal = false;
+      this.displayShareModal = false;
+
+      this.notificationContent = msg;
+      this.notificationType = status;
+      this.displayNotification = true;
+    },
+    closeNotification() {
+      this.displayNotification = false;
+    },
     getFavorites() {
       var storedFavorites = localStorage.getItem("engcon-favorites");
-
       if (storedFavorites) {
         this.favorites = JSON.parse(storedFavorites);
       }
     },
-
     replaceString(phrase, subject) {
       if(phrase !== undefined && subject !== undefined) {
         return phrase.replace("{{rep}}", subject);
       }
     },
-
     toggleDisplayFavoriteModal() {
       this.displayFavoriteModal = !this.displayFavoriteModal;
-
       // Reload products
       var test = this.products;
       this.products = [];
       this.products = test;
     },
-
     toggleDisplayShareModal() {
       this.displayShareModal = !this.displayShareModal;
     },
-
     handleFavorites(product) {
       /**
        * Add to favorite list if it's a new object
        * Remove from favorite list if it already exists
        *
        */
-
       for (var i = 0; this.favorites.length > i; i++) {
         if (product.id === this.favorites[i].id) {
           this.favorites = this.favorites.filter(
@@ -176,10 +187,8 @@ export default {
           return;
         }
       }
-
       this.favorites = [...this.favorites, product];
       localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
-
       // Reload products
       var test = this.products;
       this.products = [];
@@ -191,7 +200,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-
 .summary-bar {
   background: $color-secondary;
   height: 50px;
@@ -201,27 +209,22 @@ export default {
   position: sticky;
   top: 0px;
   z-index: 100;
-
   &__content {
     padding: 0 30px;
-
     nav {
       float: right;
     }
   }
-
   span {
     margin-right: 5%;
   }
 }
-
 .products-headline {
   max-width: 1200px;
   margin: auto;
   margin-top: 30px;
   padding-left: 15px;
 }
-
 .products-container {
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
@@ -231,7 +234,6 @@ export default {
   min-height: 100vh;
   max-width: 1200px;
 }
-
 .favorite-list {
   &__button {
     position: relative;
@@ -242,12 +244,10 @@ export default {
     padding: 0 20px 0 20px;
     box-shadow: 0 0 0 6px $color-primary;
     margin-right: 28px;
-
     &:hover {
       cursor: pointer;
     }
   }
-
   &__wrapper {
     position: fixed;
     top: 0;
@@ -256,7 +256,6 @@ export default {
     z-index: 200;
     background: rgba($color-secondary, 0.5);
   }
-
   &__container {
     background: white;
     width: 90%;
@@ -268,7 +267,6 @@ export default {
     border-radius: 3px;
     box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
   }
-
   &__header {
     background: $color-primary;
     padding: 0;
@@ -299,32 +297,26 @@ export default {
     margin-bottom: 10px;
   }
 }
-
 .back-to-top {
   text-decoration: none;
   position: relative;
   top: -7px;
   color: white;
-
   &:active {
     color: inherit;
   }
 }
-
 .return-button {
   @extend .favorite-list__button;
   top: 0px;
 }
-
 @media screen and (max-width: $breakpoint-medium) {
   .products-container {
     grid-template-columns: 33% 33% 33%;
   }
-
   .back-to-top {
     display: none;
   }
-
   .favorite-list {
     &__button {
       position: relative;
@@ -335,22 +327,41 @@ export default {
       padding: 0 20px 0 20px;
       box-shadow: 0 0 0 6px $color-primary;
       margin-right: 28px;
-
       &:hover {
         cursor: pointer;
       }
     }
   }
-
   .summary-bar {
     span {
       margin-right: 2%;
       font-size: 0.9em;
     }
-
     &__content {
       padding: 0 10px;
     }
+  }
+}
+
+.notification {
+  background: $color-success;
+  min-height: 50px;
+  padding: 15px;
+  font-size: 1.2em;
+  color: white;
+
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  p {
+    display: inline;
+    margin-left: 10px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background: lighten($color-success, 5%);
   }
 }
 
@@ -358,7 +369,6 @@ export default {
   .products-container {
     grid-template-columns: 100%;
   }
-
   .favorite-list {
     &__button {
       position: absolute;
@@ -368,31 +378,25 @@ export default {
       box-shadow: 5px 5px 15px rgba($color-secondary, 0.2);
     }
   }
-
   .summary-bar {
     top: 64px;
-
     span {
       margin-right: 4%;
       font-size: 0.75em;
     }
   }
 }
-
 @media screen and (max-width: $breakpoint-extra-small) {
   .brand-name {
     display: none;
   }
-
   .favorite-list {
     &__header {
       font-size: 1.2em !important;
     }
-
     &__content {
       max-height: 100%;
     }
-
     &__container {
       width: 100%;
       max-height: 100%;
@@ -402,7 +406,6 @@ export default {
     }
   }
 }
-
 .no-products-notification {
   font-size: 1.2em;
   color: $color-secondary;
@@ -411,10 +414,8 @@ export default {
   margin: auto;
   max-width: 800px;
 }
-
 @keyframes fadein {
   from {opacity: 0;}
   to {opacity: 1;}
 }
-
 </style>

@@ -2,15 +2,22 @@ import axios from 'axios';
 import https from 'https';
 import qs from 'qs';
 
+if(window.location.hostname === "localhost") {
+  window.baseurl = "https://engcon.com"
+}
+
+//eslint-disable-next-line
+console.log(window.baseurl);
+
 // Public
 // const baseUrl = "https://" + window.location.hostname + "/rest-api";
 const configuratorUrl = "http://beta.configurator.engcon.com/Configurator.ashx?country=se";
 
 // Local
-const baseUrl = "http://engcon.com/rest-api";
+// const baseUrl = "https://engcon.com";
 
 const instance = axios.create({
-  baseURL: baseUrl,
+  baseURL: window.baseurl,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -23,7 +30,7 @@ const instance = axios.create({
 // Exports
 async function getTranslation() {
 
-  let urlExtension = "/translate/filter?lang=" + window.lang;
+  let urlExtension = "/rest-api/translate/filter?lang=" + window.lang;
 
   try {
     const response = await instance.get(urlExtension);
@@ -66,10 +73,10 @@ async function getProductIDs(brandId, modelId) {
 }
 
 async function getProducts(query) {
-  let urlExtension = "/1/0/303.online-5.0/search";
+  let urlExtension = "/rest-api/1/0/303.online-5.0/search";
 
   try {
-    const response = await instance.get(baseUrl + urlExtension, {params: {
+    const response = await instance.get(urlExtension, {params: {
       format: "json",
       json: JSON.stringify(query)
     },
@@ -83,6 +90,26 @@ async function getProducts(query) {
   }
 }
 
+async function sendEmail(msg, link, signoff, recipent, subject) {
+  let urlExtension = "/rest-api/mail/sendMail";
+
+  try {
+    const response = await instance.post(urlExtension, {mailData: {
+      subject: subject,
+      message: msg + link + signoff,
+      html: true,
+      reciepient: recipent
+    },
+    headers: {
+      "Content-Type": "application/json"
+    }});
+    return response;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+}
+
 export {
-  getTranslation, getModels, getBrands, getProducts, getProductIDs
+  getTranslation, getModels, getBrands, getProducts, getProductIDs, sendEmail
 };

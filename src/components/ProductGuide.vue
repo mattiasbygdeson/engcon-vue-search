@@ -257,7 +257,7 @@ export default {
 }
 
 .loading-icon {
-  border: 2px solid red;
+  // border: 2px solid red;
   text-align: center !important;
   width: 100%;
   margin-top: 150px;  

@@ -54,7 +54,6 @@ export default {
     setBaseUrl() {
       // Public
       // this.baseUrl = "https://" + window.location.hostname;
-
       // Local
       this.baseUrl = "http://engcon.com";
     },
@@ -67,23 +66,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-
 .favorite-list__product {
   display: grid;
   grid-template-columns: 20% 80%;
   padding-top: 10px;
   border-bottom: 1px solid $color-gray;
-
   p {
     margin-bottom: 10px;
   }
-
   h3 {
     margin-bottom: 10px;
     font-size: 1em;
   }
 }
-
 .badge {
   background: $color-primary;
   border: 1px solid $color-primary;
@@ -96,18 +91,15 @@ export default {
   display: inline-block;
   margin-right: 10px;
   margin-top: 14px;
-
   &:hover {
     cursor: pointer;
     opacity: 0.7;
   }
 }
-
 .remove {
   background: white;
   border: 1px solid $color-gray;
 }
-
 .product-thumbnail {
   width: 100%;
   height: 100px;
@@ -116,7 +108,6 @@ export default {
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 20px;
-
   p {
     display: block !important;
   }

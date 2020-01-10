@@ -11,21 +11,14 @@ const defaultOptions = {
 };
 
 Vue.use(VueSanitize, defaultOptions);
-
 Vue.use(VueRouter);
 
 Vue.config.productionTip = false
 
-// document.addEventListener('DOMContentLoaded', function(){
-  const langDiv = document.querySelector('#lang');
-  const lang = langDiv.dataset.lang;
+const langDiv = document.querySelector('#lang');
+const lang = langDiv.dataset.lang;
 
-  window.lang = lang;
-// });
-
-
-//eslint-disable-next-line no-console
-// console.log(window.lang);
+window.lang = lang;
 
 const router = new VueRouter({
   routes: [

@@ -1,10 +1,10 @@
 <template>
   <div class="model-wrapper">
-    <a v-if="this.selectedModel.ModelId === this.model.ModelId" href="#summary-bar" v-smooth-scroll>
+    <a v-if="this.selectedModel.ModelId === this.model.ModelId" href="#summary-bar">
       <li class="model-name selected">{{model.ModelName}}</li>
     </a>
 
-    <a v-else href="#summary-bar" v-smooth-scroll>
+    <a v-else href="#summary-bar">
       <li @click="$emit('select-model', model)" class="model-name">{{model.ModelName}}</li>
     </a>
   </div>

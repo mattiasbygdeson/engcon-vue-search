@@ -45,7 +45,6 @@ import ProductFilter from "./components/ProductFilter";
 import { getTranslation } from "./api.js";
 import { getProducts } from "./api.js";
 import { getProductIDs } from "./api.js";
-
 export default {
   name: "productfilter",
   components: {
@@ -81,44 +80,34 @@ export default {
   methods: {
     getStoredProducts() {
       var storedProducts = localStorage.getItem("engcon-products");
-
       if (storedProducts) {
         this.products = JSON.parse(storedProducts);
       }
     },
-
     getStoredSearchSummary() {
       var storedSearchSummary = localStorage.getItem("engcon-searchSummary");
-
       if (storedSearchSummary) {
         this.searchSummary = JSON.parse(storedSearchSummary);
       }
     },
-
     getStoredFilterSummary() {
       var storedFilterSummary = localStorage.getItem("engcon-filterSummary");
-
       if (storedFilterSummary) {
         this.filterSummary = JSON.parse(storedFilterSummary);
       }
     },
-
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
     },
-
     async requestProductsByModel(searchSummary) {
       /**
        * Clear previous search and product result and create a new one
        * Get product IDs
        *
        */
-
       this.noProducts = false;
       this.productsLoading = true;
-
       localStorage.removeItem("engcon-filterSummary");
-
       this.products = [];
       this.filterSummary = [];
       this.searchSummary = searchSummary;
@@ -132,24 +121,18 @@ export default {
       let modelId = this.searchSummary.modelId;
       
       this.products = await getProductIDs(brandId, modelId);
-      // this.requestProductsByModel();
 
       var productsIDs = [];
-      // var startOfString = "+(";
-      // var endOfString = ") AND language:" + window.lang;
       var middleOfString = "";
 
       for (var i = 0; this.products.length > i; i++) {
         productsIDs.push(this.products[i].id);
         middleOfString += "metadata.product-id:" + this.products[i].id;
-
         if (i !== this.products.length - 1) {
           middleOfString += " OR ";
         }
       }
-
       var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
-
       let query = {
         query: "*",
         filterQuery: filterQuery,
@@ -165,18 +148,14 @@ export default {
           "metadata.product-maxWeight"
         ]
       };
-
       let products = await getProducts(query);
       this.products = products;
       localStorage.setItem("engcon-products", JSON.stringify(products));
-
       this.productsLoading = false;
-
       if(products.length === 0) {
         this.noProducts = true;
       }
     },
-
     async requestProductsByWeight(filterSummary) {
       /**
        * Clear previous search and product result and create new
@@ -231,16 +210,14 @@ export default {
       };
 
       let products = await getProducts(query);
+
       this.products = products;
       localStorage.setItem("engcon-products", JSON.stringify(products));
-
       this.productsLoading = false;
     },
-
     async requestProductsByFavorites() {
       if (this.$route.query.name) {
         this.productsLoading = true;
-
         var urlQuery = this.$route.query
 
         // Set the title
@@ -252,11 +229,9 @@ export default {
         // var startOfString = "+(";
         // var endOfString = ") AND language:" + window.lang;
         var middleOfString = "";
-
         if(Array.isArray(urlQuery.id)) {
           for (var i = 0; urlQuery.id.length > i; i++) {
             middleOfString += "id:" + urlQuery.id[i];
-
             if (i !== urlQuery.id.length - 1) {
               // Unless loop is at the last index, print " OR " in queary string
               middleOfString += " OR ";
@@ -265,9 +240,7 @@ export default {
         } else {
           middleOfString = "id:" + urlQuery.id;
         }
-
         var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
-
         let query = {
           query: "*",
           filterQuery: filterQuery,
@@ -283,18 +256,14 @@ export default {
             "metadata.product-maxWeight"
           ]
         };
-
         this.products = await getProducts(query);
-
         this.productsLoading = false;
       }
     },
-
     async requestTranslation() {
       let translation = await getTranslation();
       this.translatedStrings = translation.translation;
     },
-
     clearUrlQuery() {
       this.$router.push(this.$route.path);
       this.listTitle = "";
@@ -306,29 +275,27 @@ export default {
 
 <style lang="scss">
 @import "./scss/_variables.scss";
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
 html {
   scroll-behavior: smooth !important;
   overflow-y: initial !important;
   overflow-x: initial !important;
 }
-
 body {
   overflow: auto !important;
 }
-
+a {
+  text-decoration: none;
+}
 .main-header-wrapper {
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
   background-size: cover;
   background-position: center;
 }
-
 .main-header {
   padding-top: 50px;
   padding-bottom: 50px;
@@ -336,67 +303,52 @@ body {
   max-width: 1200px;
   margin: auto;
 }
-
 .unfocus {
   opacity: 0.5;
   filter: grayscale(1);
-
   transition: opacity 250ms cubic-bezier(0.4, 0.01, 0.165, 0.99);
-
   &:hover {
     cursor: pointer;
     opacity: initial;
     filter: grayscale(0);
   }
 }
-
 .inline {
   display: inline;
 }
-
 .icon {
   font-family: "FontAwesome";
   font-style: initial;
   text-decoration: none;
-
   &:hover {
     cursor: pointer;
     opacity: 0.7;
   }
 }
-
 .icon-big {
   font-size: 2em;
 }
-
 .icon-medium {
   font-size: 1.5em;
 }
-
 .d-block {
   display: block !important;
 }
-
 .d-none {
   display: none;
 }
-
 .hidden {
   visibility: hidden;
 }
-
 @media screen and (max-width: $breakpoint-small) {
   .main-header {
     height: auto;
   }
-
   .products-container {
     grid-template-columns: 50% 50%;
   }
 }
-
 .loading-icon-products {
-  border: 2px solid red;
   text-align: center !important;
   width: 100%;
   position: absolute;
@@ -406,5 +358,4 @@ body {
   padding-top: 35px;
   z-index: 999;
 }
-
 </style>
