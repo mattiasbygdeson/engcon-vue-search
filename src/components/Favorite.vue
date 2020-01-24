@@ -37,9 +37,9 @@
 export default {
   name: "Favorite",
   props: {
-    favorite: Array,
+    favorite: Object,
     strings: Array,
-    translatedStrings: Array
+    translatedStrings: Object
   },
   data() {
     return {

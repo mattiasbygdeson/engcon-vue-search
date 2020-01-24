@@ -6,9 +6,6 @@ if(window.location.hostname === "localhost") {
   window.baseurl = "https://engcon.com"
 }
 
-//eslint-disable-next-line
-console.log(window.baseurl);
-
 // Public
 // const baseUrl = "https://" + window.location.hostname + "/rest-api";
 const configuratorUrl = "http://beta.configurator.engcon.com/Configurator.ashx?country=se";

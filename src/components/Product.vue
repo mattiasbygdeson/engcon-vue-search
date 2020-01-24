@@ -1,24 +1,18 @@
 <template>
   <article class="product-container">
     <header>
-      <a :href="baseUrl + product.uri">
+      <a :href="this.baseurl + product.uri">
         <img
-          v-if="product['metadata.product-media'][0].length == 1"
+          alt="product"
           class="product-thumbnail"
-          v-bind:src="baseUrl + product['metadata.product-media']"
-        />
-
-        <img
-          v-else
-          class="product-thumbnail"
-          v-bind:src="baseUrl + product['metadata.product-media'][0]"
+          v-bind:src="this.baseurl + this.thumbnail"
         />
       </a>
     </header>
 
     <main>
       <h3>
-        <a :href="baseUrl + product.uri">{{product.name}}</a>
+        <a :href="this.baseurl + product.uri">{{product.name}}</a>
       </h3>
 
       <p>{{this.category}}</p>
@@ -36,7 +30,7 @@
       </span>
 
       <span class="more-info">
-        <a :href="baseUrl + product.uri">{{translatedStrings.readMore}}</a>
+        <a :href="this.baseurl + product.uri">{{translatedStrings.readMore}}</a>
         <i class="icon fas fa-angle-right icon-big" />
       </span>
     </footer>
@@ -44,26 +38,30 @@
 </template>
 
 <script>
+import { baseurl } from "../variables.js";
+
 export default {
   name: "Product",
   props: {
     product: Object,
-    favorites: Array,
+    favorites: {},
     displayFavoriteModal: Boolean,
-    translatedStrings: {},
+    translatedStrings: Object,
   },
   data() {
     return {
       keyword: "",
       inFavorites: false,
       category: this.product.title,
-      baseUrl: "",
+      baseurl: baseurl,
+      thumbnail: ""
     };
   },
   created() {
     this.checkIfProductIsInFavorites();
     this.formatCategory();
-    this.setBaseUrl();
+    this.setThumbnail();
+    // this.setBaseUrl();
   },
   watch: {
     displayFavoriteModal: function() {
@@ -73,7 +71,7 @@ export default {
   methods: {
     setBaseUrl() {
       // Public
-      this.baseUrl = "https://" + window.location.hostname;
+      // this.baseUrl = "https://" + window.location.hostname;
 
       // Local
       // this.baseUrl = "https://engcon.com"
@@ -81,9 +79,17 @@ export default {
 
     checkIfProductIsInFavorites() {
       for (var i = 0; this.favorites.length > i; i++) {
-        if (this.favorites[i].id === this.product.id) {
+        if (this.favorites[i].id == this.product.id) {
           this.inFavorites = !this.inFavorites;
         }
+      }
+    },
+
+    setThumbnail() {
+      if(Array.isArray(this.product['metadata.product-media'])) {
+        this.thumbnail = this.product['metadata.product-media'][0];
+      } else {
+        this.thumbnail = this.product['metadata.product-media'];
       }
     },
 
@@ -92,7 +98,7 @@ export default {
     },
 
     formatCategory() {
-      if(this.category !== undefined) {
+      if(this.category != undefined) {
         this.category = this.category.split(' ');
         this.category.shift();
         this.category = this.category.join();

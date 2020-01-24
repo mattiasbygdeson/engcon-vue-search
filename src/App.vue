@@ -58,7 +58,7 @@ export default {
       filterSummary: {},
       products: [],
       favorites: [],
-      translatedStrings: [],
+      translatedStrings: {},
       testData: [],
       listTitle: "",
       productsLoading: false,
@@ -105,6 +105,7 @@ export default {
        * Get product IDs
        *
        */
+
       this.noProducts = false;
       this.productsLoading = true;
       localStorage.removeItem("engcon-filterSummary");
@@ -132,7 +133,9 @@ export default {
           middleOfString += " OR ";
         }
       }
+
       var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
+
       let query = {
         query: "*",
         filterQuery: filterQuery,
@@ -148,10 +151,37 @@ export default {
           "metadata.product-maxWeight"
         ]
       };
+
       let products = await getProducts(query);
+
+      //Set the thumbnail image
+
+      
+      // console.log(products[0]['metadata.product-media']);
+
+      // for(i = 0; products.length > i; i++) {
+      //   //eslint-disable-next-line no-console
+      //   console.log();
+
+      //   if(Array.isArray(products[i]['metadata.product-media'])) {
+      //     //eslint-disable-next-line no-console
+      //     console.log(products[i]['metadata.product-media']);
+
+      //     // products[i]['metadata.product-media'] = "hej.jpg";
+      //   } else {
+      //     //eslint-disable-next-line no-console
+      //     console.log(products[i]['metadata.product-media']);
+      //   }
+      // }
+
+      // product['metadata.product-media'][0]
+
       this.products = products;
+
       localStorage.setItem("engcon-products", JSON.stringify(products));
+
       this.productsLoading = false;
+
       if(products.length === 0) {
         this.noProducts = true;
       }
@@ -280,22 +310,33 @@ export default {
   margin: 0;
   padding: 0;
 }
+
+@font-face {
+  // font-family: "Akzidenz";
+  // src: url("./assets/Akzidenz-grotesk-black.ttf");
+}
+
 html {
   scroll-behavior: smooth !important;
   overflow-y: initial !important;
   overflow-x: initial !important;
 }
+
 body {
   overflow: auto !important;
+  // font-family: 'Akzidenz', sans-serif;
 }
+
 a {
   text-decoration: none;
 }
+
 .main-header-wrapper {
   background-image: url("https://engcon.com/webdav/files/resources/img/ourProducts/hero.jpg");
   background-size: cover;
   background-position: center;
 }
+
 .main-header {
   padding-top: 50px;
   padding-bottom: 50px;
@@ -303,6 +344,7 @@ a {
   max-width: 1200px;
   margin: auto;
 }
+
 .unfocus {
   opacity: 0.5;
   filter: grayscale(1);
@@ -313,9 +355,11 @@ a {
     filter: grayscale(0);
   }
 }
+
 .inline {
   display: inline;
 }
+
 .icon {
   font-family: "FontAwesome";
   font-style: initial;
@@ -325,21 +369,27 @@ a {
     opacity: 0.7;
   }
 }
+
 .icon-big {
   font-size: 2em;
 }
+
 .icon-medium {
   font-size: 1.5em;
 }
+
 .d-block {
   display: block !important;
 }
+
 .d-none {
   display: none;
 }
+
 .hidden {
   visibility: hidden;
 }
+
 @media screen and (max-width: $breakpoint-small) {
   .main-header {
     height: auto;
@@ -348,6 +398,7 @@ a {
     grid-template-columns: 50% 50%;
   }
 }
+
 .loading-icon-products {
   text-align: center !important;
   width: 100%;

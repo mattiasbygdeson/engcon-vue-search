@@ -79,7 +79,7 @@ export default {
   name: "ProductGuide",
   props: {
     lang: String,
-    translatedStrings: {}
+    translatedStrings: Object
   },
   components: {
     Brand,

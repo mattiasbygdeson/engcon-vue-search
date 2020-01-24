@@ -9,21 +9,21 @@
         </template>
 
         <template v-else>
-          <span
-            v-if="searchSummary.brandName" class="brand-name"
-          >{{replaceString(translatedStrings.brand, searchSummary.brandName)}}</span>
+          <span v-if="searchSummary.brandName" class="brand-name">
+            {{replaceString(translatedStrings.brand, searchSummary.brandName)}}
+          </span>
 
-          <span
-            v-if="searchSummary.modelName"
-          >{{replaceString(translatedStrings.model, searchSummary.modelName)}}</span>
+          <span v-if="searchSummary.modelName">
+            {{replaceString(translatedStrings.model, searchSummary.modelName)}}
+          </span>
 
-          <span
-            v-if="searchSummary.machineWeight"
-          >{{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}</span>
+          <span v-if="searchSummary.machineWeight">
+            {{replaceString(translatedStrings.machineWeight, searchSummary.machineWeight)}}
+          </span>
 
-          <span
-            v-if="filterSummary.maxWeight > 0"
-          >{{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}</span>
+          <span v-if="filterSummary.maxWeight > 0">
+            {{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}
+          </span>
 
           <span v-if="filterSummary.keyword">Sökord: "{{filterSummary.keyword}}"</span>
         </template>
@@ -116,13 +116,13 @@ export default {
     searchSummary: {},
     filterSummary: {},
     products: Array,
-    translatedStrings: {},
+    translatedStrings: Object,
     listTitle: String,
     noProducts: Boolean,
   },
   data() {
     return {
-      favorites: [],
+      favorites: {},
       displayFavoriteModal: false,
       displayShareModal: false,
       displayNotification: false,
@@ -157,10 +157,6 @@ export default {
     },
     toggleDisplayFavoriteModal() {
       this.displayFavoriteModal = !this.displayFavoriteModal;
-      // Reload products
-      var test = this.products;
-      this.products = [];
-      this.products = test;
     },
     toggleDisplayShareModal() {
       this.displayShareModal = !this.displayShareModal;
@@ -171,6 +167,7 @@ export default {
        * Remove from favorite list if it already exists
        *
        */
+
       for (var i = 0; this.favorites.length > i; i++) {
         if (product.id === this.favorites[i].id) {
           this.favorites = this.favorites.filter(
@@ -187,12 +184,9 @@ export default {
           return;
         }
       }
+
       this.favorites = [...this.favorites, product];
       localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
-      // Reload products
-      var test = this.products;
-      this.products = [];
-      this.products = test;
     }
   }
 };
