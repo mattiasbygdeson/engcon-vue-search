@@ -311,10 +311,10 @@ export default {
   padding: 0;
 }
 
-@font-face {
-  // font-family: "Akzidenz";
-  // src: url("./assets/Akzidenz-grotesk-black.ttf");
-}
+// @font-face {
+//   font-family: "Akzidenz";
+//   src: url("./assets/Akzidenz-grotesk-black.ttf");
+// }
 
 html {
   scroll-behavior: smooth !important;

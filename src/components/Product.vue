@@ -20,14 +20,25 @@
     </main>
 
     <footer>
-      <span
-        class="favorite-icon"
-        v-bind:class="{'in-favorites' : this.inFavorites}"
+      <button
+        v-if="!this.inFavorites"
+        class="fav-button"
+        v-bind:class="{'button-primary' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
       >
-        <i class="icon far fa-star" />
-      </span>
+        Add to list
+      </button>
+
+      <button
+        v-if="this.inFavorites"
+        class="fav-button saved"
+        v-bind:class="{'button-primary' : this.inFavorites}"
+        v-on:click="$emit('handle-favorites', product)"
+        @click="toggleFavoriteIcon"
+      >
+        Added
+      </button>
 
       <span class="more-info">
         <a :href="this.baseurl + product.uri">{{translatedStrings.readMore}}</a>
@@ -258,6 +269,21 @@ export default {
       padding-top: 20px;
     }
   }
+}
+
+.fav-button {
+  background: white;
+  border: 1px solid #9b9b9b;
+  border-radius: 2px;
+  width: 100px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.saved {
+  background: $color-primary;
 }
 
 </style>
