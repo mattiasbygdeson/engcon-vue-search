@@ -6,7 +6,7 @@
         <template v-if="this.listTitle">
           <span>{{listTitle}}</span>
 
-          <button class="return-button" @click="$emit('backToStart')">Tillbaka till produktfilter</button>
+          <button class="return-button" @click="$emit('backToStart')">{{this.translatedStrings.closeSharedList}}</button>
         </template>
 
         <!-- Standard product list header -->
@@ -66,21 +66,21 @@
       />
     </div>
 
-    <FavoriteList 
+    <FavoriteList
       v-if="displayFavoriteModal" 
-      :favorites="favorites" 
-      :translatedStrings="translatedStrings"
       v-on:closeModal="toggleDisplayFavoriteModal"
       v-on:remove-favorite="handleFavorites"
+      v-on:toggle-share-modal="toggleDisplayShareModal"
+      :favorites="favorites" 
+      :translatedStrings="translatedStrings"
     />
 
-    <ShareList
-      :favorites="favorites"
-      :translatedStrings="translatedStrings"
+    <ShareModal
       v-if="displayShareModal"
       v-on:toggle-share-modal="toggleDisplayShareModal"
       v-on:email-success="createNotification"
-      class="share-modal__wrapper"
+      :favorites="favorites"
+      :translatedStrings="translatedStrings"
     />
 
     <div v-if="displayNotification" @click="closeNotification" class="notification">
@@ -93,16 +93,14 @@
 <script>
 import Product from "./Product";
 import FavoriteList from "./FavoriteList";
-// import Favorite from "./Favorite";
-import ShareList from "./ShareList";
+import ShareModal from "./ShareModal";
 
 export default {
   name: "ProductList",
   components: {
     Product,
     FavoriteList,
-    // Favorite,
-    ShareList
+    ShareModal
   },
   props: {
     searchSummary: {},
@@ -114,7 +112,7 @@ export default {
   },
   data() {
     return {
-      favorites: {},
+      favorites: [],
       displayFavoriteModal: false,
       displayShareModal: false,
       displayNotification: false,

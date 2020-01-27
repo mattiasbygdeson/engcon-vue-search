@@ -21,8 +21,8 @@
 
       <footer class="favorite-list__footer">
         <button class="button secondary">Clear</button>
-        <button class="button secondary">{{this.translatedStrings.share}}</button>
-        <button class="button primary">Generate offer inquiry</button>
+        <button class="button secondary" @click="$emit('toggle-share-modal')">{{this.translatedStrings.share}}</button>
+        <button class="button primary">{{this.translatedStrings.createOfferInquiry}}</button>
       </footer>
     </article>
   </div>

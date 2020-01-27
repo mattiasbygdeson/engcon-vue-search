@@ -54,7 +54,7 @@
 import { sendEmail } from "../api.js";
 
 export default {
-  name: "ShareList",
+  name: "ShareModal",
   data() {
     return {
       recipent: "",

@@ -154,28 +154,6 @@ export default {
 
       let products = await getProducts(query);
 
-      //Set the thumbnail image
-
-      
-      // console.log(products[0]['metadata.product-media']);
-
-      // for(i = 0; products.length > i; i++) {
-      //   //eslint-disable-next-line no-console
-      //   console.log();
-
-      //   if(Array.isArray(products[i]['metadata.product-media'])) {
-      //     //eslint-disable-next-line no-console
-      //     console.log(products[i]['metadata.product-media']);
-
-      //     // products[i]['metadata.product-media'] = "hej.jpg";
-      //   } else {
-      //     //eslint-disable-next-line no-console
-      //     console.log(products[i]['metadata.product-media']);
-      //   }
-      // }
-
-      // product['metadata.product-media'][0]
-
       this.products = products;
 
       localStorage.setItem("engcon-products", JSON.stringify(products));

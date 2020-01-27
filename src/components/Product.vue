@@ -51,7 +51,7 @@ export default {
   name: "Product",
   props: {
     product: Object,
-    favorites: {},
+    favorites: Array,
     displayFavoriteModal: Boolean,
     translatedStrings: Object,
   },
