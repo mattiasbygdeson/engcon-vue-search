@@ -1,19 +1,15 @@
 <template>
   <article class="product-container">
-    <header>
-      <a :href="this.baseurl + product.uri">
-        <img
-          alt="product"
-          class="product-thumbnail"
-          v-bind:src="this.baseurl + this.thumbnail"
-        />
-      </a>
+    <header @click="redirect()">
+      <img
+        alt="Product thumbnail"
+        class="product-thumbnail"
+        v-bind:src="this.baseurl + this.thumbnail"
+      />
     </header>
 
-    <main>
-      <h3>
-        <a :href="this.baseurl + product.uri">{{product.name}}</a>
-      </h3>
+    <main @click="redirect()">
+      <h3>{{product.name}}</h3>
 
       <p>{{this.category}}</p>
       <p>{{product["metadata.product-minWeight"]}} - {{product["metadata.product-maxWeight"]}} ton</p>
@@ -22,7 +18,7 @@
     <footer>
       <button
         v-if="!this.inFavorites"
-        class="fav-button"
+        class="button secondary small"
         v-bind:class="{'button-primary' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
@@ -32,7 +28,7 @@
 
       <button
         v-if="this.inFavorites"
-        class="fav-button saved"
+        class="button primary small"
         v-bind:class="{'button-primary' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
@@ -86,6 +82,10 @@ export default {
 
       // Local
       // this.baseUrl = "https://engcon.com"
+    },
+
+    redirect() {
+      window.location = this.baseurl + this.product.uri;
     },
 
     checkIfProductIsInFavorites() {

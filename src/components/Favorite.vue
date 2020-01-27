@@ -2,88 +2,115 @@
   <div>
     <article class="favorite-list__product">
       <section>
-        <a :href="baseUrl + favorite.uri">
+        <a :href="baseurl + favorite.uri">
           <img
-            v-if="favorite['metadata.product-media'][0].length == 1"
+            alt="Product thumbnail"
             class="product-thumbnail"
-            v-bind:src="baseUrl + favorite['metadata.product-media']"
-          />
-
-          <img
-            v-else
-            class="product-thumbnail"
-            v-bind:src="baseUrl + favorite['metadata.product-media'][0]"
+            v-bind:src="baseurl + this.thumbnail"
           />
         </a>
       </section>
 
       <section>
         <h3>{{favorite.title}}</h3>
-        <p
-          class="d-block"
-        >{{replaceString(translatedStrings.machineWeight, favorite["metadata.product-minWeight"] + " - " + favorite["metadata.product-maxWeight"])}}</p>
+        <p class="d-block">
+          {{replaceString(translatedStrings.machineWeight, favorite["metadata.product-minWeight"] + " - " + favorite["metadata.product-maxWeight"])}}
+        </p>
 
-        <a :href="baseUrl + favorite.uri" class="badge">{{translatedStrings.readMore}}</a>
-        <span
-          v-on:click="$emit('remove-favorite', favorite)"
-          class="badge remove"
-        >{{translatedStrings.remove}}</span>
+        <nav>
+          <a :href="baseurl + favorite.uri">
+            <button class="button primary small">
+              {{translatedStrings.readMore}}
+            </button>
+          </a>
+
+          <button
+            v-on:click="$emit('remove-favorite', favorite)"
+            class="button secondary small"
+          >
+            {{translatedStrings.remove}}
+          </button>
+        </nav>
       </section>
     </article>
   </div>
 </template>
 
 <script>
+import { baseurl } from "../variables.js";
+
 export default {
   name: "Favorite",
   props: {
     favorite: Object,
-    strings: Array,
     translatedStrings: Object
   },
   data() {
     return {
       displayShareModal: true,
-      baseUrl: ""
+      baseurl: baseurl,
+      thumbnail: ""
     };
   },
   created() {
-    this.setBaseUrl();
+    // this.setBaseUrl();
+    this.setThumbnail();
   },
   methods: {
     setBaseUrl() {
       // Public
       // this.baseUrl = "https://" + window.location.hostname;
       // Local
-      this.baseUrl = "http://engcon.com";
+      // this.baseUrl = "http://engcon.com";
     },
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
-    }
+    },
+    setThumbnail() {
+      if(Array.isArray(this.favorite['metadata.product-media'])) {
+        this.thumbnail = this.favorite['metadata.product-media'][0];
+      } else {
+        this.thumbnail = this.favorite['metadata.product-media'];
+      }
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-.favorite-list__product {
-  display: grid;
-  grid-template-columns: 20% 80%;
-  padding-top: 10px;
-  border-bottom: 1px solid $color-gray;
-  p {
-    margin-bottom: 10px;
+
+.favorite-list {
+  &__product {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    padding-top: 10px;
+    border-top: 1px solid $color-gray;
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+
+    nav {
+      padding-top: 10px;
+    }
   }
-  h3 {
-    margin-bottom: 10px;
-    font-size: 1em;
+
+  article {
+    background: red;
   }
 }
+
 .badge {
   background: $color-primary;
   border: 1px solid $color-primary;
   display: inline-block;
-  padding: 4px 15px;
+  padding: 10px 15px;
   border-radius: 2px;
   font-size: 0.9em;
   text-decoration: none;
@@ -91,15 +118,18 @@ export default {
   display: inline-block;
   margin-right: 10px;
   margin-top: 14px;
+
   &:hover {
     cursor: pointer;
     opacity: 0.7;
   }
 }
+
 .remove {
   background: white;
   border: 1px solid $color-gray;
 }
+
 .product-thumbnail {
   width: 100%;
   height: 100px;
@@ -108,6 +138,7 @@ export default {
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 20px;
+
   p {
     display: block !important;
   }

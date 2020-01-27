@@ -16,6 +16,7 @@
           <input id="input-subject" type="text" v-model="messageSubject" />
 
           <label for="input-message">{{translatedStrings.emailMessage}}</label>
+
           <textarea
             v-model="messageBody"
             id="input-message"
@@ -35,10 +36,9 @@
 
           <input id="input-url" class="input-copyurl" type="text" :value="favoriteListUrl" />
 
-          <button
-            @click="generateShareableUrl"
-            class="button-copy"
-          >{{translatedStrings.emailShowURL}}</button>
+          <button @click="generateShareableUrl" class="button-copy">
+            {{translatedStrings.emailShowURL}}
+          </button>
           <!-- <span @click="copyUrl" class="clickable-surface"></span> -->
 
           <!-- <p class="notification" v-if="urlCopied">{{translatedStrings.emailCopyNote}}</p> -->
@@ -154,6 +154,7 @@ export default {
       cursor: pointer;
     }
   }
+
   &__wrapper {
     position: fixed;
     top: 0;
@@ -162,6 +163,7 @@ export default {
     z-index: 200;
     background: rgba($color-secondary, 0.3);
   }
+
   &__container {
     background: white;
     width: 521px;
@@ -171,6 +173,7 @@ export default {
     border-radius: 3px;
     box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
   }
+
   &__header {
     background: $color-primary;
     padding: 0;
@@ -179,22 +182,27 @@ export default {
     padding: 8px 20px;
     display: grid;
     grid-template-columns: auto auto;
+
     i {
       text-align: right;
       margin-left: 25px;
     }
+
     h2 {
       font-weight: 800;
       font-size: 1.2em;
       padding-top: 3px;
     }
   }
+
   &__content {
     max-height: 550px;
     padding: 2%;
+
     label {
       display: block;
     }
+
     input {
       display: block;
       margin-bottom: 14px;
@@ -205,6 +213,7 @@ export default {
       width: 80%;
       padding-left: 10px;
     }
+
     textarea {
       margin-bottom: 14px;
       background: #e7e5e1;
@@ -215,37 +224,45 @@ export default {
       border: 0;
       padding: 10px;
     }
+
     .input-copy {
       border-top: 1px solid #c4c4c4;
       padding-top: 20px;
+
       input {
         display: inline;
       }
     }
+
     button {
       margin-left: 10px;
       width: 18%;
       background: $color-primary;
       border: 0;
       border-radius: 2px;
+
       &:hover {
         cursor: pointer;
         opacity: 0.8;
       }
     }
+
     .button-submit {
       position: absolute;
       height: 41px;
       width: 89px;
     }
+
     .input-name {
       display: inline;
     }
+
     .button-copy {
       height: 41px;
     }
   }
 }
+
 @keyframes fadein-fadeout {
   from {
     opacity: 0;
@@ -254,32 +271,38 @@ export default {
     opacity: 1;
   }
 }
+
 .notification {
   animation-name: fadein-fadeout;
   animation-duration: 0.5s;
   position: relative;
   top: -40px;
 }
+
 .share-modal__content {
   input {
     font-family: "Courier New", Courier, monospace;
     color: $color-secondary;
     font-size: 0.95em;
   }
+
   textarea {
     font-family: "Courier New", Courier, monospace;
     color: $color-secondary;
     font-size: 0.95em;
   }
+
   ::placeholder {
     font-family: "Courier New", Courier, monospace;
     color: $color-secondary;
     font-size: 1.1em;
   }
 }
+
 .input-copyurl {
   color: darken($color-gray, 40%) !important;
 }
+
 .clickable-surface {
   background: #e7e5e1;
   opacity: 0;
@@ -293,9 +316,11 @@ export default {
     opacity: 0.3;
   }
 }
+
 .error {
   color: $color-warning;
 }
+
 @media screen and (max-width: $breakpoint-small) {
   .share-modal {
     &__container {
@@ -306,32 +331,39 @@ export default {
       box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
     }
   }
+
   .input-name {
     width: 75% !important;
   }
+
   .share-modal {
     &__content {
       input {
         width: 100%;
       }
+
       textarea {
         width: 100%;
         max-width: 100% !important;
       }
+
       .input-copy {
         input {
           width: 75%;
         }
       }
+
       .button-submit {
         width: 18%;
       }
+
       .button-copy {
         width: 21%;
       }
     }
   }
 }
+
 @media screen and (max-width: $breakpoint-extra-small) {
   .share-modal {
     &__container {
@@ -344,26 +376,32 @@ export default {
       box-shadow: 16px 16px 20px rgba($color-secondary, 0.2);
     }
   }
+
   .input-name {
     width: 75% !important;
   }
+
   .share-modal {
     &__content {
       input {
         width: 100%;
       }
+
       textarea {
         width: 100%;
         max-width: 100% !important;
       }
+
       .input-copy {
         input {
           width: 75%;
         }
       }
+
       .button-submit {
         width: 21%;
       }
+
       .button-copy {
         width: 21%;
       }

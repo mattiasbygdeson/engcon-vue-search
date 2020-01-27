@@ -311,10 +311,10 @@ export default {
   padding: 0;
 }
 
-// @font-face {
-//   font-family: "Akzidenz";
-//   src: url("./assets/Akzidenz-grotesk-black.ttf");
-// }
+@font-face {
+  font-family: "Akzidenz";
+  src: url("./assets/Akzidenz-grotesk-black.ttf");
+}
 
 html {
   scroll-behavior: smooth !important;
@@ -324,7 +324,7 @@ html {
 
 body {
   overflow: auto !important;
-  // font-family: 'Akzidenz', sans-serif;
+  font-family: 'Akzidenz', sans-serif;
 }
 
 a {
@@ -388,6 +388,69 @@ a {
 
 .hidden {
   visibility: hidden;
+}
+
+.button {
+  font-size: 1em;
+  height: 45px;
+  padding: 0 20px;
+  border: 1px solid #9b9b9b;
+  border-radius: 2px;
+  margin-right: 10px;
+
+  &:hover {
+    cursor: pointer;
+    // color: white;
+  }
+
+  position: relative;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-transition: color 500ms;
+  transition: color 500ms;
+
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // background: black;
+    background: #ebb729;
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transition: 200ms ease-out;
+    transition: 200ms ease-out;
+  }
+
+  &:hover:before {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+  }
+
+  &.primary {
+    background: $color-primary;
+  }
+
+  &.secondary {
+    background: white;
+
+    &:before {
+      background: rgb(235, 235, 235);
+    }
+  }
+
+  &.small {
+    padding: 5px 15px;
+    height: 40px;
+    font-size: 0.9em;
+  }
 }
 
 @media screen and (max-width: $breakpoint-small) {
