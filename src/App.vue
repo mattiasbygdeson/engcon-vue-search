@@ -191,17 +191,17 @@ export default {
         this.filterSummary.maxWeight +
         " TO *]) AND language:" + window.lang;
 
-      if (this.filterSummary.keyword) {
-        var keyword = this.filterSummary.keyword.toUpperCase();
-        filterQuery += " AND name:*" + keyword + "*";
-      }
+      // if (this.filterSummary.keyword) {
+      //   var keyword = this.filterSummary.keyword.toUpperCase();
+      //   filterQuery += " AND name:*" + keyword + "*";
+      // }
 
       if (this.filterSummary.maxWeight == 0) {
         filterQuery = filterQuery.replace(/0/g, "*");
       }
 
       let query = {
-        query: "*",
+        query: this.filterSummary.keyword ? this.filterSummary.keyword : "*",
         filterQuery: filterQuery,
         limit: 200,
         fields: [
