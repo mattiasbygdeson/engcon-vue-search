@@ -39,9 +39,9 @@
       </section>
 
       <section class="brand-search-column">
-        <h2
-          v-if="selectedBrand.length !== 0"
-        >{{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}</h2>
+        <h2 v-if="selectedBrand.length !== 0">
+          {{replaceString(translatedStrings.selectYour, selectedBrand.BrandName)}}
+        </h2>
 
         <p v-else class="notice">{{translatedStrings.selectBrandTo}}</p>
 
@@ -78,7 +78,6 @@ import { getModels } from "../api.js";
 export default {
   name: "ProductGuide",
   props: {
-    lang: String,
     translatedStrings: Object
   },
   components: {

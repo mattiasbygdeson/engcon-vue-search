@@ -9,7 +9,6 @@
         <ProductFilter
           v-on:summarizeFilter="requestProductsByWeight"
           :translatedStrings="translatedStrings"
-          
         />
       </header>
     </div>
@@ -18,12 +17,14 @@
 
     <ProductList
       v-on:backToStart="clearUrlQuery"
+      :key="searchSummary.brandId"
       :translatedStrings="translatedStrings"
       :searchSummary="searchSummary"
       :filterSummary="filterSummary"
       :products="products"
       :listTitle="listTitle"
       :noProducts="noProducts"
+      :baseurl="baseurl"
     />
 
     <div v-if="productsLoading" class="loading-icon-products">
@@ -42,9 +43,13 @@
 import ProductGuide from "./components/ProductGuide";
 import ProductList from "./components/ProductList";
 import ProductFilter from "./components/ProductFilter";
-import { getTranslation } from "./api.js";
-import { getProducts } from "./api.js";
-import { getProductIDs } from "./api.js";
+import { getTranslation, getProducts, getProductIDs } from "./api.js";
+import { baseurl } from "./variables.js";
+
+// import { getProducts } from "./api.js";
+// import { getProductIDs } from "./api.js";
+
+
 export default {
   name: "productfilter",
   components: {
@@ -63,6 +68,7 @@ export default {
       listTitle: "",
       productsLoading: false,
       noProducts: false,
+      baseurl: baseurl,
     };
   },
   created() {
@@ -276,7 +282,7 @@ export default {
       this.$router.push(this.$route.path);
       this.listTitle = "";
       this.getStoredProducts();
-    },
+    }
   }
 };
 </script>
@@ -289,11 +295,6 @@ export default {
   padding: 0;
 }
 
-@font-face {
-  font-family: "Akzidenz";
-  src: url("./assets/Akzidenz-grotesk-black.ttf");
-}
-
 html {
   scroll-behavior: smooth !important;
   overflow-y: initial !important;
@@ -302,7 +303,6 @@ html {
 
 body {
   overflow: auto !important;
-  font-family: 'Akzidenz', sans-serif;
 }
 
 a {

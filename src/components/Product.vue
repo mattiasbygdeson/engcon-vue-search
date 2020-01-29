@@ -17,23 +17,25 @@
 
     <footer>
       <button
+        style="width:100px"
         v-if="!this.inFavorites"
         class="button secondary small"
         v-bind:class="{'button-primary' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
       >
-        Add to list
+        {{this.translatedStrings.addToProductList}}
       </button>
 
       <button
+        style="width:100px"
         v-if="this.inFavorites"
         class="button primary small"
         v-bind:class="{'button-primary' : this.inFavorites}"
         v-on:click="$emit('handle-favorites', product)"
         @click="toggleFavoriteIcon"
       >
-        Added
+        {{this.translatedStrings.addedToProductList}}
       </button>
 
       <span class="more-info">
@@ -45,8 +47,6 @@
 </template>
 
 <script>
-import { baseurl } from "../variables.js";
-
 export default {
   name: "Product",
   props: {
@@ -54,13 +54,13 @@ export default {
     favorites: Array,
     displayFavoriteModal: Boolean,
     translatedStrings: Object,
+    baseurl: String,
   },
   data() {
     return {
       keyword: "",
       inFavorites: false,
       category: this.product.title,
-      baseurl: baseurl,
       thumbnail: ""
     };
   },
@@ -68,7 +68,6 @@ export default {
     this.checkIfProductIsInFavorites();
     this.formatCategory();
     this.setThumbnail();
-    // this.setBaseUrl();
   },
   watch: {
     displayFavoriteModal: function() {
@@ -76,18 +75,9 @@ export default {
     }
   },
   methods: {
-    setBaseUrl() {
-      // Public
-      // this.baseUrl = "https://" + window.location.hostname;
-
-      // Local
-      // this.baseUrl = "https://engcon.com"
-    },
-
     redirect() {
       window.location = this.baseurl + this.product.uri;
     },
-
     checkIfProductIsInFavorites() {
       for (var i = 0; this.favorites.length > i; i++) {
         if (this.favorites[i].id == this.product.id) {
@@ -95,7 +85,6 @@ export default {
         }
       }
     },
-
     setThumbnail() {
       if(Array.isArray(this.product['metadata.product-media'])) {
         this.thumbnail = this.product['metadata.product-media'][0];
@@ -103,11 +92,9 @@ export default {
         this.thumbnail = this.product['metadata.product-media'];
       }
     },
-
     toggleFavoriteIcon() {
       this.inFavorites = !this.inFavorites;
     },
-
     formatCategory() {
       if(this.category != undefined) {
         this.category = this.category.split(' ');

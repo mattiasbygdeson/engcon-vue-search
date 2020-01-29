@@ -1,7 +1,7 @@
-var baseurl = window.location.hostname;
+var baseurl = "http://" + window.location.hostname;
 
-if(baseurl == "localhost") {
-  baseurl = "https://engcon.com"
+if(window.location.hostname == "localhost") {
+  baseurl = "http://engcon.com"
 }
 
 export { baseurl };

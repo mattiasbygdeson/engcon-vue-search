@@ -17,6 +17,7 @@ Vue.config.productionTip = false
 
 const langDiv = document.querySelector('#lang');
 const lang = langDiv.dataset.lang;
+// const lang = "sv";
 
 window.lang = lang;
 

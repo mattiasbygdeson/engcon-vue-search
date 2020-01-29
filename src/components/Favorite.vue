@@ -37,18 +37,19 @@
 </template>
 
 <script>
-import { baseurl } from "../variables.js";
+// import { baseurl } from "../variables.js";
 
 export default {
   name: "Favorite",
   props: {
     favorite: Object,
-    translatedStrings: Object
+    translatedStrings: Object,
+    baseurl: String,
   },
   data() {
     return {
       displayShareModal: true,
-      baseurl: baseurl,
+      // baseurl: baseurl,
       thumbnail: ""
     };
   },
@@ -98,6 +99,7 @@ export default {
 
     nav {
       padding-top: 10px;
+      margin-bottom: 15px;
     }
   }
 

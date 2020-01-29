@@ -16,13 +16,14 @@
           :translatedStrings="translatedStrings"
           :key="favorite.id"
           :favorite="favorite"
+          :baseurl="baseurl"
         />
       </main>
 
       <footer class="favorite-list__footer">
-        <button class="button secondary">Clear</button>
+        <button class="button secondary" @click="$emit('clear-favorites')">{{this.translatedStrings.clear}}</button>
         <button class="button secondary" @click="$emit('toggle-share-modal')">{{this.translatedStrings.share}}</button>
-        <button class="button primary">{{this.translatedStrings.createOfferInquiry}}</button>
+        <button class="button primary" @click="$emit('toggle-offer-inquiry-modal')">{{this.translatedStrings.createOfferInquiry}}</button>
       </footer>
     </article>
   </div>
@@ -38,7 +39,8 @@ export default {
   },
   props: {
     favorites: Array,
-    translatedStrings: Object
+    translatedStrings: Object,
+    baseurl: String,
   },
   methods: {
     replaceString(phrase, subject) {

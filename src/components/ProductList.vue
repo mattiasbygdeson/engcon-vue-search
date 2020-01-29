@@ -62,6 +62,7 @@
         :favorites="favorites"
         :displayFavoriteModal="displayFavoriteModal"
         :translatedStrings="translatedStrings"
+        :baseurl="baseurl"
         v-on:summarizeFilter="$emit('summarizeFilter')"
       />
     </div>
@@ -71,8 +72,11 @@
       v-on:closeModal="toggleDisplayFavoriteModal"
       v-on:remove-favorite="handleFavorites"
       v-on:toggle-share-modal="toggleDisplayShareModal"
+      v-on:toggle-offer-inquiry-modal="toggleDisplayOfferInquiryModal"
+      v-on:clear-favorites="clearFavorites"
       :favorites="favorites" 
       :translatedStrings="translatedStrings"
+      :baseurl="baseurl"
     />
 
     <ShareModal
@@ -81,6 +85,15 @@
       v-on:email-success="createNotification"
       :favorites="favorites"
       :translatedStrings="translatedStrings"
+    />
+
+    <OfferInquiryModal
+      v-if="displayOfferInquiryModal"
+      v-on:toggle-offer-inquiry-modal="toggleDisplayOfferInquiryModal"
+      v-on:email-success="createNotification"
+      :favorites="favorites"
+      :translatedStrings="translatedStrings"
+      :baseurl="baseurl"
     />
 
     <div v-if="displayNotification" @click="closeNotification" class="notification">
@@ -94,13 +107,15 @@
 import Product from "./Product";
 import FavoriteList from "./FavoriteList";
 import ShareModal from "./ShareModal";
+import OfferInquiryModal from "./OfferInquiryModal";
 
 export default {
   name: "ProductList",
   components: {
     Product,
     FavoriteList,
-    ShareModal
+    ShareModal,
+    OfferInquiryModal
   },
   props: {
     searchSummary: {},
@@ -109,23 +124,29 @@ export default {
     translatedStrings: Object,
     listTitle: String,
     noProducts: Boolean,
+    baseurl: String
   },
   data() {
     return {
       favorites: [],
       displayFavoriteModal: false,
       displayShareModal: false,
+      displayOfferInquiryModal: false,
       displayNotification: false,
       notificationContent: "",
     };
   },
   created() {
     this.getFavorites();
+    
+    //eslint-disable-next-line no-console
+    console.log("ProductList created");
   },
   methods: {
     createNotification(msg, status) {
       this.displayFavoriteModal = false;
       this.displayShareModal = false;
+      this.displayOfferInquiryModal = false;
 
       this.notificationContent = msg;
       this.notificationType = status;
@@ -150,6 +171,9 @@ export default {
     },
     toggleDisplayShareModal() {
       this.displayShareModal = !this.displayShareModal;
+    },
+    toggleDisplayOfferInquiryModal() {
+      this.displayOfferInquiryModal = !this.displayOfferInquiryModal;
     },
     handleFavorites(product) {
       /**
@@ -177,6 +201,10 @@ export default {
 
       this.favorites = [...this.favorites, product];
       localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
+    },
+    clearFavorites() {
+      this.favorites = [];
+      localStorage.removeItem("engcon-favorites");
     }
   }
 };
