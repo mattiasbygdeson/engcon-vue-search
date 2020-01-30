@@ -55,7 +55,7 @@
 
     <div class="products-container">
       <Product
-        v-on:handle-favorites="handleFavorites"
+        v-on:handle-favorites="$emit('handle-favorites', product)"
         v-for="product in products"
         :key="product.id"
         :product="product"
@@ -70,10 +70,10 @@
     <FavoriteList
       v-if="displayFavoriteModal" 
       v-on:closeModal="toggleDisplayFavoriteModal"
-      v-on:remove-favorite="handleFavorites"
+      v-on:remove-favorite="deleteFavorite"
       v-on:toggle-share-modal="toggleDisplayShareModal"
       v-on:toggle-offer-inquiry-modal="toggleDisplayOfferInquiryModal"
-      v-on:clear-favorites="clearFavorites"
+      v-on:clear-favorites="$emit('clear-favorites')"
       :favorites="favorites" 
       :translatedStrings="translatedStrings"
       :baseurl="baseurl"
@@ -122,14 +122,15 @@ export default {
     searchSummary: {},
     filterSummary: {},
     products: Array,
+    favorites: Array,
     translatedStrings: Object,
     listTitle: String,
     noProducts: Boolean,
-    baseurl: String
+    baseurl: String,
   },
   data() {
     return {
-      favorites: [],
+      // favorites: [],
       displayFavoriteModal: false,
       displayShareModal: false,
       displayOfferInquiryModal: false,
@@ -138,7 +139,7 @@ export default {
     };
   },
   created() {
-    this.getFavorites();
+    // this.getFavorites();
   },
   methods: {
     createNotification(msg, status) {
@@ -153,12 +154,12 @@ export default {
     closeNotification() {
       this.displayNotification = false;
     },
-    getFavorites() {
-      var storedFavorites = localStorage.getItem("engcon-favorites");
-      if (storedFavorites) {
-        this.favorites = JSON.parse(storedFavorites);
-      }
-    },
+    // getFavorites() {
+    //   var storedFavorites = localStorage.getItem("engcon-favorites");
+    //   if (storedFavorites) {
+    //     this.favorites = JSON.parse(storedFavorites);
+    //   }
+    // },
     replaceString(phrase, subject) {
       if(phrase !== undefined && subject !== undefined) {
         return phrase.replace("{{rep}}", subject);
@@ -173,37 +174,40 @@ export default {
     toggleDisplayOfferInquiryModal() {
       this.displayOfferInquiryModal = !this.displayOfferInquiryModal;
     },
-    handleFavorites(product) {
-      /**
-       * Add to favorite list if it's a new object
-       * Remove from favorite list if it already exists
-       *
-       */
-
-      for (var i = 0; this.favorites.length > i; i++) {
-        if (product.id === this.favorites[i].id) {
-          this.favorites = this.favorites.filter(
-            favorites => favorites.id !== product.id
-          );
-          localStorage.removeItem(
-            "engcon-favorites",
-            JSON.stringify(this.favorites)
-          );
-          localStorage.setItem(
-            "engcon-favorites",
-            JSON.stringify(this.favorites)
-          );
-          return;
-        }
-      }
-
-      this.favorites = [...this.favorites, product];
-      localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
+    deleteFavorite(product) {
+      this.$emit('remove-favorite', product);
     },
-    clearFavorites() {
-      this.favorites = [];
-      localStorage.removeItem("engcon-favorites");
-    }
+    // handleFavorites(product) {
+    //   /**
+    //    * Add to favorite list if it's a new object
+    //    * Remove from favorite list if it already exists
+    //    *
+    //    */
+
+    //   for (var i = 0; this.favorites.length > i; i++) {
+    //     if (product.id === this.favorites[i].id) {
+    //       this.favorites = this.favorites.filter(
+    //         favorites => favorites.id !== product.id
+    //       );
+    //       localStorage.removeItem(
+    //         "engcon-favorites",
+    //         JSON.stringify(this.favorites)
+    //       );
+    //       localStorage.setItem(
+    //         "engcon-favorites",
+    //         JSON.stringify(this.favorites)
+    //       );
+    //       return;
+    //     }
+    //   }
+
+    //   this.favorites = [...this.favorites, product];
+    //   localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
+    // },
+    // clearFavorites() {
+    //   this.favorites = [];
+    //   localStorage.removeItem("engcon-favorites");
+    // }
   }
 };
 </script>

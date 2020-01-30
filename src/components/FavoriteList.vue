@@ -12,7 +12,7 @@
       <main class="favorite-list__content">
         <Favorite
           v-for="favorite in favorites"
-          v-on:remove-favorite="$emit('remove-favorite', favorite)"
+          v-on:remove-favorite="deleteFavorite"
           :translatedStrings="translatedStrings"
           :key="favorite.id"
           :favorite="favorite"
@@ -48,6 +48,9 @@ export default {
         return phrase.replace("{{rep}}", subject);
       }
     },
+    deleteFavorite(product) {
+      this.$emit('remove-favorite', product);
+    }
   }
 }
 </script>

@@ -25,6 +25,10 @@
       :listTitle="listTitle"
       :noProducts="noProducts"
       :baseurl="baseurl"
+      :favorites="favorites"
+      v-on:handle-favorites="handleFavorites"
+      v-on:remove-favorite="handleFavorites"
+      v-on:clear-favorites="clearFavorites"
     />
 
     <div v-if="productsLoading" class="loading-icon-products">
@@ -45,9 +49,6 @@ import ProductList from "./components/ProductList";
 import ProductFilter from "./components/ProductFilter";
 import { getTranslation, getProducts, getProductIDs } from "./api.js";
 import { baseurl } from "./variables.js";
-
-// import { getProducts } from "./api.js";
-// import { getProductIDs } from "./api.js";
 
 export default {
   name: "productfilter",
@@ -74,6 +75,7 @@ export default {
     this.getStoredProducts();
     this.getStoredSearchSummary();
     this.getStoredFilterSummary();
+    this.getFavorites();
     this.requestTranslation();
     this.requestProductsByFavorites();
   },
@@ -101,6 +103,43 @@ export default {
         this.filterSummary = JSON.parse(storedFilterSummary);
       }
     },
+    getFavorites() {
+      var storedFavorites = localStorage.getItem("engcon-favorites");
+      if (storedFavorites) {
+        this.favorites = JSON.parse(storedFavorites);
+      }
+    },
+    handleFavorites(product) {
+      /**
+       * Add to favorite list if it's a new object
+       * Remove from favorite list if it already exists
+       *
+       */
+
+      for (var i = 0; this.favorites.length > i; i++) {
+        if (product.id === this.favorites[i].id) {
+          this.favorites = this.favorites.filter(
+            favorites => favorites.id !== product.id
+          );
+          localStorage.removeItem(
+            "engcon-favorites",
+            JSON.stringify(this.favorites)
+          );
+          localStorage.setItem(
+            "engcon-favorites",
+            JSON.stringify(this.favorites)
+          );
+          return;
+        }
+      }
+
+      this.favorites = [...this.favorites, product];
+      localStorage.setItem("engcon-favorites", JSON.stringify(this.favorites));
+    },
+    clearFavorites() {
+      this.favorites = [];
+      localStorage.removeItem("engcon-favorites");
+    },
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
     },
@@ -110,6 +149,8 @@ export default {
        * Get product IDs
        *
        */
+
+      this.clearFavorites();
 
       this.noProducts = false;
       this.productsLoading = true;
@@ -175,6 +216,8 @@ export default {
        *
        */
 
+      this.clearFavorites();
+
       this.noProducts = false;
       this.productsLoading = true;
 
@@ -195,11 +238,6 @@ export default {
         "] AND metadata.product-maxWeight:[" +
         this.filterSummary.maxWeight +
         " TO *]) AND language:" + window.lang;
-
-      // if (this.filterSummary.keyword) {
-      //   var keyword = this.filterSummary.keyword.toUpperCase();
-      //   filterQuery += " AND name:*" + keyword + "*";
-      // }
 
       if (this.filterSummary.maxWeight == 0) {
         filterQuery = filterQuery.replace(/0/g, "*");
@@ -241,7 +279,9 @@ export default {
         // Construct a filterQuery string
         // var startOfString = "+(";
         // var endOfString = ") AND language:" + window.lang;
+
         var middleOfString = "";
+
         if(Array.isArray(urlQuery.id)) {
           for (var i = 0; urlQuery.id.length > i; i++) {
             middleOfString += "id:" + urlQuery.id[i];
@@ -253,6 +293,7 @@ export default {
         } else {
           middleOfString = "id:" + urlQuery.id;
         }
+
         var filterQuery = "+(" + middleOfString + ") AND language:" + window.lang;
         let query = {
           query: "*",
@@ -269,6 +310,7 @@ export default {
             "metadata.product-maxWeight"
           ]
         };
+
         this.products = await getProducts(query);
         this.productsLoading = false;
       }

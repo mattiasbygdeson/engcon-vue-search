@@ -25,7 +25,7 @@
           </a>
 
           <button
-            v-on:click="$emit('remove-favorite', favorite)"
+            v-on:click="this.deleteFavorite"
             class="button secondary small"
           >
             {{translatedStrings.remove}}
@@ -37,8 +37,6 @@
 </template>
 
 <script>
-// import { baseurl } from "../variables.js";
-
 export default {
   name: "Favorite",
   props: {
@@ -49,21 +47,13 @@ export default {
   data() {
     return {
       displayShareModal: true,
-      // baseurl: baseurl,
       thumbnail: ""
     };
   },
   created() {
-    // this.setBaseUrl();
     this.setThumbnail();
   },
   methods: {
-    setBaseUrl() {
-      // Public
-      // this.baseUrl = "https://" + window.location.hostname;
-      // Local
-      // this.baseUrl = "http://engcon.com";
-    },
     replaceString(phrase, subject) {
       return phrase.replace("{{rep}}", subject);
     },
@@ -74,6 +64,10 @@ export default {
         this.thumbnail = this.favorite['metadata.product-media'];
       }
     },
+    deleteFavorite() {
+      const product = this.favorite;
+      this.$emit('remove-favorite', product);
+    }
   }
 };
 </script>
