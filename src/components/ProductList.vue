@@ -94,6 +94,7 @@
       :favorites="favorites"
       :translatedStrings="translatedStrings"
       :baseurl="baseurl"
+      :searchSummary="searchSummary"
     />
 
     <div v-if="displayNotification" @click="closeNotification" class="notification">
@@ -138,9 +139,6 @@ export default {
   },
   created() {
     this.getFavorites();
-    
-    //eslint-disable-next-line no-console
-    console.log("ProductList created");
   },
   methods: {
     createNotification(msg, status) {

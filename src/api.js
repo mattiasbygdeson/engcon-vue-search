@@ -3,22 +3,7 @@ import https from 'https';
 import qs from 'qs';
 import { baseurl } from "./variables.js";
 
-// if(window.location.hostname === "localhost") {
-//   window.baseurl = "https://engcon.com"
-// }
-
-//eslint-disable-next-line no-console
-console.log(baseurl);
-
-//eslint-disable-next-line no-console
-// console.log(window.baseurl);
-
-// Public
-// const baseUrl = "https://" + window.location.hostname + "/rest-api";
 const configuratorUrl = "http://beta.configurator.engcon.com/Configurator.ashx?country=se";
-
-// Local
-// const baseUrl = "https://engcon.com";
 
 const instance = axios.create({
   baseURL: baseurl,

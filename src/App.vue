@@ -49,7 +49,6 @@ import { baseurl } from "./variables.js";
 // import { getProducts } from "./api.js";
 // import { getProductIDs } from "./api.js";
 
-
 export default {
   name: "productfilter",
   components: {

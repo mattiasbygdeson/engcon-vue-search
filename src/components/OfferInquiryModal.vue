@@ -52,13 +52,13 @@ export default {
       favoriteListUrl: "",
       urlCopied: false,
       formError: false,
-      // baseurl: baseurl
     };
   },
   props: {
     favorites: Array,
     translatedStrings: Object,
     baseurl: String,
+    searchSummary: Object
   },
   methods: {
     copyUrl() {
@@ -91,7 +91,13 @@ export default {
 
       // Set up e-mail message body
       const msg = productList;
-      const pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
+      var pricelistLink = "";
+
+      // Only some countries has price list urls to be sent
+      if(this.translatedStrings.priceListUrl.length > 0) {
+        pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + this.searchSummary.modelId + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
+      }
+
       const footer = "<p><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p><p><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";
       const recipent = this.translatedStrings.offerInquiryRecipient;
       const subject = this.messageSubject;
