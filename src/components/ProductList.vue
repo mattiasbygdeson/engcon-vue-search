@@ -95,6 +95,7 @@
       :translatedStrings="translatedStrings"
       :baseurl="baseurl"
       :searchSummary="searchSummary"
+      :filterSummary="filterSummary"
     />
 
     <div v-if="displayNotification" @click="closeNotification" class="notification">

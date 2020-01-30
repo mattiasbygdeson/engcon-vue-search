@@ -58,7 +58,15 @@ export default {
     favorites: Array,
     translatedStrings: Object,
     baseurl: String,
-    searchSummary: Object
+    searchSummary: Object,
+    filterSummary: Object
+  },
+  created() {
+    //eslint-disable-next-line no-console
+    console.log(Object.keys(this.searchSummary).length);
+
+    //eslint-disable-next-line no-console
+    console.log(Object.keys(this.filterSummary).length);
   },
   methods: {
     copyUrl() {
@@ -66,17 +74,12 @@ export default {
       navigator.clipboard.writeText(this.favoriteListUrl);
     },
     async sendEmail() {
-      if (
-        !this.senderEmail ||
-        !this.senderName ||
-        !this.messageSubject ||
-        !this.messageBody
-      ) {
+      if (!this.senderEmail || !this.senderName || !this.messageSubject || !this.messageBody) {
         this.formError = true;
         return;
       }
 
-      // Create list 
+      // Create list of products
       var productList = "";
       for(var i = 0; this.favorites.length > i; i++) {
         productList += 
@@ -84,7 +87,7 @@ export default {
           "<a :href='" + this.baseurl + this.favorites[i].uri + "'>" + this.baseurl + this.favorites[i].uri + "</a>";
       }
 
-      // Sanitize
+      // Sanitize input fields
       var regex = /(<([^>]+)>)/gi;
       this.messageBody = this.messageBody.replace(regex, "");
       this.senderName = this.senderName.replace(regex, "");
@@ -92,13 +95,32 @@ export default {
       // Set up e-mail message body
       const msg = productList;
       var pricelistLink = "";
+      var footer;
 
-      // Only some countries has price list urls to be sent
-      if(this.translatedStrings.priceListUrl.length > 0) {
-        pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + this.searchSummary.modelId + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
+      // E-mail body based on model
+      if(Object.keys(this.searchSummary).length > 0) {
+        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Machine" + ": </span>" + this.searchSummary.brandName + ", " + this.searchSummary.modelName + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";
+
+        // Only some countries has price list urls to be sent
+        if(this.translatedStrings.priceListUrl.length > 0) {
+          pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + this.searchSummary.modelId + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
+        }          
       }
 
-      const footer = "<p><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p><p><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";
+      // E-mail body based on weight filter
+      if(Object.keys(this.filterSummary).length > 0) {
+        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Max weight" + ": </span>" + this.filterSummary.maxWeight + "</p>";
+
+        if(this.filterSummary.keyword.length > 0) {
+          footer += "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Keyword" + ": </span>" + this.filterSummary.keyword + "</p>";
+        }
+
+        footer += "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";        
+      }
+
       const recipent = this.translatedStrings.offerInquiryRecipient;
       const subject = this.messageSubject;
 
