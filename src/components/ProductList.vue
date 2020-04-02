@@ -27,7 +27,7 @@
             {{replaceString(translatedStrings.machineWeight, filterSummary.maxWeight)}}
           </span>
 
-          <span v-if="filterSummary.keyword">Sökord: "{{filterSummary.keyword}}"</span>
+          <span v-if="filterSummary.keyword">{{this.translatedStrings.keyword}} "{{filterSummary.keyword}}"</span>
         </template>
 
         <nav>
@@ -46,8 +46,7 @@
       </div>
     </div>
 
-    <!-- <div v-if="noProducts" class="no-products-notification"> -->
-    <div v-if="this.products.length < 1" class="no-products-notification">
+    <div v-if="noProducts" class="no-products-notification">
       <p>{{translatedStrings.noProductsNotice}}</p>
     </div>
 

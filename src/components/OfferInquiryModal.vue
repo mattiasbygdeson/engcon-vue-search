@@ -22,6 +22,9 @@
             rows="10"
           />
 
+          <label for="input-phone">{{this.translatedStrings.offerInquiryYourPhone}}</label>
+          <input id="input-phone" type="text" v-model="senderPhone" />
+
           <label for="input-email">{{this.translatedStrings.offerInquiryYourEmail}}</label>
           <input id="input-email" type="email" v-model="senderEmail" />
 
@@ -38,7 +41,6 @@
 </template>
 
 <script>
-// import { baseurl } from "../variables.js";
 import { sendEmail } from "../api.js";
 
 export default {
@@ -47,6 +49,7 @@ export default {
     return {
       senderEmail: "",
       senderName: "",
+      senderPhone: "",
       messageSubject: this.translatedStrings.offerInquirySubject,
       messageBody: this.translatedStrings.offerInquiryMessage,
       favoriteListUrl: "",
@@ -91,6 +94,7 @@ export default {
       var regex = /(<([^>]+)>)/gi;
       this.messageBody = this.messageBody.replace(regex, "");
       this.senderName = this.senderName.replace(regex, "");
+      this.senderPhone = this.senderPhone.replace(regex, "");
 
       // Set up e-mail message body
       const msg = productList;
@@ -99,9 +103,11 @@ export default {
 
       // E-mail body based on model
       if(Object.keys(this.searchSummary).length > 0) {
-        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Machine" + ": </span>" + this.searchSummary.brandName + ", " + this.searchSummary.modelName + "</p>" +
+        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.machine + " </span>" + this.searchSummary.brandName + ", " + this.searchSummary.modelName + "</p>" +
                   "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p>" +
-                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryName + ": </span>" + this.senderName + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryEmail + ": </span>" + this.senderEmail + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryPhone + ": </span>" + this.senderPhone + "</p>";
 
         // Only some countries has price list urls to be sent
         if(this.translatedStrings.priceListUrl.length > 0) {
@@ -111,14 +117,16 @@ export default {
 
       // E-mail body based on weight filter
       if(Object.keys(this.filterSummary).length > 0) {
-        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Max weight" + ": </span>" + this.filterSummary.maxWeight + "</p>";
+        footer =  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.maxWeight + " </span>" + this.filterSummary.maxWeight + " t</p>";
 
         if(this.filterSummary.keyword.length > 0) {
-          footer += "<p style='font-size:1.1em'><span style='font-weight:bold'>" + "Keyword" + ": </span>" + this.filterSummary.keyword + "</p>";
+          footer += "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.keyword + " </span>" + this.filterSummary.keyword + "</p>";
         }
 
         footer += "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.emailMessage + ": </span>" + this.messageBody + "</p>" +
-                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquirySender + ": </span>" + this.senderEmail + "</p>";        
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryName + ": </span>" + this.senderName + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryEmail + ": </span>" + this.senderEmail + "</p>" +
+                  "<p style='font-size:1.1em'><span style='font-weight:bold'>" + this.translatedStrings.offerInquiryPhone + ": </span>" + this.senderPhone + "</p>";
       }
 
       const recipent = this.translatedStrings.offerInquiryRecipient;
@@ -175,7 +183,7 @@ export default {
   &__container {
     background: white;
     width: 521px;
-    height: 470px;
+    // height: 470px;
     margin: auto;
     margin-top: 15vh;
     border-radius: 3px;
@@ -204,7 +212,7 @@ export default {
   }
 
   &__content {
-    max-height: 550px;
+    // max-height: 550px;
     padding: 2%;
 
     label {
