@@ -111,7 +111,7 @@ export default {
 
         // Only some countries has price list urls to be sent
         if(this.translatedStrings.priceListUrl.length > 0) {
-          pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + this.searchSummary.modelId + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
+          pricelistLink = "<p style='font-size:1.2em;border:1px solid #ccc;padding: 10px'><a href='" + this.translatedStrings.priceListUrl + this.searchSummary.modelName + "'>" + this.translatedStrings.offerInquiryProceedToUrl + "</a></p>";
         }          
       }
 
