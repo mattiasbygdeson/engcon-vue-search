@@ -2,7 +2,7 @@
   <div class="share-modal__wrapper">
     <article class="share-modal__container">
       <header class="share-modal__header">
-        <h2>Create offer inquiry</h2>
+        <h2>{{translatedStrings.createOfferInquiry}}</h2>
 
         <i @click="$emit('toggle-offer-inquiry-modal')" class="icon fas fa-times icon-big" />
       </header>
@@ -77,7 +77,7 @@ export default {
       navigator.clipboard.writeText(this.favoriteListUrl);
     },
     async sendEmail() {
-      if (!this.senderEmail || !this.senderName || !this.messageSubject || !this.messageBody) {
+      if (!this.senderEmail || !this.senderName || !this.messageSubject || !this.messageBody || !this.senderPhone) {
         this.formError = true;
         return;
       }
